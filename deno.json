@@ -3,5 +3,11 @@
     "start": "deno run --allow-ffi ./main.ts"
   },
   "imports": {
+  },
+  "compilerOptions": {
+    "lib": [
+      "deno.window",
+      "webworker"
+    ]
   }
 }
