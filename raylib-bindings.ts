@@ -34,6 +34,38 @@ const Vector2Struct = {
   ],
 } as const;
 
+const Texture2DStruct = {
+  struct: [
+    "u32", // id
+    "i32", // width
+    "i32", // height
+    "i32", // mipmaps
+    "i32", // format
+  ],
+} as const;
+
+const GlyphInfoStruct = {
+  struct: [
+    "i32", // value
+    "i32", // offsetX
+    "i32", // offsetY
+    "i32", // advanceX
+    RectangleStruct, // imageRec
+    "buffer", // image (Image struct pointer or handle)
+  ],
+} as const;
+
+export const FontStruct = {
+  struct: [
+    "u32", // baseSize
+    "i32", // glyphCount
+    "i32", // glyphPadding
+    Texture2DStruct, // texture
+    "buffer", // recs (Rectangle array pointer)
+    "buffer", // glyphs (GlyphInfo array pointer)
+  ],
+} as const;
+
 const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   BeginDrawing: {
     parameters: [],
@@ -42,6 +74,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   BeginMode2D: {
     parameters: [Camera2DStruct],
     result: "void",
+  },
+  Clamp: {
+    parameters: ["f32", "f32", "f32"],
+    result: "f32",
   },
   ClearBackground: {
     parameters: [ColorStruct],
@@ -53,6 +89,14 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   },
   DrawCircle: {
     parameters: ["i16", "i16", "f32", ColorStruct],
+    result: "void",
+  },
+  DrawCircleV: {
+    parameters: [Vector2Struct, "f32", ColorStruct],
+    result: "void",
+  },
+  DrawGrid: {
+    parameters: ["i32", "f32"],
     result: "void",
   },
   DrawLine: {
@@ -75,6 +119,17 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["buffer", "i16", "i16", "i16", ColorStruct],
     result: "void",
   },
+  DrawTextEx: {
+    parameters: [
+      FontStruct,
+      "buffer",
+      Vector2Struct,
+      "f32",
+      "f32",
+      ColorStruct,
+    ],
+    result: "void",
+  },
   EndDrawing: {
     parameters: [],
     result: "void",
@@ -86,6 +141,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   Fade: {
     parameters: [ColorStruct, "f32"],
     result: ColorStruct,
+  },
+  GetFontDefault: {
+    parameters: [],
+    result: FontStruct,
   },
   GetFPS: {
     parameters: [],
@@ -111,9 +170,18 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [],
     result: Vector2Struct,
   },
+
   GetMouseWheelMove: {
     parameters: [],
     result: "f32",
+  },
+  GetMouseX: {
+    parameters: [],
+    result: "i32",
+  },
+  GetMouseY: {
+    parameters: [],
+    result: "i32",
   },
   GetRandomValue: {
     parameters: ["i32", "i32"],
@@ -154,6 +222,22 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   IsMouseButtonDown: {
     parameters: ["i16"],
     result: "bool",
+  },
+  rlPushMatrix: {
+    parameters: [],
+    result: "void",
+  },
+  rlPopMatrix: {
+    parameters: [],
+    result: "void",
+  },
+  rlRotatef: {
+    parameters: ["f32", "f32", "f32", "f32"],
+    result: "void",
+  },
+  rlTranslatef: {
+    parameters: ["f32", "f32", "f32"],
+    result: "void",
   },
   SetTargetFPS: {
     parameters: ["i16"],
@@ -205,6 +289,17 @@ function toFloat32Array(arr: number[]): Float32Array {
   return new Float32Array(arr);
 }
 
+function toFontStruct(font: Font) {
+  return new Uint32Array([
+    font.baseSize,
+    font.glyphCount,
+    font.glyphPadding,
+    font.texture,
+    font.recs,
+    font.glyphs,
+  ]);
+}
+
 export interface Rectangle {
   x: number;
   y: number;
@@ -222,6 +317,15 @@ export interface Camera {
   offset: Vector2;
   rotation: number;
   zoom: number;
+}
+
+interface Font {
+  baseSize: number;
+  glyphCount: number;
+  glyphPadding: number;
+  texture: number; // pointer or handle
+  recs: number; // pointer
+  glyphs: number; // pointer
 }
 
 // Color constants
@@ -312,8 +416,9 @@ export function getScreenHeight(): number {
   return raylib.symbols.GetScreenHeight();
 }
 
-// Drawing related functions
+// ???
 // ----------------------------------------------------------------------------
+
 export function beginDrawing(): void {
   raylib.symbols.BeginDrawing();
 }
@@ -321,6 +426,9 @@ export function beginDrawing(): void {
 export function endDrawing(): void {
   raylib.symbols.EndDrawing();
 }
+
+// Basic shapes drawing functions
+// ----------------------------------------------------------------------------
 
 export function clearBackground(color: Color): void {
   raylib.symbols.ClearBackground(toUint8Array(color));
@@ -335,6 +443,18 @@ export function drawCircle(args: {
   return raylib.symbols.DrawCircle(
     args.centerX,
     args.centerY,
+    args.radius,
+    toUint8Array(args.color),
+  );
+}
+
+export function drawCircleV(args: {
+  center: Vector2;
+  radius: number;
+  color: Color;
+}): void {
+  raylib.symbols.DrawCircleV(
+    toFloat32Array([args.center.x, args.center.y]),
     args.radius,
     toUint8Array(args.color),
   );
@@ -444,7 +564,7 @@ export function isKeyDown(key: number): boolean {
   return raylib.symbols.IsKeyDown(key);
 }
 
-// Input related functions: mouse
+// Input-related functions: mouse
 // ----------------------------------------------------------------------------
 export function getMousePosition(): Vector2 {
   const mousePosition = raylib.symbols.GetMousePosition();
@@ -462,6 +582,14 @@ export function getMousePosition(): Vector2 {
 
 export function getMouseWheelMove(): number {
   return raylib.symbols.GetMouseWheelMove();
+}
+
+export function getMouseX(): number {
+  return raylib.symbols.GetMouseX();
+}
+
+export function getMouseY(): number {
+  return raylib.symbols.GetMouseY();
 }
 
 export function isMouseButtonDown(key: number) {
@@ -520,6 +648,12 @@ export function getScreenToWorld2D(position: Vector2, camera: Camera): Vector2 {
   };
 }
 
+// Basic geometric 3D shapes drawing functions
+// ----------------------------------------------------------------------------
+export function drawGrid(slices: number, spacing: number): void {
+  raylib.symbols.DrawGrid(slices, spacing);
+}
+
 // Math Utilities
 // ----------------------------------------------------------------------------
 export function vector2Scale(vector2: Vector2, scale: number): Vector2 {
@@ -555,4 +689,67 @@ export function vector2Add(vector2A: Vector2, vector2B: Vector2): Vector2 {
     x: view.getFloat32(0, true),
     y: view.getFloat32(4, true),
   };
+}
+
+export function clamp(value: number, min: number, max: number): number {
+  return raylib.symbols.Clamp(value, min, max);
+}
+
+// Text drawing functions
+// ----------------------------------------------------------------------------
+
+export function drawTextEx(args: {
+  font: Font;
+  text: string;
+  position: Vector2;
+  fontSize: number;
+  spacing: number;
+  tint: Color;
+}): void {
+  raylib.symbols.DrawTextEx(
+    toFontStruct(args.font),
+    toCString(args.text),
+    toFloat32Array([args.position.x, args.position.y]),
+    args.fontSize,
+    args.spacing,
+    toUint8Array(args.tint),
+  );
+}
+
+// Font loading/unloading functions
+// ----------------------------------------------------------------------------
+
+export function getFontDefault(): Font {
+  const font = raylib.symbols.GetFontDefault();
+
+  return {
+    baseSize: font[0],
+    glyphCount: font[1],
+    glyphPadding: font[2],
+    texture: font[3],
+    recs: font[4],
+    glyphs: font[5],
+  };
+}
+
+// RLGH
+export function rlPushMatrix(): void {
+  raylib.symbols.rlPushMatrix();
+}
+
+export function rlPopMatrix(): void {
+  raylib.symbols.rlPopMatrix();
+}
+
+export function rlTranslatef(x: number, y: number, z: number): void {
+  raylib.symbols.rlTranslatef(x, y, z);
+}
+
+export function rlRotatef(
+  angle: number,
+  x: number,
+  y: number,
+  z: number,
+): void {
+  raylib.symbols.rlRotatef(angle, x, y, z);
 }

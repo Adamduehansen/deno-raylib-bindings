@@ -1,16 +1,25 @@
 import {
   beginDrawing,
   beginMode2D,
+  Black,
   Camera,
+  clamp,
   clearBackground,
   closeWindow,
+  DarkGray,
   DarkGreen,
   drawCircle,
+  drawCircleV,
+  drawGrid,
+  drawTextEx,
   endDrawing,
   endMode2D,
+  getFontDefault,
   getMouseDelta,
   getMousePosition,
   getMouseWheelMove,
+  getMouseX,
+  getMouseY,
   getScreenHeight,
   getScreenToWorld2D,
   getScreenWidth,
@@ -21,6 +30,10 @@ import {
   KeyTwo,
   MouseButtonLeft,
   RayWhite,
+  rlPopMatrix,
+  rlPushMatrix,
+  rlRotatef,
+  rlTranslatef,
   setTargetFPS,
   vector2Add,
   vector2Scale,
@@ -83,6 +96,11 @@ if (import.meta.main) {
         // Set the target to match, so that the camera maps the world space point
         // under the cursor to the screen space point under the cursor at any zoom
         camera.target = mouseWorldPos;
+
+        // Zoom increment
+        // Uses log scaling to provide consistent zoom speed
+        const scale = 0.2 * wheelDelta;
+        camera.zoom = clamp(Math.exp(Math.log(camera.zoom) + scale), 0.125, 64);
       }
     }
 
@@ -93,6 +111,12 @@ if (import.meta.main) {
     clearBackground(RayWhite);
 
     beginMode2D(camera);
+    rlPushMatrix();
+    rlTranslatef(0, 25 * 50, 0);
+    rlRotatef(90, 1, 0, 0);
+    drawGrid(100, 50);
+    rlPopMatrix();
+
     drawCircle({
       centerX: getScreenWidth() / 2,
       centerY: getScreenHeight() / 2,
@@ -100,6 +124,25 @@ if (import.meta.main) {
       color: DarkGreen,
     });
     endMode2D();
+
+    // Draw mouse reference
+    drawCircleV({
+      center: getMousePosition(),
+      radius: 4,
+      color: DarkGray,
+    });
+
+    drawTextEx({
+      font: getFontDefault(),
+      text: `[${getMouseX()}, ${getMouseY()}]`,
+      tint: Black,
+      spacing: 2,
+      fontSize: 20,
+      position: vector2Add(getMousePosition(), {
+        x: -44,
+        y: -24,
+      }),
+    });
 
     endDrawing();
   }
