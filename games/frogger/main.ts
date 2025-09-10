@@ -2,7 +2,7 @@ import {
   beginDrawing,
   clearBackground,
   closeWindow,
-  drawRectangle,
+  Color,
   drawRectangleRec,
   endDrawing,
   getFrameTime,
@@ -24,28 +24,42 @@ import {
 abstract class Entity {
   x: number;
   y: number;
+  color: Color;
 
   constructor() {
     this.x = 0;
     this.y = 0;
+    this.color = RayWhite;
+  }
+
+  render() {
+    drawRectangleRec({
+      x: this.x,
+      y: this.y,
+      width: 16,
+      height: 16,
+    }, this.color);
   }
 }
 
 class Frog extends Entity {
+  constructor() {
+    super();
+    this.color = Green;
+  }
 }
 
 class Car extends Entity {
-  constructor(args: {
-    type: "A" | "B" | "C" | "D" | "E";
-  }) {
+  constructor() {
     super();
+    this.color = Red;
   }
 }
 
 initWindow({
   title: "Frogger",
-  height: 260,
-  width: 230,
+  height: 240,
+  width: 160,
 });
 
 setTargetFPS(60);
@@ -53,11 +67,9 @@ setTargetFPS(60);
 const frog = new Frog();
 frog.x = getScreenWidth() / 2 - 8;
 frog.y = getScreenHeight() / 2 - 8;
-const frogSpeed = 1;
+const frogSpeed = 200;
 
-const car = new Car({
-  type: "A",
-});
+const car = new Car();
 car.x = getScreenWidth();
 car.y = getScreenHeight() / 2 - 8;
 const carSpeed = 30;
@@ -82,15 +94,15 @@ while (windowShouldClose() === false) {
 
   // Frog update
   if (isKeyDown(KeyA)) {
-    frog.x -= frogSpeed;
+    frog.x -= frogSpeed * deltaTime;
   } else if (isKeyDown(KeyD)) {
-    frog.x += frogSpeed;
+    frog.x += frogSpeed * deltaTime;
   }
 
   if (isKeyDown(KeyW)) {
-    frog.y -= frogSpeed;
+    frog.y -= frogSpeed * deltaTime;
   } else if (isKeyDown(KeyS)) {
-    frog.y += frogSpeed;
+    frog.y += frogSpeed * deltaTime;
   }
 
   // Car update
@@ -107,22 +119,8 @@ while (windowShouldClose() === false) {
 
   clearBackground(RayWhite);
 
-  // Frog
-  drawRectangle({
-    width: 16,
-    height: 16,
-    posX: frog.x,
-    posY: frog.y,
-    color: Green,
-  });
-
-  // Car
-  drawRectangleRec({
-    x: car.x,
-    y: car.y,
-    height: 16,
-    width: 16,
-  }, Red);
+  frog.render();
+  car.render();
 
   endDrawing();
 }
