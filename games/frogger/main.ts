@@ -56,23 +56,38 @@ class Car extends Entity {
   }
 }
 
-const FrogSize = 16;
+const GridSize = 16;
 
 initWindow({
   title: "Frogger",
   height: 240,
-  width: 160,
+  width: 176,
 });
 
 setTargetFPS(60);
 
+const entities: Entity[] = [];
+
 const frog = new Frog();
 frog.x = 0;
-frog.y = getScreenHeight() - FrogSize;
+frog.y = getScreenHeight() - GridSize;
+entities.push(frog);
 
-const car = new Car();
-car.x = getScreenWidth();
-car.y = getScreenHeight() / 2 - 8;
+const car1 = new Car();
+car1.x = getScreenWidth() - GridSize;
+car1.y = getScreenHeight() - GridSize * 2;
+entities.push(car1);
+
+const car2 = new Car();
+car2.x = getScreenWidth() - GridSize * 5;
+car2.y = getScreenHeight() - GridSize * 2;
+entities.push(car2);
+
+const car3 = new Car();
+car3.x = getScreenWidth() - GridSize * 9;
+car3.y = getScreenHeight() - GridSize * 2;
+entities.push(car3);
+
 const carSpeed = 30;
 
 // async function* shouldClose() {
@@ -95,22 +110,34 @@ while (windowShouldClose() === false) {
 
   // Frog update
   if (isKeyPressed(KeyA)) {
-    frog.x -= FrogSize;
+    frog.x -= GridSize;
   } else if (isKeyPressed(KeyD)) {
-    frog.x += FrogSize;
+    frog.x += GridSize;
   }
 
   if (isKeyPressed(KeyW)) {
-    frog.y -= FrogSize;
+    frog.y -= GridSize;
   } else if (isKeyPressed(KeyS)) {
-    frog.y += FrogSize;
+    frog.y += GridSize;
   }
 
   // Car update
-  if (car.x < -FrogSize) {
-    car.x = getScreenWidth();
+  if (car1.x < -GridSize) {
+    car1.x = getScreenWidth();
   } else {
-    car.x -= carSpeed * deltaTime;
+    car1.x -= carSpeed * deltaTime;
+  }
+
+  if (car2.x < -GridSize) {
+    car2.x = getScreenWidth();
+  } else {
+    car2.x -= carSpeed * deltaTime;
+  }
+
+  if (car3.x < -GridSize) {
+    car3.x = getScreenWidth();
+  } else {
+    car3.x -= carSpeed * deltaTime;
   }
 
   // Draw
@@ -120,8 +147,9 @@ while (windowShouldClose() === false) {
 
   clearBackground(RayWhite);
 
-  frog.render();
-  car.render();
+  for (const entity of entities) {
+    entity.render();
+  }
 
   endDrawing();
 }
