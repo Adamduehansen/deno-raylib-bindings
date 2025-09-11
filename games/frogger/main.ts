@@ -10,7 +10,7 @@ import {
   getScreenWidth,
   Green,
   initWindow,
-  isKeyDown,
+  isKeyPressed,
   KeyA,
   KeyD,
   KeyS,
@@ -56,6 +56,8 @@ class Car extends Entity {
   }
 }
 
+const FrogSize = 16;
+
 initWindow({
   title: "Frogger",
   height: 240,
@@ -65,9 +67,8 @@ initWindow({
 setTargetFPS(60);
 
 const frog = new Frog();
-frog.x = getScreenWidth() / 2 - 8;
-frog.y = getScreenHeight() / 2 - 8;
-const frogSpeed = 200;
+frog.x = 0;
+frog.y = getScreenHeight() - FrogSize;
 
 const car = new Car();
 car.x = getScreenWidth();
@@ -76,7 +77,7 @@ const carSpeed = 30;
 
 // async function* shouldClose() {
 //   while (true) {
-//     await new Promise((r) => setTimeout(r, 16));
+//     await new Promise((r) => setTimeout(r, FrogSize));
 //     yield windowShouldClose();
 //   }
 // }
@@ -93,20 +94,20 @@ while (windowShouldClose() === false) {
   const deltaTime = getFrameTime();
 
   // Frog update
-  if (isKeyDown(KeyA)) {
-    frog.x -= frogSpeed * deltaTime;
-  } else if (isKeyDown(KeyD)) {
-    frog.x += frogSpeed * deltaTime;
+  if (isKeyPressed(KeyA)) {
+    frog.x -= FrogSize;
+  } else if (isKeyPressed(KeyD)) {
+    frog.x += FrogSize;
   }
 
-  if (isKeyDown(KeyW)) {
-    frog.y -= frogSpeed * deltaTime;
-  } else if (isKeyDown(KeyS)) {
-    frog.y += frogSpeed * deltaTime;
+  if (isKeyPressed(KeyW)) {
+    frog.y -= FrogSize;
+  } else if (isKeyPressed(KeyS)) {
+    frog.y += FrogSize;
   }
 
   // Car update
-  if (car.x < -16) {
+  if (car.x < -FrogSize) {
     car.x = getScreenWidth();
   } else {
     car.x -= carSpeed * deltaTime;
