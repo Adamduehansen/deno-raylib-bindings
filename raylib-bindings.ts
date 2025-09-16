@@ -34,7 +34,7 @@ const Vector2Struct = {
   ],
 } as const;
 
-const Texture2DStruct = {
+const TextureStruct = {
   struct: [
     "u32", // id
     "i32", // width
@@ -60,7 +60,7 @@ export const FontStruct = {
     "u32", // baseSize
     "i32", // glyphCount
     "i32", // glyphPadding
-    Texture2DStruct, // texture
+    TextureStruct, // texture
     "buffer", // recs (Rectangle array pointer)
     "buffer", // glyphs (GlyphInfo array pointer)
   ],
@@ -74,6 +74,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   BeginMode2D: {
     parameters: [Camera2DStruct],
     result: "void",
+  },
+  CheckCollisionRecs: {
+    parameters: [RectangleStruct, RectangleStruct],
+    result: "bool",
   },
   Clamp: {
     parameters: ["f32", "f32", "f32"],
@@ -130,6 +134,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     ],
     result: "void",
   },
+  DrawTexture: {
+    parameters: [TextureStruct, "i16", "i16", ColorStruct],
+    result: "void",
+  },
   EndDrawing: {
     parameters: [],
     result: "void",
@@ -174,7 +182,6 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [],
     result: Vector2Struct,
   },
-
   GetMouseWheelMove: {
     parameters: [],
     result: "f32",
@@ -227,6 +234,14 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["i16"],
     result: "bool",
   },
+  LoadTexture: {
+    parameters: ["buffer"],
+    result: TextureStruct,
+  },
+  MeasureText: {
+    parameters: ["buffer", "i32"],
+    result: "i32",
+  },
   rlPushMatrix: {
     parameters: [],
     result: "void",
@@ -278,6 +293,10 @@ function toUint8Array(arr: number[]): BufferSource {
   return new Uint8Array(arr);
 }
 
+function toRaylibColor(arr: number[]): BufferSource {
+  return toUint8Array(arr);
+}
+
 function toCamera2DArray(camera: Camera): BufferSource {
   return new Float32Array([
     camera.offset.x,
@@ -289,8 +308,28 @@ function toCamera2DArray(camera: Camera): BufferSource {
   ]);
 }
 
+function toRaylibRectangle(rec: Rectangle): BufferSource {
+  return new Float32Array([rec.x, rec.y, rec.width, rec.height]);
+}
+
 function toFloat32Array(arr: number[]): BufferSource {
   return new Float32Array(arr);
+}
+
+export function toTexture(textureBuffer: Uint8Array): Texture {
+  // TextureStruct: [id (u32), width (i32), height (i32), mipmaps (i32), format (i32)]
+  // Use DataView for correct type handling
+  const buffer = textureBuffer.buffer;
+  const byteOffset = textureBuffer.byteOffset;
+  const view = new DataView(buffer, byteOffset, textureBuffer.byteLength);
+
+  return {
+    id: view.getUint32(0, true),
+    width: view.getInt32(4, true),
+    height: view.getInt32(8, true),
+    mipmaps: view.getInt32(12, true),
+    format: view.getInt32(16, true),
+  };
 }
 
 function toFontStruct(font: Font) {
@@ -302,6 +341,27 @@ function toFontStruct(font: Font) {
     font.recs,
     font.glyphs,
   ]);
+}
+
+function toRaylibTexture(texture: Texture): BufferSource {
+  return new Uint32Array([
+    texture.id,
+    texture.width,
+    texture.height,
+    texture.mipmaps,
+    texture.format,
+  ]);
+  // // TextureStruct: [id (u32), width (i32), height (i32), mipmaps (i32), format (i32)]
+  // const buffer = new ArrayBuffer(20); // 5 fields * 4 bytes each
+  // const view = new DataView(buffer);
+
+  // view.setUint32(0, texture.id, true);
+  // view.setInt32(4, texture.width, true);
+  // view.setInt32(8, texture.height, true);
+  // view.setInt32(12, texture.mipmaps, true);
+  // view.setInt32(16, texture.format, true);
+
+  // return new Uint8Array(buffer);
 }
 
 export interface Rectangle {
@@ -330,6 +390,14 @@ interface Font {
   texture: number; // pointer or handle
   recs: number; // pointer
   glyphs: number; // pointer
+}
+
+interface Texture {
+  id: number;
+  width: number;
+  height: number;
+  mipmaps: number;
+  format: number;
 }
 
 // Color constants
@@ -431,6 +499,15 @@ export function beginDrawing(): void {
 
 export function endDrawing(): void {
   raylib.symbols.EndDrawing();
+}
+
+// Basic shapes collision detection functions
+// ----------------------------------------------------------------------------
+export function checkCollisionRecs(rec1: Rectangle, rec2: Rectangle): boolean {
+  return raylib.symbols.CheckCollisionRecs(
+    toRaylibRectangle(rec1),
+    toRaylibRectangle(rec2),
+  );
 }
 
 // Basic shapes drawing functions
@@ -620,6 +697,22 @@ export function getMouseDelta(): Vector2 {
   };
 }
 
+// Texture loading functions
+// ----------------------------------------------------------------------------
+export function loadTexture(fileName: string): Texture {
+  const texture = raylib.symbols.LoadTexture(toCString(fileName));
+
+  return toTexture(texture);
+
+  // return {
+  //   id: 0,
+  //   width: 0,
+  //   height: 0,
+  //   mipmaps: 0,
+  //   format: 0,
+  // };
+}
+
 // Gesture and touch handling functions
 // ----------------------------------------------------------------------------
 export function isGestureDetected(gesture: number): boolean {
@@ -726,6 +819,22 @@ export function drawTextEx(args: {
   );
 }
 
+// Texture drawing functions
+// ----------------------------------------------------------------------------
+export function drawTexture(args: {
+  texture: Texture;
+  x: number;
+  y: number;
+  color: Color;
+}): void {
+  return raylib.symbols.DrawTexture(
+    toRaylibTexture(args.texture),
+    args.x,
+    args.y,
+    toRaylibColor(White),
+  );
+}
+
 // Font loading/unloading functions
 // ----------------------------------------------------------------------------
 
@@ -740,6 +849,12 @@ export function getFontDefault(): Font {
     recs: font[4],
     glyphs: font[5],
   };
+}
+
+// Text font info functions
+// ----------------------------------------------------------------------------
+export function measureText(str: string, fontSize: number): number {
+  return raylib.symbols.MeasureText(toCString(str), fontSize);
 }
 
 // RLGH

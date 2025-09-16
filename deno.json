@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "frogger": "deno run --allow-ffi ./games/frogger/main.ts",
-    "frogger:compile": "deno compile --allow-ffi --output ./bin/frogger --include ./lib/libraylib.so.5.5.0 ./games/frogger/main.ts"
+    "gemcatcher": "deno run --allow-ffi ./games/gem-catcher/main.ts",
+    "gemcatcher:compile": "deno compile --allow-ffi --output ./bin/gem-catcher ./games/gem-catcher/main.ts"
   },
   "imports": {
   },
