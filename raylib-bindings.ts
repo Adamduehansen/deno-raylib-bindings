@@ -270,6 +270,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [],
     result: "void",
   },
+  UnloadTexture: {
+    parameters: [TextureStruct],
+    result: "void",
+  },
   Vector2Scale: {
     parameters: [Vector2Struct, "f32"],
     result: Vector2Struct,
@@ -701,16 +705,11 @@ export function getMouseDelta(): Vector2 {
 // ----------------------------------------------------------------------------
 export function loadTexture(fileName: string): Texture {
   const texture = raylib.symbols.LoadTexture(toCString(fileName));
-
   return toTexture(texture);
+}
 
-  // return {
-  //   id: 0,
-  //   width: 0,
-  //   height: 0,
-  //   mipmaps: 0,
-  //   format: 0,
-  // };
+export function unloadTexture(texture: Texture): void {
+  return raylib.symbols.UnloadTexture(toRaylibTexture(texture));
 }
 
 // Gesture and touch handling functions
