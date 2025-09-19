@@ -6,6 +6,9 @@ import {
   getScreenHeight,
   getScreenWidth,
   initWindow,
+  isKeyDown,
+  KeyA,
+  KeyD,
   loadTexture,
   setTargetFPS,
   unloadTexture,
@@ -42,10 +45,24 @@ abstract class Entity {
     this.pos = args.pos;
   }
 
+  abstract update(): void;
   abstract render(): void;
 }
 
+const PlayerPaddleSpeed = 10;
+
 class PlayerPaddle extends Entity {
+  override update(): void {
+    if (
+      isKeyDown(KeyD) && this.pos.x < getScreenWidth() - paddleTexture.width
+    ) {
+      this.pos.x += PlayerPaddleSpeed;
+    }
+    if (isKeyDown(KeyA) && this.pos.x > 0) {
+      this.pos.x -= PlayerPaddleSpeed;
+    }
+  }
+
   override render(): void {
     drawTexture({
       texture: paddleTexture,
@@ -79,6 +96,12 @@ const playerPaddle = new PlayerPaddle({
 world.add(playerPaddle);
 
 while (windowShouldClose() === false) {
+  // Update
+  // --------------------------------------------------------------------------
+  for (const entity of world.entities) {
+    entity.update();
+  }
+
   // Drawing
   // --------------------------------------------------------------------------
   beginDrawing();
