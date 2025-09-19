@@ -21,7 +21,7 @@ import {
   RayWhite,
   setTargetFPS,
   windowShouldClose,
-} from "./src/raylib-bindings.ts";
+} from "./raylib-bindings.ts";
 
 type Screen = "Logo" | "Title" | "GamePlay" | "Ending";
 
