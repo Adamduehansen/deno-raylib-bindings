@@ -41,17 +41,21 @@ interface Vector {
 
 interface EntityArgs {
   texture: Texture;
+  name: string;
 }
 
 abstract class Entity {
   pos: Vector;
   texture: Texture;
+  name: string;
+  world?: World;
 
   constructor(args: EntityArgs) {
     this.pos = {
       x: 0,
       y: 0,
     };
+    this.name = args.name;
     this.texture = args.texture;
   }
 
@@ -73,6 +77,7 @@ class PlayerPaddle extends Entity {
   constructor() {
     super({
       texture: paddleTexture,
+      name: "Player",
     });
   }
 
@@ -92,6 +97,7 @@ class Background extends Entity {
   constructor() {
     super({
       texture: bgTexture,
+      name: "Background",
     });
   }
 
@@ -102,6 +108,7 @@ class Star extends Entity {
   constructor() {
     super({
       texture: starTexture,
+      name: "Star",
     });
   }
 
@@ -119,6 +126,7 @@ class World {
 
   add(entity: Entity): void {
     this.#entities.push(entity);
+    entity.world = this;
   }
 }
 
