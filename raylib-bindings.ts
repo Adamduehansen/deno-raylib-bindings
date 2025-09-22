@@ -359,17 +359,6 @@ function toRaylibTexture(texture: Texture): BufferSource {
     texture.mipmaps,
     texture.format,
   ]);
-  // // TextureStruct: [id (u32), width (i32), height (i32), mipmaps (i32), format (i32)]
-  // const buffer = new ArrayBuffer(20); // 5 fields * 4 bytes each
-  // const view = new DataView(buffer);
-
-  // view.setUint32(0, texture.id, true);
-  // view.setInt32(4, texture.width, true);
-  // view.setInt32(8, texture.height, true);
-  // view.setInt32(12, texture.mipmaps, true);
-  // view.setInt32(16, texture.format, true);
-
-  // return new Uint8Array(buffer);
 }
 
 export interface Rectangle {
@@ -430,6 +419,7 @@ export const KeyOne = 49;
 export const KeyTwo = 50;
 export const KeyA = 65;
 export const KeyD = 68;
+export const KeyP = 80;
 export const KeyR = 82;
 export const KeyS = 83;
 export const KeyW = 87;

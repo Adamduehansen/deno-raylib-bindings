@@ -11,8 +11,10 @@ import {
   getScreenWidth,
   initWindow,
   isKeyDown,
+  isKeyPressed,
   KeyA,
   KeyD,
+  KeyP,
   loadTexture,
   Rectangle,
   setTargetFPS,
@@ -39,6 +41,7 @@ const starTexture = loadTexture(
 setTargetFPS(60);
 
 let score = 0;
+let paused: boolean = false;
 
 interface Vector {
   x: number;
@@ -190,10 +193,18 @@ world.add(playerPaddle);
 let starSpawnTimer = 0;
 
 while (windowShouldClose() === false) {
+  // Input handling
+  // --------------------------------------------------------------------------
+  if (isKeyPressed(KeyP)) {
+    paused = !paused;
+  }
+
   // Update
   // --------------------------------------------------------------------------
   const frameTime = getFrameTime();
-  starSpawnTimer += frameTime;
+  if (paused === false) {
+    starSpawnTimer += frameTime;
+  }
   if (starSpawnTimer > 1) {
     const star = new Star();
     star.pos.y = -starTexture.height;
@@ -203,8 +214,10 @@ while (windowShouldClose() === false) {
     starSpawnTimer = 0;
   }
 
-  for (const entity of world.entities) {
-    entity.update();
+  if (paused === false) {
+    for (const entity of world.entities) {
+      entity.update();
+    }
   }
 
   // Drawing
