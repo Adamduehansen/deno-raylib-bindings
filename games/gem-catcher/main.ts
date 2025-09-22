@@ -1,6 +1,8 @@
 import {
   beginDrawing,
+  checkCollisionRecs,
   closeWindow,
+  drawFPS,
   drawText,
   drawTexture,
   endDrawing,
@@ -12,6 +14,7 @@ import {
   KeyA,
   KeyD,
   loadTexture,
+  Rectangle,
   setTargetFPS,
   Texture,
   unloadTexture,
@@ -34,6 +37,8 @@ const starTexture = loadTexture(
 );
 
 setTargetFPS(60);
+
+let score = 0;
 
 interface Vector {
   x: number;
@@ -77,6 +82,19 @@ abstract class Entity {
     this.world?.remove(this);
   }
 
+  getRect(): Rectangle {
+    return {
+      x: this.pos.x,
+      y: this.pos.y,
+      width: this.texture.width,
+      height: this.texture.height,
+    };
+  }
+
+  hasCollidingWith(entity: Entity): boolean {
+    return checkCollisionRecs(this.getRect(), entity.getRect());
+  }
+
   abstract update(): void;
 }
 
@@ -86,7 +104,7 @@ class PlayerPaddle extends Entity {
   constructor() {
     super({
       texture: paddleTexture,
-      name: "Player",
+      name: "PlayerPaddle",
     });
   }
 
@@ -123,6 +141,14 @@ class Star extends Entity {
 
   override update(): void {
     this.pos.y += 5;
+
+    const paddle = this.world?.entities.find((entity) =>
+      entity.name === "PlayerPaddle"
+    );
+    if (paddle !== undefined && this.hasCollidingWith(paddle)) {
+      score += 1;
+      this.destroy();
+    }
 
     if (this.pos.y > getScreenHeight()) {
       this.destroy();
@@ -187,6 +213,7 @@ while (windowShouldClose() === false) {
   for (const entity of world.entities) {
     entity.render();
   }
+  drawFPS(10, 10);
   drawText({
     text: `Amount of stars: ${
       world.entities.filter((entity) => entity.name === "Star").length
@@ -194,18 +221,26 @@ while (windowShouldClose() === false) {
     color: White,
     fontSize: 24,
     posX: 10,
-    posY: 10,
+    posY: 40,
   });
   drawText({
     text: `Toal amount of entities: ${world.entities.length}`,
     color: White,
     fontSize: 24,
     posX: 10,
-    posY: 40,
+    posY: 80,
+  });
+  drawText({
+    text: `Score: ${score}`,
+    color: White,
+    fontSize: 24,
+    posX: 10,
+    posY: 120,
   });
   endDrawing();
 }
 
+unloadTexture(starTexture);
 unloadTexture(paddleTexture);
 unloadTexture(bgTexture);
 

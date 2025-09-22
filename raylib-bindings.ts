@@ -99,6 +99,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [Vector2Struct, "f32", ColorStruct],
     result: "void",
   },
+  DrawFPS: {
+    parameters: ["i16", "i16"],
+    result: "void",
+  },
   DrawGrid: {
     parameters: ["i32", "f32"],
     result: "void",
@@ -816,6 +820,10 @@ export function drawTextEx(args: {
     args.spacing,
     toUint8Array(args.tint),
   );
+}
+
+export function drawFPS(x: number, y: number): void {
+  return raylib.symbols.DrawFPS(x, y);
 }
 
 // Texture drawing functions
