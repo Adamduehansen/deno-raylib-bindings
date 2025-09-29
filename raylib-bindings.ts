@@ -308,6 +308,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [TextureStruct],
     result: "void",
   },
+  UnloadSound: {
+    parameters: [SoundStruct],
+    result: "void",
+  },
   Vector2Scale: {
     parameters: [Vector2Struct, "f32"],
     result: Vector2Struct,
@@ -980,6 +984,10 @@ export function initAudioDevice(): void {
 // Wave/Sound loading/unloading functions
 export function loadSound(fileName: string): Sound {
   return toSound(raylib.symbols.LoadSound(toCString(fileName)));
+}
+
+export function unloadSound(sound: Sound): void {
+  return raylib.symbols.UnloadSound(toRaylibSound(sound));
 }
 
 // Wave/Sound management functions

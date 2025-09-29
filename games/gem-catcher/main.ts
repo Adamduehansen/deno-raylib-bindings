@@ -23,6 +23,7 @@ import {
   Rectangle,
   setTargetFPS,
   Texture,
+  unloadSound,
   unloadTexture,
   White,
   windowShouldClose,
@@ -281,5 +282,8 @@ while (windowShouldClose() === false) {
 unloadTexture(starTexture);
 unloadTexture(paddleTexture);
 unloadTexture(bgTexture);
+
+unloadSound(spellSound);
+unloadSound(explodeSound);
 
 closeWindow();
