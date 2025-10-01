@@ -1,6 +1,7 @@
 import {
   beginDrawing,
   checkCollisionRecs,
+  clearBackground,
   closeWindow,
   drawFPS,
   drawText,
@@ -16,10 +17,12 @@ import {
   KeyA,
   KeyD,
   KeyP,
+  KeyR,
   loadSound,
   loadTexture,
   measureText,
   playSound,
+  RayWhite,
   Rectangle,
   setTargetFPS,
   Texture,
@@ -72,7 +75,7 @@ abstract class Entity {
   }
 
   destroy() {
-    this.world?.remove(this);
+    this.world?.entityManager.remove(this);
   }
 
   getRect(): Rectangle {
@@ -135,7 +138,7 @@ class Star extends Entity {
   override update(): void {
     this.pos.y += 5;
 
-    const paddle = this.world?.entities.find((entity) =>
+    const paddle = this.world?.entityManager.entities.find((entity) =>
       entity.name === "PlayerPaddle"
     );
     if (paddle !== undefined && this.hasCollidingWith(paddle)) {
@@ -152,16 +155,21 @@ class Star extends Entity {
   }
 }
 
-class World {
+class EntityManager {
   #entities: Entity[] = [];
+  #world: World;
 
   get entities(): readonly Entity[] {
     return this.#entities;
   }
 
+  constructor(world: World) {
+    this.#world = world;
+  }
+
   add(entity: Entity): void {
     this.#entities.push(entity);
-    entity.world = this;
+    entity.world = this.#world;
   }
 
   remove(entityToRemove: Entity): void {
@@ -169,6 +177,16 @@ class World {
       entity.id !== entityToRemove.id
     );
   }
+
+  clear(predicate: (entity: Entity) => boolean): void {
+    for (const entity of this.#entities.filter(predicate)) {
+      entity.destroy();
+    }
+  }
+}
+
+class World {
+  readonly entityManager: EntityManager = new EntityManager(this);
 }
 
 initWindow({
@@ -195,13 +213,13 @@ const world = new World();
 const background = new Background();
 background.pos.x = 0;
 background.pos.y = 0;
-world.add(background);
+world.entityManager.add(background);
 
 const playerPaddle = new PlayerPaddle();
 const PaddleWidth = 104;
 playerPaddle.pos.x = getScreenWidth() / 2 - PaddleWidth / 2;
 playerPaddle.pos.y = getScreenHeight() - 50;
-world.add(playerPaddle);
+world.entityManager.add(playerPaddle);
 
 let starSpawnTimer = 0;
 
@@ -210,6 +228,10 @@ while (windowShouldClose() === false) {
   // --------------------------------------------------------------------------
   if (isKeyPressed(KeyP)) {
     paused = !paused;
+  }
+
+  if (gameOver && isKeyPressed(KeyR)) {
+    world.entityManager.clear((entity: Entity) => entity.name === "Star");
   }
 
   // Update
@@ -226,12 +248,12 @@ while (windowShouldClose() === false) {
         Math.random() * getScreenWidth() - starTexture.width,
       );
       star.pos.x = x;
-      world.add(star);
+      world.entityManager.add(star);
       starSpawnTimer = 0;
     }
 
     if (paused === false) {
-      for (const entity of world.entities) {
+      for (const entity of world.entityManager.entities) {
         entity.update();
       }
     }
@@ -240,13 +262,16 @@ while (windowShouldClose() === false) {
   // Drawing
   // --------------------------------------------------------------------------
   beginDrawing();
-  for (const entity of world.entities) {
+  clearBackground(RayWhite);
+
+  for (const entity of world.entityManager.entities) {
     entity.render();
   }
   drawFPS(10, 10);
   drawText({
     text: `Amount of stars: ${
-      world.entities.filter((entity) => entity.name === "Star").length
+      world.entityManager.entities.filter((entity) => entity.name === "Star")
+        .length
     }`,
     color: White,
     fontSize: 24,
@@ -254,7 +279,7 @@ while (windowShouldClose() === false) {
     posY: 40,
   });
   drawText({
-    text: `Toal amount of entities: ${world.entities.length}`,
+    text: `Toal amount of entities: ${world.entityManager.entities.length}`,
     color: White,
     fontSize: 24,
     posX: 10,
@@ -274,6 +299,13 @@ while (windowShouldClose() === false) {
       fontSize: 32,
       posX: getScreenWidth() / 2 - measureText("Game Over!", 32) / 2,
       posY: getScreenHeight() / 2,
+    });
+    drawText({
+      text: "Press R to restart",
+      color: White,
+      fontSize: 32,
+      posX: getScreenWidth() / 2 - measureText("Press R to restart", 32) / 2,
+      posY: (getScreenHeight() / 2) + 35,
     });
   }
   endDrawing();
