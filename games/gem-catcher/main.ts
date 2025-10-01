@@ -232,6 +232,9 @@ while (windowShouldClose() === false) {
 
   if (gameOver && isKeyPressed(KeyR)) {
     world.entityManager.clear((entity: Entity) => entity.name === "Star");
+    playerPaddle.pos.x = getScreenWidth() / 2 - PaddleWidth / 2;
+    score = 0;
+    gameOver = false;
   }
 
   // Update
