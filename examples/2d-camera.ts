@@ -33,7 +33,7 @@ import {
   setTargetFPS,
   SkyBlue,
   windowShouldClose,
-} from "./raylib-bindings.ts";
+} from "../raylib-bindings.ts";
 
 if (import.meta.main) {
   const maxBuildings = 100;
