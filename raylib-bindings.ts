@@ -105,6 +105,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [ColorStruct],
     result: "void",
   },
+  CloseAudioDevice: {
+    parameters: [],
+    result: "void",
+  },
   CloseWindow: {
     parameters: [],
     result: "void",
@@ -999,6 +1003,10 @@ export function rlRotatef(
 }
 
 // Audio device management functions
+export function closeAudioDevice(): void {
+  return raylib.symbols.CloseAudioDevice();
+}
+
 export function initAudioDevice(): void {
   return raylib.symbols.InitAudioDevice();
 }
