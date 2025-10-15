@@ -55,21 +55,20 @@ const AudioStreamStruct = {
   ],
 } as const;
 
-export const SoundStruct = {
+const SoundStruct = {
   struct: [
     AudioStreamStruct, // stream
     "u32", // frameCount
   ],
 } as const;
 
-const GlyphInfoStruct = {
+export const MusicStruct = {
   struct: [
-    "i32", // value
-    "i32", // offsetX
-    "i32", // offsetY
-    "i32", // advanceX
-    RectangleStruct, // imageRec
-    "buffer", // image (Image struct pointer or handle)
+    AudioStreamStruct, // Stream
+    "u32", // frameCount
+    "bool", // looping
+    "i32", // ctxType   // <-- should be i32, not i16
+    "buffer", // ctxData (*void)
   ],
 } as const;
 
@@ -268,6 +267,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["i16"],
     result: "bool",
   },
+  LoadMusicStream: {
+    parameters: ["buffer"],
+    result: MusicStruct,
+  },
   LoadTexture: {
     parameters: ["buffer"],
     result: TextureStruct,
@@ -280,10 +283,15 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["buffer", "i32"],
     result: "i32",
   },
+  PlayMusicStream: {
+    parameters: [MusicStruct],
+    result: "void",
+  },
   PlaySound: {
     parameters: [SoundStruct],
     result: "void",
   },
+
   rlPushMatrix: {
     parameters: [],
     result: "void",
@@ -318,6 +326,14 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   },
   UnloadSound: {
     parameters: [SoundStruct],
+    result: "void",
+  },
+  UnloadMusicStream: {
+    parameters: [MusicStruct],
+    result: "void",
+  },
+  UpdateMusicStream: {
+    parameters: [MusicStruct],
     result: "void",
   },
   Vector2Scale: {
@@ -377,6 +393,33 @@ function toCamera2DArray(camera: Camera): BufferSource {
     camera.zoom,
   ]);
 }
+
+// function toRaylibMusic(music: Music): BufferSource {
+//   // MusicStruct layout:
+//   // AudioStream: [sampleRate (u32), sampleSize (u32), channels (u32), bufferCount (u32), frameCount (u32), data (pointer)]
+//   // frameCount (u32)
+//   // looping (bool, 1 byte)
+//   // ctxType (i32, 4 bytes)
+//   // ctxData (pointer, 8 bytes)
+//   const buffer = new ArrayBuffer(45);
+//   const view = new DataView(buffer);
+
+//   // AudioStream fields
+//   view.setUint32(0, music.stream.sampleRate, true);
+//   view.setUint32(4, music.stream.sampleSize, true);
+//   view.setUint32(8, music.stream.channels, true);
+//   view.setUint32(12, music.stream.bufferCount, true);
+//   view.setUint32(16, music.stream.frameCount, true);
+//   view.setBigUint64(20, BigInt(music.stream.data), true);
+
+//   // Music fields
+//   view.setUint32(28, music.frameCount, true);
+//   view.setUint8(32, music.looping ? 1 : 0);
+//   view.setInt32(33, music.ctxType, true); // <-- updated
+//   view.setBigUint64(37, BigInt(music.ctxData), true); // <-- updated
+
+//   return new Uint8Array(buffer);
+// }
 
 function toRaylibRectangle(rec: Rectangle): BufferSource {
   return new Float32Array([rec.x, rec.y, rec.width, rec.height]);
@@ -459,6 +502,51 @@ export function toSound(soundBuffer: Uint8Array): Sound {
   };
 }
 
+// export function toMusic(musicBuffer: BufferSource): Music {
+//   // MusicStruct layout:
+//   // AudioStream: [sampleRate (u32), sampleSize (u32), channels (u32), bufferCount (u32), frameCount (u32), data (pointer)]
+//   // frameCount (u32)
+//   // looping (bool, 1 byte)
+//   // ctxType (i32, 4 bytes)
+//   // ctxData (pointer, 8 bytes)
+//   const buffer = (musicBuffer as Uint8Array).buffer;
+//   const byteOffset = (musicBuffer as Uint8Array).byteOffset || 0;
+//   const view = new DataView(
+//     buffer,
+//     byteOffset,
+//     (musicBuffer as Uint8Array).byteLength,
+//   );
+
+//   // AudioStream fields
+//   const sampleRate = view.getUint32(0, true);
+//   const sampleSize = view.getUint32(4, true);
+//   const channels = view.getUint32(8, true);
+//   const bufferCount = view.getUint32(12, true);
+//   const streamFrameCount = view.getUint32(16, true);
+//   const data = view.getBigUint64(20, true);
+
+//   // Music fields
+//   const frameCount = view.getUint32(28, true);
+//   const looping = !!view.getUint8(32);
+//   const ctxType = view.getInt32(33, true); // <-- updated
+//   const ctxData = view.getBigUint64(37, true); // <-- updated
+
+//   return {
+//     stream: {
+//       sampleRate,
+//       sampleSize,
+//       channels,
+//       bufferCount,
+//       frameCount: streamFrameCount,
+//       data: Number(data),
+//     },
+//     frameCount,
+//     looping,
+//     ctxType,
+//     ctxData: Number(ctxData),
+//   };
+// }
+
 export interface Rectangle {
   x: number;
   y: number;
@@ -507,6 +595,14 @@ export interface AudioStream {
 export interface Sound {
   stream: AudioStream;
   frameCount: number;
+}
+
+interface Music {
+  stream: AudioStream;
+  frameCount: number;
+  looping: boolean;
+  ctxType: number;
+  ctxData: number;
 }
 
 // Color constants
@@ -1023,4 +1119,21 @@ export function unloadSound(sound: Sound): void {
 // Wave/Sound management functions
 export function playSound(sound: Sound): void {
   return raylib.symbols.PlaySound(toRaylibSound(sound));
+}
+
+// Music management functions
+export function loadMusicStream(fileName: string): BufferSource {
+  return raylib.symbols.LoadMusicStream(toCString(fileName));
+}
+
+export function playMusicStream(music: BufferSource): void {
+  return raylib.symbols.PlayMusicStream(music);
+}
+
+export function updateMusicStream(music: BufferSource): void {
+  return raylib.symbols.UpdateMusicStream(music);
+}
+
+export function unloadMusicStream(music: BufferSource): void {
+  return raylib.symbols.UnloadMusicStream(music);
 }
