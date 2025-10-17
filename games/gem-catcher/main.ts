@@ -19,16 +19,20 @@ import {
   KeyD,
   KeyP,
   KeyR,
+  loadMusicStream,
   loadSound,
   loadTexture,
   measureText,
+  playMusicStream,
   playSound,
   RayWhite,
   Rectangle,
   setTargetFPS,
   Texture,
+  unloadMusicStream,
   unloadSound,
   unloadTexture,
+  updateMusicStream,
   White,
   windowShouldClose,
 } from "../../raylib-bindings.ts";
@@ -201,6 +205,10 @@ initAudioDevice();
 const spellSound = loadSound("./games/gem-catcher/assets/spell1_0.wav");
 const explodeSound = loadSound("./games/gem-catcher/assets/explode.wav");
 
+const backgroundMusic = loadMusicStream(
+  "./games/gem-catcher/assets/bgm_action_5.mp3",
+);
+
 const bgTexture = loadTexture("./games/gem-catcher/assets/GameBg.png");
 const paddleTexture = loadTexture("./games/gem-catcher/assets/paddleBlu.png");
 const starTexture = loadTexture(
@@ -224,7 +232,11 @@ world.entityManager.add(playerPaddle);
 
 let starSpawnTimer = 0;
 
+playMusicStream(backgroundMusic);
+
 while (windowShouldClose() === false) {
+  updateMusicStream(backgroundMusic);
+
   // Input handling
   // --------------------------------------------------------------------------
   if (isKeyPressed(KeyP)) {
@@ -318,6 +330,8 @@ while (windowShouldClose() === false) {
 unloadTexture(starTexture);
 unloadTexture(paddleTexture);
 unloadTexture(bgTexture);
+
+unloadMusicStream(backgroundMusic);
 
 unloadSound(spellSound);
 unloadSound(explodeSound);
