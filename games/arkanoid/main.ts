@@ -5,12 +5,14 @@ import {
   Black,
   clearBackground,
   closeWindow,
+  drawCircleV,
   drawRectangle,
   endDrawing,
   initWindow,
   isKeyDown,
   KeyA,
   KeyD,
+  Maroon,
   RayWhite,
   setTargetFPS,
   windowShouldClose,
@@ -19,13 +21,43 @@ import {
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 450;
 
-const PADDLE_WIDTH = 80;
+class Ball extends Entity {
+  #paddle: Paddle;
+
+  constructor(paddle: Paddle) {
+    super({
+      pos: {
+        x: 0,
+        y: 0,
+      },
+    });
+    this.#paddle = paddle;
+  }
+
+  override render(): void {
+    drawCircleV({
+      center: {
+        x: this.pos.x,
+        y: this.pos.y,
+      },
+      color: Maroon,
+      radius: 7,
+    });
+  }
+
+  override update(): void {
+    this.pos.x = this.#paddle.pos.x + Paddle.width / 2;
+    this.pos.y = this.#paddle.pos.y - 20;
+  }
+}
 
 class Paddle extends Entity {
+  static width = 80;
+
   constructor() {
     super({
       pos: {
-        x: GAME_WIDTH / 2 - PADDLE_WIDTH / 2,
+        x: GAME_WIDTH / 2 - Paddle.width / 2,
         y: Math.floor(GAME_HEIGHT * 7 / 8),
       },
     });
@@ -42,8 +74,8 @@ class Paddle extends Entity {
     if (isKeyDown(KeyA)) {
       this.pos.x -= 5;
     }
-    if (this.pos.x + PADDLE_WIDTH > GAME_WIDTH) {
-      this.pos.x = GAME_WIDTH - PADDLE_WIDTH;
+    if (this.pos.x + Paddle.width > GAME_WIDTH) {
+      this.pos.x = GAME_WIDTH - Paddle.width;
     }
   }
 
@@ -59,17 +91,20 @@ class Paddle extends Entity {
 }
 
 class GameScene extends Scene {
+  constructor() {
+    super();
+
+    const paddle = new Paddle();
+    this.add(paddle);
+    this.add(new Ball(paddle));
+  }
 }
 
 class GameOverScene extends Scene {
 }
 
 const gameScene = new GameScene();
-const paddle = new Paddle();
-gameScene.add(paddle);
-
 const gameOverScene = new GameOverScene();
-
 const scenes = {
   gameScene,
   gameOverScene,
