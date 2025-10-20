@@ -4,11 +4,17 @@
     "gemcatcher:compile": "deno compile --allow-ffi --output ./bin/gem-catcher ./games/gem-catcher/main.ts"
   },
   "imports": {
+    "@src/": "./src/"
   },
   "compilerOptions": {
     "lib": [
       "deno.window",
       "webworker"
     ]
+  },
+  "permissions": {
+    "default": {
+      "ffi": true
+    }
   }
 }

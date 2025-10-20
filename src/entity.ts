@@ -1,7 +1,19 @@
 import { type Color, drawText } from "../raylib-bindings.ts";
 import { type Vector } from "./math.ts";
 
+interface EntityArgs {
+  pos: Vector;
+}
+
 export abstract class Entity {
+  pos: Vector;
+
+  constructor(args: EntityArgs) {
+    this.pos = args.pos;
+  }
+
+  update(): void {}
+
   abstract render(): void;
 }
 
@@ -13,21 +25,25 @@ interface TextOptions {
 
 export class Text extends Entity {
   readonly text: string;
-  readonly options: TextOptions;
+  readonly color: Color;
+  readonly fontSize: number;
 
   constructor(text: string, options: TextOptions) {
-    super();
+    super({
+      pos: options.pos,
+    });
     this.text = text;
-    this.options = options;
+    this.color = options.color;
+    this.fontSize = options.fontSize;
   }
 
   override render(): void {
     drawText({
       text: this.text,
-      color: this.options.color,
-      fontSize: this.options.fontSize,
-      posX: this.options.pos.x,
-      posY: this.options.pos.y,
+      color: this.color,
+      fontSize: this.fontSize,
+      posX: this.pos.x,
+      posY: this.pos.y,
     });
   }
 }

@@ -765,6 +765,9 @@ export function drawLine(args: {
   );
 }
 
+/**
+ * Draw a color-filled rectangle
+ */
 export function drawRectangle(args: {
   posX: number;
   posY: number;

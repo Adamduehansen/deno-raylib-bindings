@@ -7,6 +7,12 @@ export abstract class Scene {
     this.#entities.push(entity);
   }
 
+  update(): void {
+    for (const entity of this.#entities) {
+      entity.update();
+    }
+  }
+
   render(): void {
     for (const entity of this.#entities) {
       entity.render();
