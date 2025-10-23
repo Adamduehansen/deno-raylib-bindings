@@ -3,6 +3,7 @@ import { Scene } from "@src/scene.ts";
 import {
   beginDrawing,
   Black,
+  checkCollisionRecs,
   clearBackground,
   closeWindow,
   drawCircleV,
@@ -24,7 +25,10 @@ const GAME_WIDTH = 800;
 const GAME_HEIGHT = 450;
 
 class Ball extends Entity {
+  static radius = 7;
+
   #paddle: Paddle;
+  #active: boolean = false;
 
   constructor(paddle: Paddle) {
     super({
@@ -32,13 +36,16 @@ class Ball extends Entity {
         x: 0,
         y: 0,
       },
+      height: Ball.radius,
+      width: Ball.radius,
     });
     this.#paddle = paddle;
   }
 
   override initialize(): void {
-    this.scene?.eventEmitter.on("active", (activated) => {
-      console.log("active", activated);
+    this.scene?.eventEmitter.on("activate", () => {
+      this.#active = true;
+      this.velocity.y = -5;
     });
   }
 
@@ -49,18 +56,33 @@ class Ball extends Entity {
         y: this.pos.y,
       },
       color: Maroon,
-      radius: 7,
+      radius: Ball.radius,
     });
   }
 
   override update(): void {
-    this.pos.x = this.#paddle.pos.x + Paddle.width / 2;
-    this.pos.y = this.#paddle.pos.y - 20;
+    super.update();
+
+    // Update ball position.
+    if (this.#active === false) {
+      this.pos.x = this.#paddle.pos.x + Paddle.width / 2;
+      this.pos.y = this.#paddle.pos.y - 20;
+    }
+
+    // Check collision
+    if (this.pos.y < 0) {
+      this.velocity.y *= -1;
+    }
+
+    if (checkCollisionRecs(this.body, this.#paddle.body)) {
+      this.velocity.y *= -1;
+    }
   }
 }
 
 class Paddle extends Entity {
   static width = 80;
+  static height = 20;
 
   constructor() {
     super({
@@ -68,6 +90,8 @@ class Paddle extends Entity {
         x: GAME_WIDTH / 2 - Paddle.width / 2,
         y: Math.floor(GAME_HEIGHT * 7 / 8),
       },
+      width: Paddle.width,
+      height: Paddle.height,
     });
   }
 
@@ -90,8 +114,8 @@ class Paddle extends Entity {
   override render(): void {
     drawRectangle({
       color: Black,
-      height: 20,
-      width: 80,
+      height: Paddle.height,
+      width: Paddle.width,
       posX: this.pos.x,
       posY: this.pos.y,
     });
@@ -111,13 +135,12 @@ class GameScene extends Scene {
     super.update();
 
     if (isKeyPressed(KeySpace)) {
-      this.eventEmitter.emit("active", true);
+      this.eventEmitter.emit("activate");
     }
   }
 }
 
-class GameOverScene extends Scene {
-}
+class GameOverScene extends Scene {}
 
 const gameScene = new GameScene();
 const gameOverScene = new GameOverScene();
