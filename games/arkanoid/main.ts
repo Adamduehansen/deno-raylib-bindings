@@ -9,6 +9,7 @@ import {
   drawCircleV,
   drawRectangle,
   endDrawing,
+  getScreenWidth,
   initWindow,
   isKeyDown,
   isKeyPressed,
@@ -69,13 +70,21 @@ class Ball extends Entity {
       this.pos.y = this.#paddle.pos.y - 20;
     }
 
-    // Check collision
+    // Check collision with top
     if (this.pos.y < 0) {
       this.velocity.y *= -1;
     }
 
+    // Check collision with walls
+    if (this.pos.x < 0 || this.pos.x > getScreenWidth()) {
+      this.velocity.x *= -1;
+    }
+
     if (checkCollisionRecs(this.body, this.#paddle.body)) {
+      const paddleCenter = this.#paddle.pos.x + Paddle.width / 2;
+
       this.velocity.y *= -1;
+      this.velocity.x = (this.pos.x - paddleCenter) / 5;
     }
   }
 }
@@ -96,6 +105,7 @@ class Paddle extends Entity {
   }
 
   override update(): void {
+    super.update();
     if (isKeyDown(KeyD)) {
       this.pos.x += 5;
     }
