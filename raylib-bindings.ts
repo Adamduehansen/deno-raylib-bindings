@@ -96,6 +96,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [RectangleStruct, RectangleStruct],
     result: "bool",
   },
+  CheckCollisionCircleRec: {
+    parameters: [Vector2Struct, "f32", RectangleStruct],
+    result: "bool",
+  },
   Clamp: {
     parameters: ["f32", "f32", "f32"],
     result: "f32",
@@ -714,6 +718,19 @@ export function checkCollisionRecs(rec1: Rectangle, rec2: Rectangle): boolean {
   return raylib.symbols.CheckCollisionRecs(
     toRaylibRectangle(rec1),
     toRaylibRectangle(rec2),
+  );
+}
+
+// Check collision between circle and rectangle
+export function checkCollisionCircleRec(
+  vector: Vector2,
+  radius: number,
+  rectangle: Rectangle,
+): boolean {
+  return raylib.symbols.CheckCollisionCircleRec(
+    toRaylibVector2(vector),
+    radius,
+    toRaylibRectangle(rectangle),
   );
 }
 

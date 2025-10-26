@@ -1,6 +1,6 @@
 import { Entity } from "@src/entity.ts";
 import {
-  checkCollisionRecs,
+  checkCollisionCircleRec,
   drawCircleV,
   getScreenWidth,
   Maroon,
@@ -46,6 +46,8 @@ export class Ball extends Entity {
 
   override update(): void {
     super.update();
+    this.body.x -= Ball.radius / 2;
+    this.body.y -= Ball.radius / 2;
 
     // Update ball position.
     if (this.#active === false) {
@@ -64,7 +66,7 @@ export class Ball extends Entity {
     }
 
     // Check collision with paddle
-    if (checkCollisionRecs(this.body, this.#paddle.body)) {
+    if (checkCollisionCircleRec(this.pos, Ball.radius, this.#paddle.body)) {
       const paddleCenter = this.#paddle.pos.x + Paddle.width / 2;
 
       this.velocity.y *= -1;
@@ -74,7 +76,7 @@ export class Ball extends Entity {
     // Check collision with any brick
     const bricks = this.scene?.entityManager.getByName("brick") ?? [];
     for (const brick of bricks) {
-      if (checkCollisionRecs(this.body, brick.body) === false) {
+      if (!checkCollisionCircleRec(this.pos, Ball.radius, brick.body)) {
         continue;
       }
 
