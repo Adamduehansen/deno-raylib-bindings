@@ -21,6 +21,7 @@ export class Ball extends Entity {
       },
       height: Ball.radius,
       width: Ball.radius,
+      name: "ball",
     });
     this.#paddle = paddle;
   }
@@ -68,6 +69,17 @@ export class Ball extends Entity {
 
       this.velocity.y *= -1;
       this.velocity.x = (this.pos.x - paddleCenter) / 5;
+    }
+
+    // Check collision with any brick
+    const bricks = this.scene?.entityManager.getByName("brick") ?? [];
+    for (const brick of bricks) {
+      if (checkCollisionRecs(this.body, brick.body) === false) {
+        continue;
+      }
+
+      this.velocity.y *= -1;
+      brick.remove();
     }
   }
 }

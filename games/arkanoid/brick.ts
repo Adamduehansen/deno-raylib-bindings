@@ -20,6 +20,7 @@ export class Brick extends Entity {
       pos: pos,
       height: 40,
       width: 40,
+      name: "brick",
     });
     this.color = color;
   }

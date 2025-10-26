@@ -15,13 +15,13 @@ export class GameScene extends Scene {
     super();
 
     const paddle = new Paddle();
-    this.add(paddle);
-    this.add(new Ball(paddle));
+    this.entityManager.add(paddle);
+    this.entityManager.add(new Ball(paddle));
 
     let colorIndex = 0;
     for (let rowIndex = 0; rowIndex < 5; rowIndex++) {
       for (let columnIndex = 0; columnIndex < 20; columnIndex++) {
-        this.add(
+        this.entityManager.add(
           new Brick({
             pos: vec(40 * columnIndex, 40 * rowIndex + 40),
             color: rowIndex % 2 === 0

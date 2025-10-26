@@ -21,6 +21,7 @@ export class Paddle extends Entity {
       },
       width: Paddle.width,
       height: Paddle.height,
+      name: "paddle",
     });
   }
 

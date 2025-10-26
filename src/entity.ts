@@ -4,14 +4,20 @@ import { Scene } from "./scene.ts";
 
 interface EntityArgs {
   pos: Vector;
+  name?: string;
   width?: number;
   height?: number;
 }
 
+let currentEntityId = 1;
+
 export abstract class Entity {
   pos: Vector;
-  scene?: Scene;
   velocity: Vector;
+  id: number;
+
+  name?: string;
+  scene?: Scene;
 
   #body: Rectangle;
 
@@ -28,6 +34,8 @@ export abstract class Entity {
       height: args.height ?? 0,
       width: args.width ?? 0,
     };
+    this.name = args.name ?? undefined;
+    this.id = currentEntityId++;
   }
 
   update(): void {
@@ -39,6 +47,10 @@ export abstract class Entity {
       width: this.body.width,
       height: this.body.height,
     };
+  }
+
+  remove(): void {
+    this.scene?.entityManager.remove(this);
   }
 
   initialize(): void {}
