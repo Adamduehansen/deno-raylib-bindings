@@ -44,6 +44,7 @@ export abstract class Scene {
   render(): void {
     for (const entity of this.entityManager.entities) {
       entity.render();
+      entity.body?.render();
     }
   }
 }

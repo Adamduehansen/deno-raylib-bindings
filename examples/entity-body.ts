@@ -18,7 +18,7 @@ import {
 import { Scene } from "@src/scene.ts";
 import { Entity } from "@src/entity.ts";
 import { vec } from "@src/math.ts";
-import { CircleBody, RectangleBody } from "@src/physics.ts";
+import { Body } from "@src/physics.ts";
 
 initWindow({
   title: "Example: entity body",
@@ -34,7 +34,7 @@ class Rectangle extends Entity {
       pos: vec(100, 100),
       width: 50,
       height: 50,
-      body: new RectangleBody(60, 60),
+      body: Body.rectangle(60, 60),
     });
   }
 
@@ -45,8 +45,6 @@ class Rectangle extends Entity {
       width: this.width,
       height: this.height,
     }, Red);
-
-    this.body?.render();
   }
 }
 
@@ -54,7 +52,7 @@ class Circle extends Entity {
   constructor() {
     super({
       pos: vec(200, 100),
-      body: new CircleBody(30),
+      body: Body.Circle(30),
     });
   }
 
@@ -64,8 +62,6 @@ class Circle extends Entity {
       color: Blue,
       radius: 25,
     });
-
-    this.body?.render();
   }
 }
 
@@ -85,8 +81,6 @@ while (windowShouldClose() === false) {
   // ==========================================================================
   scene.update();
 
-  // Render mouse position
-
   // Render
   // ==========================================================================
   beginDrawing();
@@ -95,13 +89,13 @@ while (windowShouldClose() === false) {
 
   scene.render();
 
-  const mousePosition = getMousePosition();
+  const { x: mouseX, y: mouseY } = getMousePosition();
   drawText({
     color: Black,
     fontSize: 24,
     posX: 0,
     posY: 0,
-    text: `x: ${mousePosition.x}, y: ${mousePosition.y}`,
+    text: `x: ${mouseX}, y: ${mouseY}`,
   });
 
   endDrawing();

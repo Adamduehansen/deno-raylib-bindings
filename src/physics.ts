@@ -10,9 +10,17 @@ export abstract class Body {
 
   abstract update(pos: Vector): void;
   abstract render(): void;
+
+  static rectangle(width: number, height: number): Body {
+    return new RectangleBody(width, height);
+  }
+
+  static Circle(radius: number): Body {
+    return new CircleBody(radius);
+  }
 }
 
-export class RectangleBody extends Body {
+class RectangleBody extends Body {
   width: number;
   height: number;
 
@@ -40,7 +48,7 @@ export class RectangleBody extends Body {
   }
 }
 
-export class CircleBody extends Body {
+class CircleBody extends Body {
   radius: number;
 
   constructor(radius: number) {
