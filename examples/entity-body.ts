@@ -10,6 +10,9 @@ import {
   endDrawing,
   getMousePosition,
   initWindow,
+  isKeyDown,
+  KeyLeft,
+  KeyRight,
   RayWhite,
   Red,
   setTargetFPS,
@@ -62,6 +65,18 @@ class Circle extends Entity {
       color: Blue,
       radius: 25,
     });
+  }
+
+  override update(): void {
+    super.update();
+
+    if (isKeyDown(KeyLeft)) {
+      this.velocity.x = -3;
+    } else if (isKeyDown(KeyRight)) {
+      this.velocity.x = 3;
+    } else {
+      this.velocity.x = 0;
+    }
   }
 }
 
