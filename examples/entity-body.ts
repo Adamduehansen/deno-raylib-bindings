@@ -45,6 +45,10 @@ class Rectangle1 extends Entity {
     });
   }
 
+  override onCollision(other: Entity): void {
+    console.log(this.name, "->", other.name);
+  }
+
   override render(): void {
     drawRectangleRec({
       x: this.pos.x - this.width / 2,
@@ -69,7 +73,7 @@ class Rectangle2 extends Entity {
   }
 
   override onCollision(other: Entity): void {
-    console.log("Collision!", other.name);
+    console.log(this.name, "->", other.name);
   }
 
   override update(): void {
@@ -108,6 +112,10 @@ class Circle extends Entity {
       name: "Circle",
       body: Body.Circle(30),
     });
+  }
+
+  override onCollision(other: Entity): void {
+    console.log(this.name, "->", other.name);
   }
 
   override render(): void {

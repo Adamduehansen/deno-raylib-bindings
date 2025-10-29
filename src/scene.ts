@@ -1,7 +1,10 @@
-import { checkCollisionRecs } from "../raylib-bindings.ts";
+import {
+  checkCollisionCircleRec,
+  checkCollisionRecs,
+} from "../raylib-bindings.ts";
 import { Entity } from "./entity.ts";
 import { EventEmitter } from "./event-emitter.ts";
-import { RectangleBody } from "./physics.ts";
+import { CircleBody, RectangleBody } from "./physics.ts";
 
 class EntityManager {
   #entities: Entity[] = [];
@@ -66,11 +69,32 @@ export abstract class Scene {
       }
 
       if (
-        entity.body instanceof RectangleBody &&
-        other.body instanceof RectangleBody &&
-        checkCollisionRecs(
-          entity.body.getCollider(),
-          other.body.getCollider(),
+        (
+          // Rect on rect collision
+          entity.body instanceof RectangleBody &&
+          other.body instanceof RectangleBody &&
+          checkCollisionRecs(
+            entity.body.getCollider(),
+            other.body.getCollider(),
+          )
+        ) || (
+          // Rect on circle collision
+          entity.body instanceof RectangleBody &&
+          other.body instanceof CircleBody &&
+          checkCollisionCircleRec(
+            other.body.getCollider().vector,
+            other.body.getCollider().radius,
+            entity.body.getCollider(),
+          )
+        ) || (
+          // Circle on rect collision
+          entity.body instanceof CircleBody &&
+          other.body instanceof RectangleBody &&
+          checkCollisionCircleRec(
+            entity.body.getCollider().vector,
+            entity.body.getCollider().radius,
+            other.body.getCollider(),
+          )
         )
       ) {
         entity.onCollision(other);

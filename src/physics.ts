@@ -68,7 +68,7 @@ export class RectangleBody extends Body {
   }
 }
 
-class CircleBody extends Body {
+export class CircleBody extends Body {
   radius: number;
 
   constructor(radius: number) {
