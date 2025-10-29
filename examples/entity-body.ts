@@ -6,7 +6,6 @@ import {
   closeWindow,
   drawCircleV,
   drawRectangleRec,
-  drawText,
   endDrawing,
   getMousePosition,
   initWindow,
@@ -19,7 +18,7 @@ import {
   windowShouldClose,
 } from "../raylib-bindings.ts";
 import { Scene } from "@src/scene.ts";
-import { Entity } from "@src/entity.ts";
+import { Entity, Text } from "@src/entity.ts";
 import { vec } from "@src/math.ts";
 import { Body } from "@src/physics.ts";
 
@@ -67,6 +66,9 @@ class Circle extends Entity {
     });
   }
 
+  override initialize(): void {
+  }
+
   override update(): void {
     super.update();
 
@@ -80,12 +82,30 @@ class Circle extends Entity {
   }
 }
 
+class MousePositionText extends Text {
+  constructor() {
+    super("", {
+      color: Black,
+      fontSize: 24,
+      pos: vec(0, 0),
+    });
+  }
+
+  override update(): void {
+    super.update();
+
+    const { x: mouseX, y: mouseY } = getMousePosition();
+    this.text = `x: ${mouseX}, y: ${mouseY}`;
+  }
+}
+
 class MainScene extends Scene {
   constructor() {
     super();
 
     this.entityManager.add(new Rectangle());
     this.entityManager.add(new Circle());
+    this.entityManager.add(new MousePositionText());
   }
 }
 
@@ -99,20 +119,8 @@ while (windowShouldClose() === false) {
   // Render
   // ==========================================================================
   beginDrawing();
-
   clearBackground(RayWhite);
-
   scene.render();
-
-  const { x: mouseX, y: mouseY } = getMousePosition();
-  drawText({
-    color: Black,
-    fontSize: 24,
-    posX: 0,
-    posY: 0,
-    text: `x: ${mouseX}, y: ${mouseY}`,
-  });
-
   endDrawing();
 }
 

@@ -61,7 +61,7 @@ interface TextOptions {
 }
 
 export class Text extends Entity {
-  readonly text: string;
+  text: string;
   readonly color: Color;
   readonly fontSize: number;
 
