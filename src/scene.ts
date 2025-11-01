@@ -47,6 +47,7 @@ export abstract class Scene {
   update(): void {
     for (const entity of this.entityManager.entities) {
       entity.update();
+      // TODO: Update of body should happen inside Entity.
       entity.body?.update(entity.pos);
     }
 
@@ -58,6 +59,7 @@ export abstract class Scene {
   render(): void {
     for (const entity of this.entityManager.entities) {
       entity.render();
+      // TODO: Render of body should happen inside Entity.
       entity.body?.render();
     }
   }

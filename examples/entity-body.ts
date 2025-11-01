@@ -17,7 +17,6 @@ import {
   KeyRight,
   KeyUp,
   RayWhite,
-  Red,
   setTargetFPS,
   windowShouldClose,
 } from "../raylib-bindings.ts";
@@ -55,7 +54,7 @@ class Rectangle1 extends Entity {
       y: this.pos.y - this.height / 2,
       width: this.width,
       height: this.height,
-    }, Red);
+    }, Black);
   }
 }
 

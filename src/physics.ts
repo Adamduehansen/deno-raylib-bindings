@@ -1,8 +1,10 @@
 import {
   drawCircleLinesV,
+  drawCircleV,
   drawRectangleLinesEx,
   Green,
   Rectangle,
+  Red,
 } from "../raylib-bindings.ts";
 import { vec, Vector } from "./math.ts";
 
@@ -54,6 +56,11 @@ export class RectangleBody extends Body {
       color: Green,
       lineThick: 1,
     });
+    drawCircleV({
+      center: this.pos,
+      color: Red,
+      radius: 2,
+    });
   }
 
   override getCollider(): Rectangle {
@@ -85,6 +92,11 @@ export class CircleBody extends Body {
       center: this.pos,
       color: Green,
       radius: this.radius,
+    });
+    drawCircleV({
+      center: this.pos,
+      color: Red,
+      radius: 2,
     });
   }
 
