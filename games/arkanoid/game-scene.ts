@@ -1,6 +1,7 @@
 import { Scene } from "@src/scene.ts";
 import {
   DarkGray,
+  getScreenHeight,
   Gray,
   isKeyPressed,
   KeySpace,
@@ -9,8 +10,11 @@ import { Ball } from "./ball.ts";
 import { Paddle } from "./paddle.ts";
 import { Brick } from "./brick.ts";
 import { vec } from "@src/math.ts";
+import { Life } from "./life.ts";
 
 export class GameScene extends Scene {
+  lifes = 5;
+
   constructor() {
     super();
 
@@ -33,6 +37,17 @@ export class GameScene extends Scene {
         );
         colorIndex += 1;
       }
+    }
+
+    for (let index = 0; index < this.lifes; index++) {
+      this.entityManager.add(
+        new Life({
+          pos: {
+            x: index * 50 + 45,
+            y: getScreenHeight() - 20,
+          },
+        }),
+      );
     }
   }
 
