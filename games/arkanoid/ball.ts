@@ -91,6 +91,7 @@ export class Ball extends Entity {
     } else if (this.pos.y > getScreenHeight()) {
       this.#active = false;
       this.velocity.x = 0;
+      this.scene?.eventEmitter.emit("decreaseLife");
     }
   }
 }

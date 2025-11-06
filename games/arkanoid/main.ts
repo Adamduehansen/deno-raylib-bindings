@@ -1,4 +1,3 @@
-import { Scene } from "@src/scene.ts";
 import {
   beginDrawing,
   clearBackground,
@@ -11,6 +10,7 @@ import {
   windowShouldClose,
 } from "../../raylib-bindings.ts";
 import { GameScene } from "./game-scene.ts";
+import { GameOverScene } from "./game-over-scene.ts";
 
 const GAME_WIDTH = 800;
 const GAME_HEIGHT = 450;
@@ -23,15 +23,21 @@ initWindow({
 
 setTargetFPS(60);
 
-class GameOverScene extends Scene {}
-
 const gameScene = new GameScene();
+gameScene.eventEmitter.on("goToGameOverScene", () => {
+  currentScene = "gameOverScene";
+});
+
 const gameOverScene = new GameOverScene();
+gameOverScene.eventEmitter.on("goToGameScene", () => {
+  currentScene = "gameScene";
+});
+
 const scenes = {
   gameScene,
   gameOverScene,
 };
-const currentScene: keyof typeof scenes = "gameScene";
+let currentScene: keyof typeof scenes = "gameOverScene";
 
 while (windowShouldClose() === false) {
   // Update

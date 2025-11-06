@@ -15,6 +15,7 @@ export class Life extends Entity {
       pos: pos,
       height: HEIGHT,
       width: WIDTH,
+      name: "life",
     });
   }
 

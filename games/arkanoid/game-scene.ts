@@ -12,9 +12,9 @@ import { Brick } from "./brick.ts";
 import { vec } from "@src/math.ts";
 import { Life } from "./life.ts";
 
-export class GameScene extends Scene {
-  lifes = 5;
+const MAX_LIFES = 1;
 
+export class GameScene extends Scene {
   constructor() {
     super();
 
@@ -39,7 +39,7 @@ export class GameScene extends Scene {
       }
     }
 
-    for (let index = 0; index < this.lifes; index++) {
+    for (let index = 0; index < MAX_LIFES; index++) {
       this.entityManager.add(
         new Life({
           pos: {
@@ -49,6 +49,18 @@ export class GameScene extends Scene {
         }),
       );
     }
+
+    this.eventEmitter.on("decreaseLife", () => {
+      const lifes = this.entityManager.query((entity) =>
+        entity.name === "life"
+      );
+
+      if (lifes.length > 1) {
+        lifes.at(-1)?.remove();
+      } else {
+        this.eventEmitter.emit("goToGameOverScene");
+      }
+    });
   }
 
   override update(): void {
