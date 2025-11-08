@@ -2,13 +2,12 @@ import { Entity } from "@src/entity.ts";
 import {
   Black,
   drawRectangle,
-  getScreenHeight,
-  getScreenWidth,
   isKeyDown,
   KeyA,
   KeyD,
 } from "../../raylib-bindings.ts";
 import { Body } from "@src/physics.ts";
+import { vec } from "@src/math.ts";
 
 export class Paddle extends Entity {
   static width = 80;
@@ -17,15 +16,19 @@ export class Paddle extends Entity {
 
   constructor() {
     super({
-      pos: {
-        x: getScreenWidth() / 2,
-        y: Math.floor(getScreenHeight() * 7 / 8),
-      },
+      pos: vec(0, 0),
       width: Paddle.width,
       height: Paddle.height,
       name: "paddle",
       body: Body.rectangle(Paddle.width, Paddle.height),
     });
+  }
+
+  override initialize(): void {
+    this.pos = vec(
+      this.scene!.game!.width / 2,
+      Math.floor(this.scene!.game!.height * 7 / 8),
+    );
   }
 
   override update(): void {
@@ -42,8 +45,8 @@ export class Paddle extends Entity {
       this.pos.x = 0;
     }
 
-    if (this.pos.x > getScreenWidth()) {
-      this.pos.x = getScreenWidth();
+    if (this.pos.x > this.scene!.game!.width) {
+      this.pos.x = this.scene!.game!.width;
     }
   }
 

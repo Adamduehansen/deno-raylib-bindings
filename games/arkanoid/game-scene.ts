@@ -58,7 +58,8 @@ export class GameScene extends Scene {
       if (lifes.length > 1) {
         lifes.at(-1)?.remove();
       } else {
-        this.eventEmitter.emit("goToGameOverScene");
+        // this.eventEmitter.emit("goToGameOverScene");
+        this.game?.goToScene("gameOver");
       }
     });
   }

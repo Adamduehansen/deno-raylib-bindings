@@ -4,6 +4,7 @@ import {
 } from "../raylib-bindings.ts";
 import { Entity } from "./entity.ts";
 import { EventEmitter } from "./event-emitter.ts";
+import { Game } from "./game.ts";
 import { CircleBody, RectangleBody } from "./physics.ts";
 
 class EntityManager {
@@ -20,7 +21,6 @@ class EntityManager {
 
   add(entity: Entity): void {
     entity.scene = this.#scene;
-    entity.initialize();
     this.#entities.push(entity);
   }
 
@@ -43,6 +43,16 @@ export abstract class Scene {
   readonly entityManager: EntityManager = new EntityManager(this);
 
   eventEmitter: EventEmitter = new EventEmitter();
+
+  game?: Game;
+
+  constructor() {}
+
+  initialize(): void {
+    for (const entity of this.entityManager.entities) {
+      entity.initialize();
+    }
+  }
 
   update(): void {
     for (const entity of this.entityManager.entities) {
