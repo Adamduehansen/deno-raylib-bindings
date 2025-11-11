@@ -4,6 +4,10 @@ import { vec, type Vector } from "./math.ts";
 import { Body } from "./physics.ts";
 import { Scene } from "./scene.ts";
 
+export interface Event {
+  scene: Scene;
+}
+
 interface EntityArgs {
   pos: Vector;
   name?: string;
@@ -55,6 +59,12 @@ export abstract class Entity {
 
   // deno-lint-ignore no-unused-vars
   onCollision(other: Entity): void {}
+
+  /**
+   * Called when an entity is destroyed.
+   */
+  // deno-lint-ignore no-unused-vars
+  onDestroyed(event: Event) {}
 
   abstract render(): void;
 }

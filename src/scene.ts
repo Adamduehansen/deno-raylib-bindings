@@ -43,6 +43,9 @@ class EntityManager {
     this.#entities = this.#entities.filter((entity) =>
       entity.id !== entityToRemove.id
     );
+    entityToRemove.onDestroyed({
+      scene: this.#scene,
+    });
   }
 }
 

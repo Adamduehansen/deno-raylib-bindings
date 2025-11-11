@@ -26,6 +26,18 @@ export class GameScene extends Scene {
       if (lifes.length > 1) {
         lifes.at(-1)?.remove();
       } else {
+        this.entityManager.clear();
+        this.game?.goToScene("gameOver");
+      }
+    });
+
+    this.eventEmitter.on("brick-destroyed", () => {
+      const numberOfBricksLeft = this.entityManager.query((entity) =>
+        entity.name === "brick"
+      ).length;
+
+      if (numberOfBricksLeft === 0) {
+        this.entityManager.clear();
         this.game?.goToScene("gameOver");
       }
     });
@@ -33,8 +45,6 @@ export class GameScene extends Scene {
 
   override activate(): void {
     super.activate();
-
-    this.entityManager.clear();
 
     const paddle = new Paddle();
     this.entityManager.add(paddle);

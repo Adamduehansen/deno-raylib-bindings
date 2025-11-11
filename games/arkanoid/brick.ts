@@ -1,4 +1,4 @@
-import { Entity } from "@src/entity.ts";
+import { Entity, Event } from "@src/entity.ts";
 import { Vector } from "@src/math.ts";
 import {
   Color,
@@ -36,5 +36,9 @@ export class Brick extends Entity {
       width: this.width,
       height: this.height,
     }, this.color);
+  }
+
+  override onDestroyed(event: Event): void {
+    event.scene.eventEmitter.emit("brick-destroyed");
   }
 }
