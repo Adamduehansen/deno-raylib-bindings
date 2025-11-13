@@ -1,19 +1,19 @@
-type EventMap = Record<string, (() => void)[]>;
+type EventMap = Record<string, ((data?: unknown) => void)[]>;
 
 export class EventEmitter {
   #eventMap: EventMap = {};
 
-  emit(event: string) {
+  emit(event: string, data?: unknown) {
     if (this.#eventMap[event] === undefined) {
       return;
     }
 
     for (const handler of this.#eventMap[event]) {
-      handler();
+      handler(data);
     }
   }
 
-  on(event: string, handler: () => void) {
+  on(event: string, handler: (data: unknown) => void) {
     if (this.#eventMap[event] === undefined) {
       this.#eventMap[event] = [];
     }

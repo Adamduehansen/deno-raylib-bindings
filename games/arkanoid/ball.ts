@@ -14,6 +14,7 @@ export class Ball extends Entity {
 
   #paddle: Paddle;
   #active: boolean = false;
+  #paused = false;
 
   constructor(paddle: Paddle) {
     super({
@@ -34,6 +35,10 @@ export class Ball extends Entity {
     this.scene?.eventEmitter.on("activate", () => {
       this.#active = true;
       this.velocity.y = -5;
+    });
+
+    this.scene?.eventEmitter.on("pause", () => {
+      this.#paused = !this.#paused;
     });
   }
 

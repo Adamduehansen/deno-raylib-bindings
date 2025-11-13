@@ -4,6 +4,7 @@ import {
   getScreenHeight,
   Gray,
   isKeyPressed,
+  KeyP,
   KeySpace,
 } from "../../raylib-bindings.ts";
 import { Ball } from "./ball.ts";
@@ -15,6 +16,8 @@ import { Life } from "./life.ts";
 const MAX_LIFES = 1;
 
 export class GameScene extends Scene {
+  #paused = false;
+
   constructor() {
     super();
 
@@ -84,6 +87,9 @@ export class GameScene extends Scene {
 
     if (isKeyPressed(KeySpace)) {
       this.eventEmitter.emit("activate");
+    } else if (isKeyPressed(KeyP)) {
+      this.#paused = !this.#paused;
+      this.eventEmitter.emit("pause", this.#paused);
     }
   }
 }

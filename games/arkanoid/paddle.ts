@@ -14,6 +14,8 @@ export class Paddle extends Entity {
   static height = 20;
   static speed = 5;
 
+  #paused = false;
+
   constructor() {
     super({
       pos: vec(0, 0),
@@ -29,10 +31,22 @@ export class Paddle extends Entity {
       this.scene!.game!.width / 2,
       Math.floor(this.scene!.game!.height * 7 / 8),
     );
+
+    this.scene?.eventEmitter.on("pause", (paused: boolean) => {
+      this.#paused = paused;
+    });
   }
 
   override update(): void {
+    // Pre update
+    if (this.#paused) {
+      return;
+    }
+
     super.update();
+
+    // Post update
+
     if (isKeyDown(KeyD)) {
       this.velocity.x = Paddle.speed;
     } else if (isKeyDown(KeyA)) {
