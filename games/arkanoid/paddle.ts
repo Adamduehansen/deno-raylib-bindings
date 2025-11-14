@@ -32,35 +32,36 @@ export class Paddle extends Entity {
       Math.floor(this.scene!.game!.height * 7 / 8),
     );
 
-    this.scene?.eventEmitter.on("pause", (paused: boolean) => {
+    this.scene?.eventEmitter.on("pause", (paused) => {
+      if (typeof paused !== "boolean") {
+        return;
+      }
+
       this.#paused = paused;
     });
   }
 
   override update(): void {
-    // Pre update
-    if (this.#paused) {
-      return;
-    }
-
     super.update();
 
-    // Post update
-
-    if (isKeyDown(KeyD)) {
-      this.velocity.x = Paddle.speed;
-    } else if (isKeyDown(KeyA)) {
-      this.velocity.x = -Paddle.speed;
+    if (this.#paused === true) {
+      this.velocity = vec(0, 0);
     } else {
-      this.velocity.x = 0;
-    }
+      if (isKeyDown(KeyD)) {
+        this.velocity.x = Paddle.speed;
+      } else if (isKeyDown(KeyA)) {
+        this.velocity.x = -Paddle.speed;
+      } else {
+        this.velocity.x = 0;
+      }
 
-    if (this.pos.x < 0) {
-      this.pos.x = 0;
-    }
+      if (this.pos.x < 0) {
+        this.pos.x = 0;
+      }
 
-    if (this.pos.x > this.scene!.game!.width) {
-      this.pos.x = this.scene!.game!.width;
+      if (this.pos.x > this.scene!.game!.width) {
+        this.pos.x = this.scene!.game!.width;
+      }
     }
   }
 
