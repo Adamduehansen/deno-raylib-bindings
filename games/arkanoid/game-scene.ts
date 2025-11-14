@@ -13,14 +13,12 @@ import { Brick } from "./brick.ts";
 import { vec } from "@src/math.ts";
 import { Life } from "./life.ts";
 
-const MAX_LIFES = 1;
+const MAX_LIFES = 3;
 
 export class GameScene extends Scene {
   #paused = false;
 
-  constructor() {
-    super();
-
+  override initialize(): void {
     this.eventEmitter.on("decreaseLife", () => {
       const lifes = this.entityManager.query((entity) =>
         entity.name === "life"
