@@ -1,4 +1,4 @@
-import { Entity, Event } from "@src/entity.ts";
+import { Entity, EntityContext } from "@src/entity.ts";
 import { Vector } from "@src/math.ts";
 import { DarkGray, Gray } from "../../raylib-bindings.ts";
 import { Body } from "@src/physics.ts";
@@ -23,7 +23,7 @@ export class Brick extends Entity {
     });
   }
 
-  override onDestroyed(event: Event): void {
+  override onDestroyed(event: EntityContext): void {
     event.scene.eventEmitter.emit("brick-destroyed");
   }
 }

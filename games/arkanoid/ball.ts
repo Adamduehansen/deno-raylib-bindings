@@ -1,4 +1,4 @@
-import { Entity } from "@src/entity.ts";
+import { Entity, EntityContext } from "@src/entity.ts";
 import {
   getScreenHeight,
   getScreenWidth,
@@ -31,18 +31,18 @@ export class Ball extends Entity {
     this.#paddle = paddle;
   }
 
-  override initialize(): void {
-    this.scene?.eventEmitter.on("activate", () => {
+  override initialize({ scene }: EntityContext): void {
+    scene.eventEmitter.on("activate", () => {
       this.#active = true;
       this.velocity.y = -5;
     });
 
-    this.scene?.eventEmitter.on("pause", () => {
+    scene.eventEmitter.on("pause", () => {
       this.#paused = !this.#paused;
     });
   }
 
-  override onCollision(other: Entity): void {
+  override onCollision(other: Entity, entityContext: EntityContext): void {
     if (other.name === "paddle") {
       this.velocity.y *= -1;
       this.velocity.x = (this.pos.x - this.#paddle.pos.x) / 5;
@@ -63,12 +63,12 @@ export class Ball extends Entity {
         this.velocity.x *= -1;
       }
 
-      other.remove();
+      entityContext.scene.entityManager.remove(other);
     }
   }
 
-  override update(): void {
-    super.update();
+  override update(context: EntityContext): void {
+    super.update(context);
 
     // Update ball position.
     if (this.#active === false) {
@@ -85,7 +85,7 @@ export class Ball extends Entity {
     } else if (this.pos.y > getScreenHeight()) {
       this.#active = false;
       this.velocity.x = 0;
-      this.scene?.eventEmitter.emit("decreaseLife");
+      context.scene.eventEmitter.emit("decreaseLife");
     }
   }
 }

@@ -5,7 +5,7 @@ import { vec, type Vector } from "./math.ts";
 import { Body } from "./physics.ts";
 import { Scene } from "./scene.ts";
 
-export interface Event {
+export interface EntityContext {
   scene: Scene;
 }
 
@@ -32,7 +32,6 @@ export abstract class Entity {
   readonly renderer: Renderer<Entity>;
   readonly name?: string;
 
-  scene?: Scene;
   #body?: Body;
   pos: Vector;
   velocity: Vector;
@@ -57,25 +56,25 @@ export abstract class Entity {
     this.renderer = args.renderer;
   }
 
-  update(): void {
+  update(_context: EntityContext): void {
     this.pos.x += this.velocity.x;
     this.pos.y += this.velocity.y;
   }
 
-  remove(): void {
-    this.scene?.entityManager.remove(this);
-  }
-
-  initialize(): void {}
+  /**
+   * Called once when the entity is added to the scene.
+   */
+  // deno-lint-ignore no-unused-vars
+  initialize(context: EntityContext): void {}
 
   // deno-lint-ignore no-unused-vars
-  onCollision(other: Entity): void {}
+  onCollision(other: Entity, context: EntityContext): void {}
 
   /**
    * Called when an entity is destroyed.
    */
   // deno-lint-ignore no-unused-vars
-  onDestroyed(event: Event) {}
+  onDestroyed(context: EntityContext) {}
 
   render(): void {
     this.renderer.render(this);

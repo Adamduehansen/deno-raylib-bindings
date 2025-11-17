@@ -35,7 +35,7 @@ export class GameScene extends Scene {
       );
 
       if (lifes.length > 1) {
-        lifes.at(-1)?.remove();
+        this.entityManager.remove(lifes.at(-1));
       } else {
         this.entityManager.clear();
         this.game?.goToScene("gameOver");

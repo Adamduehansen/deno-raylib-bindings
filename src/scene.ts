@@ -20,14 +20,15 @@ class EntityManager {
   }
 
   add(entity: Entity): void {
-    entity.scene = this.#scene;
     this.#entities.push(entity);
-    entity.initialize();
+    entity.initialize({
+      scene: this.#scene,
+    });
   }
 
   clear(): void {
     for (const entity of this.#entities) {
-      entity.remove();
+      this.remove(entity);
     }
   }
 
@@ -39,7 +40,11 @@ class EntityManager {
     return this.#entities.filter(predicate);
   }
 
-  remove(entityToRemove: Entity): void {
+  remove(entityToRemove: Entity | undefined): void {
+    if (entityToRemove === undefined) {
+      return;
+    }
+
     this.#entities = this.#entities.filter((entity) =>
       entity.id !== entityToRemove.id
     );
@@ -76,7 +81,9 @@ export abstract class Scene {
 
   update(): void {
     for (const entity of this.entityManager.entities) {
-      entity.update();
+      entity.update({
+        scene: this,
+      });
       // TODO: Update of body should happen inside Entity.
       entity.body?.update(entity.pos);
     }
@@ -133,7 +140,9 @@ export abstract class Scene {
           )
         )
       ) {
-        entity.onCollision(other);
+        entity.onCollision(other, {
+          scene: this,
+        });
       }
     }
   }
