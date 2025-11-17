@@ -14,7 +14,7 @@ import { Paddle } from "./paddle.ts";
 import { Brick } from "./brick.ts";
 import { Life } from "./life.ts";
 
-const MAX_LIFES = 3;
+const MAX_LIFES = 1;
 
 export class GameScene extends Scene {
   #paused = false;

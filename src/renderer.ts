@@ -25,12 +25,12 @@ export abstract class Renderer<TEntity extends Entity> {
 
 export class TextRenderer extends Renderer<Text> {
   override render(entity: Text): void {
-    const textLength = measureText(entity.text, 48);
+    const textLength = measureText(entity.text, entity.fontSize);
     drawTextEx({
       text: entity.text,
       tint: this.color,
       fontSize: entity.fontSize,
-      spacing: 5,
+      spacing: 3,
       font: getFontDefault(),
       position: {
         x: entity.pos.x - textLength / 2,

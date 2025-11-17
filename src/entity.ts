@@ -89,7 +89,7 @@ interface TextOptions {
 
 export class Text extends Entity {
   text: string;
-  readonly fontSize: number;
+  fontSize: number;
 
   constructor(text: string, options: TextOptions) {
     super({
