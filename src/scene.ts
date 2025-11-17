@@ -62,8 +62,6 @@ export abstract class Scene {
   readonly entityManager: EntityManager = new EntityManager(this);
   readonly eventEmitter: EventEmitter = new EventEmitter();
 
-  game?: Game;
-
   constructor() {}
 
   /**
@@ -79,7 +77,7 @@ export abstract class Scene {
   // deno-lint-ignore no-unused-vars
   initialize(context: SceneContext): void {}
 
-  update(): void {
+  update(_context: SceneContext): void {
     for (const entity of this.entityManager.entities) {
       entity.update({
         scene: this,

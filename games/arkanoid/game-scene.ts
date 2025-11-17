@@ -1,4 +1,3 @@
-import { Scene, SceneContext } from "@src/scene.ts";
 import {
   DarkGray,
   getScreenHeight,
@@ -7,12 +6,13 @@ import {
   KeyP,
   KeySpace,
 } from "../../raylib-bindings.ts";
+import { Scene, SceneContext } from "@src/scene.ts";
+import { vec } from "@src/math.ts";
+import { Text } from "@src/entity.ts";
 import { Ball } from "./ball.ts";
 import { Paddle } from "./paddle.ts";
 import { Brick } from "./brick.ts";
-import { vec } from "@src/math.ts";
 import { Life } from "./life.ts";
-import { Text } from "@src/entity.ts";
 
 const MAX_LIFES = 3;
 
@@ -38,7 +38,7 @@ export class GameScene extends Scene {
         this.entityManager.remove(lifes.at(-1));
       } else {
         this.entityManager.clear();
-        this.game?.goToScene("gameOver");
+        game.goToScene("gameOver");
       }
     });
 
@@ -49,7 +49,7 @@ export class GameScene extends Scene {
 
       if (numberOfBricksLeft === 0) {
         this.entityManager.clear();
-        this.game?.goToScene("gameOver");
+        game.goToScene("gameOver");
       }
     });
 
@@ -102,8 +102,8 @@ export class GameScene extends Scene {
     }
   }
 
-  override update(): void {
-    super.update();
+  override update(context: SceneContext): void {
+    super.update(context);
 
     if (isKeyPressed(KeySpace)) {
       this.eventEmitter.emit("activate");

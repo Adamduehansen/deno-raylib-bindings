@@ -1,11 +1,11 @@
-import { Scene } from "@src/scene.ts";
-import { Text } from "@src/entity.ts";
 import {
   Gray,
   isKeyPressed,
   KeyEnter,
   measureText,
 } from "../../raylib-bindings.ts";
+import { Scene, SceneContext } from "@src/scene.ts";
+import { Text } from "@src/entity.ts";
 import { vec } from "@src/math.ts";
 
 export class GameOverScene extends Scene {
@@ -23,16 +23,18 @@ export class GameOverScene extends Scene {
     this.entityManager.add(this.#gameOverText);
   }
 
-  override initialize(): void {
+  override initialize({ game }: SceneContext): void {
     this.#gameOverText.pos = vec(
-      this.game!.width / 2 - measureText(this.#gameOverText.text, 20) / 2,
-      this.game!.height / 2 - 50,
+      game.width / 2 - measureText(this.#gameOverText.text, 20) / 2,
+      game.height / 2 - 50,
     );
   }
 
-  override update(): void {
+  override update(context: SceneContext): void {
+    super.update(context);
+
     if (isKeyPressed(KeyEnter)) {
-      this.game?.goToScene("game");
+      context.game.goToScene("game");
     }
   }
 }
