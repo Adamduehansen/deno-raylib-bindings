@@ -1,4 +1,4 @@
-import { Entity, EntityContext } from "@src/entity.ts";
+import { Entity } from "@src/entity.ts";
 import {
   getScreenHeight,
   getScreenWidth,
@@ -8,6 +8,7 @@ import { Paddle } from "./paddle.ts";
 import { Body } from "@src/physics.ts";
 import { Brick } from "./brick.ts";
 import { CircleRenderer } from "@src/renderer.ts";
+import { Scene } from "@src/scene.ts";
 
 export class Ball extends Entity {
   static radius = 7;
@@ -31,7 +32,7 @@ export class Ball extends Entity {
     this.#paddle = paddle;
   }
 
-  override initialize({ scene }: EntityContext): void {
+  override initialize(scene: Scene): void {
     scene.eventEmitter.on("activate", () => {
       this.#active = true;
       this.velocity.y = -5;
@@ -42,7 +43,7 @@ export class Ball extends Entity {
     });
   }
 
-  override onCollision(other: Entity, entityContext: EntityContext): void {
+  override onCollision(other: Entity, scene: Scene): void {
     if (other.name === "paddle") {
       this.velocity.y *= -1;
       this.velocity.x = (this.pos.x - this.#paddle.pos.x) / 5;
@@ -63,12 +64,12 @@ export class Ball extends Entity {
         this.velocity.x *= -1;
       }
 
-      entityContext.scene.entityManager.remove(other);
+      scene.entityManager.remove(other);
     }
   }
 
-  override update(context: EntityContext): void {
-    super.update(context);
+  override update(scene: Scene): void {
+    super.update(scene);
 
     // Update ball position.
     if (this.#active === false) {
@@ -85,7 +86,7 @@ export class Ball extends Entity {
     } else if (this.pos.y > getScreenHeight()) {
       this.#active = false;
       this.velocity.x = 0;
-      context.scene.eventEmitter.emit("decreaseLife");
+      scene.eventEmitter.emit("decreaseLife");
     }
   }
 }

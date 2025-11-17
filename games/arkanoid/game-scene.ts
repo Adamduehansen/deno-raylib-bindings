@@ -6,13 +6,14 @@ import {
   KeyP,
   KeySpace,
 } from "../../raylib-bindings.ts";
-import { Scene, SceneContext } from "@src/scene.ts";
+import { Scene } from "@src/scene.ts";
 import { vec } from "@src/math.ts";
 import { Text } from "@src/entity.ts";
 import { Ball } from "./ball.ts";
 import { Paddle } from "./paddle.ts";
 import { Brick } from "./brick.ts";
 import { Life } from "./life.ts";
+import { Game } from "@src/game.ts";
 
 const MAX_LIFES = 1;
 
@@ -24,7 +25,7 @@ export class GameScene extends Scene {
     pos: vec(0, 0),
   });
 
-  override initialize({ game }: SceneContext): void {
+  override initialize(game: Game): void {
     this.entityManager.add(this.#pauseText);
     this.#pauseText.pos = vec(game.width / 2, game.height / 2);
     this.#pauseText.renderer.setAlpha(0);
@@ -102,8 +103,8 @@ export class GameScene extends Scene {
     }
   }
 
-  override update(context: SceneContext): void {
-    super.update(context);
+  override update(game: Game): void {
+    super.update(game);
 
     if (isKeyPressed(KeySpace)) {
       this.eventEmitter.emit("activate");

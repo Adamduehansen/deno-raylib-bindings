@@ -1,8 +1,10 @@
-import { Entity, EntityContext } from "@src/entity.ts";
+import { Entity } from "@src/entity.ts";
 import { Black, isKeyDown, KeyA, KeyD } from "../../raylib-bindings.ts";
 import { Body } from "@src/physics.ts";
 import { vec } from "@src/math.ts";
 import { RectangleRenderer } from "@src/renderer.ts";
+import { Scene } from "@src/scene.ts";
+import { GAME_HEIGHT, GAME_WIDTH } from "./consts.ts";
 
 export class Paddle extends Entity {
   static width = 80;
@@ -22,10 +24,10 @@ export class Paddle extends Entity {
     });
   }
 
-  override initialize({ scene }: EntityContext): void {
+  override initialize(scene: Scene): void {
     this.pos = vec(
-      scene.game!.width / 2,
-      Math.floor(scene.game!.height * 7 / 8),
+      GAME_WIDTH / 2,
+      Math.floor(GAME_HEIGHT * 7 / 8),
     );
 
     scene.eventEmitter.on("pause", (paused) => {
@@ -37,8 +39,8 @@ export class Paddle extends Entity {
     });
   }
 
-  override update(context: EntityContext): void {
-    super.update(context);
+  override update(scene: Scene): void {
+    super.update(scene);
 
     if (this.#paused === true) {
       this.velocity = vec(0, 0);
@@ -55,8 +57,8 @@ export class Paddle extends Entity {
         this.pos.x = 0;
       }
 
-      if (this.pos.x > context.scene!.game!.width) {
-        this.pos.x = context.scene!.game!.width;
+      if (this.pos.x > GAME_WIDTH) {
+        this.pos.x = GAME_WIDTH;
       }
     }
   }

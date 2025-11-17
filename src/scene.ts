@@ -21,9 +21,7 @@ class EntityManager {
 
   add(entity: Entity): void {
     this.#entities.push(entity);
-    entity.initialize({
-      scene: this.#scene,
-    });
+    entity.initialize(this.#scene);
   }
 
   clear(): void {
@@ -48,14 +46,8 @@ class EntityManager {
     this.#entities = this.#entities.filter((entity) =>
       entity.id !== entityToRemove.id
     );
-    entityToRemove.onDestroyed({
-      scene: this.#scene,
-    });
+    entityToRemove.onDestroyed(this.#scene);
   }
-}
-
-export interface SceneContext {
-  game: Game;
 }
 
 export abstract class Scene {
@@ -75,13 +67,11 @@ export abstract class Scene {
    * that needs to live across scene changes.
    */
   // deno-lint-ignore no-unused-vars
-  initialize(context: SceneContext): void {}
+  initialize(game: Game): void {}
 
-  update(_context: SceneContext): void {
+  update(_game: Game): void {
     for (const entity of this.entityManager.entities) {
-      entity.update({
-        scene: this,
-      });
+      entity.update(this);
       // TODO: Update of body should happen inside Entity.
       entity.body?.update(entity.pos);
     }
@@ -138,9 +128,7 @@ export abstract class Scene {
           )
         )
       ) {
-        entity.onCollision(other, {
-          scene: this,
-        });
+        entity.onCollision(other, this);
       }
     }
   }

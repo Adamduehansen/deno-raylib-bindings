@@ -1,7 +1,8 @@
 import { Gray, isKeyPressed, KeyEnter } from "../../raylib-bindings.ts";
-import { Scene, SceneContext } from "@src/scene.ts";
+import { Scene } from "@src/scene.ts";
 import { Text } from "@src/entity.ts";
 import { vec } from "@src/math.ts";
+import { Game } from "@src/game.ts";
 
 export class GameOverScene extends Scene {
   #gameOverText = new Text("PRESS [ENTER] TO PLAY AGAIN", {
@@ -10,16 +11,16 @@ export class GameOverScene extends Scene {
     pos: vec(0, 0),
   });
 
-  override initialize({ game }: SceneContext): void {
+  override initialize(game: Game): void {
     this.entityManager.add(this.#gameOverText);
     this.#gameOverText.pos = vec(game.width / 2, game.height / 2);
   }
 
-  override update(context: SceneContext): void {
-    super.update(context);
+  override update(game: Game): void {
+    super.update(game);
 
     if (isKeyPressed(KeyEnter)) {
-      context.game.goToScene("game");
+      game.goToScene("game");
     }
   }
 }

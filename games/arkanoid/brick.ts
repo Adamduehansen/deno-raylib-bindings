@@ -1,8 +1,9 @@
-import { Entity, EntityContext } from "@src/entity.ts";
+import { Entity } from "@src/entity.ts";
 import { Vector } from "@src/math.ts";
 import { DarkGray, Gray } from "../../raylib-bindings.ts";
 import { Body } from "@src/physics.ts";
 import { RectangleRenderer } from "@src/renderer.ts";
+import { Scene } from "@src/scene.ts";
 
 interface BrickArgs {
   pos: Vector;
@@ -23,7 +24,7 @@ export class Brick extends Entity {
     });
   }
 
-  override onDestroyed(event: EntityContext): void {
-    event.scene.eventEmitter.emit("brick-destroyed");
+  override onDestroyed(scene: Scene): void {
+    scene.eventEmitter.emit("brick-destroyed");
   }
 }

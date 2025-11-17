@@ -47,10 +47,7 @@ export class Game {
     this.#currentScene = args.initialScene;
 
     for (const scene of Object.values(this.#scenes)) {
-      scene.game = this;
-      scene.initialize({
-        game: this,
-      });
+      scene.initialize(this);
     }
   }
 
@@ -58,7 +55,7 @@ export class Game {
     while (windowShouldClose() === false) {
       // Update
       // ======================================================================
-      this.#scenes[this.#currentScene].update();
+      this.#scenes[this.#currentScene].update(this);
 
       // Render
       // ======================================================================

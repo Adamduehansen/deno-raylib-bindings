@@ -1,9 +1,7 @@
 import { GameScene } from "./game-scene.ts";
 import { GameOverScene } from "./game-over-scene.ts";
 import { Game } from "@src/game.ts";
-
-const GAME_WIDTH = 800;
-const GAME_HEIGHT = 450;
+import { GAME_HEIGHT, GAME_WIDTH } from "./consts.ts";
 
 const gameScene = new GameScene();
 const gameOverScene = new GameOverScene();
