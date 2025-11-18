@@ -100,6 +100,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [Camera2DStruct],
     result: "void",
   },
+  BeginTextureMode: {
+    parameters: [RenderTexture2DStruct],
+    result: "void",
+  },
   CheckCollisionRecs: {
     parameters: [RectangleStruct, RectangleStruct],
     result: "bool",
@@ -164,6 +168,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [RectangleStruct, ColorStruct],
     result: "void",
   },
+  DrawRectangleV: {
+    parameters: [Vector2Struct, Vector2Struct, ColorStruct],
+    result: "void",
+  },
   DrawText: {
     parameters: ["buffer", "i16", "i16", "i16", ColorStruct],
     result: "void",
@@ -183,6 +191,17 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [TextureStruct, "i16", "i16", ColorStruct],
     result: "void",
   },
+  DrawTexturePro: {
+    parameters: [
+      TextureStruct,
+      RectangleStruct,
+      RectangleStruct,
+      Vector2Struct,
+      "f32",
+      ColorStruct,
+    ],
+    result: "void",
+  },
   DrawTextureRec: {
     parameters: [TextureStruct, RectangleStruct, Vector2Struct, ColorStruct],
     result: "void",
@@ -192,6 +211,10 @@ const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     result: "void",
   },
   EndMode2D: {
+    parameters: [],
+    result: "void",
+  },
+  EndTextureMode: {
     parameters: [],
     result: "void",
   },
@@ -490,7 +513,7 @@ function toRenderTexture(renderTexture: Uint8Array): RenderTexture {
   const id = view.getInt16(0, true);
 
   // TextureStruct starts at offset 2 (u32 + i32 + i32 + i32 + i32) = 20 bytes
-  const texOffset = 2;
+  const texOffset = 4;
   const texture: Texture = {
     id: view.getUint32(texOffset + 0, true),
     width: view.getInt32(texOffset + 4, true),
@@ -519,14 +542,16 @@ function toRenderTexture(renderTexture: Uint8Array): RenderTexture {
 function toRaylibRenderTexture(renderTexture: RenderTexture): BufferSource {
   // RenderTexture2DStruct layout: [i16, TextureStruct, TextureStruct]
   // TextureStruct: [u32 id, i32 width, i32 height, i32 mipmaps, i32 format] = 20 bytes
-  const SIZE = 2 + 20 + 20; // 42 bytes
+
+  // TODO: the size needs to be adjusted. 20 is just a guess.
+  const SIZE = 8 + 20 + 20; // 42 bytes
   const buffer = new ArrayBuffer(SIZE);
   const view = new DataView(buffer);
 
   // id (i16)
   view.setInt16(0, renderTexture.id, true);
 
-  const texOffset = 2;
+  const texOffset = 4; // Updated to match the change in toRenderTexture
   const t = renderTexture.texture;
   view.setUint32(texOffset + 0, t.id, true);
   view.setInt32(texOffset + 4, t.width, true);
@@ -710,6 +735,7 @@ interface Music {
 // Color constants
 export type Color = [number, number, number, number];
 export const Black: Color = [0, 0, 0, 255];
+export const Blank: Color = [0, 0, 0, 0];
 export const Blue: Color = [0, 121, 241, 255];
 export const DarkBlue: Color = [0, 82, 172, 255];
 export const DarkGray: Color = [80, 80, 80, 255];
@@ -801,15 +827,22 @@ export function getScreenHeight(): number {
   return raylib.symbols.GetScreenHeight();
 }
 
-// ???
+// Drawing-related functions
 // ----------------------------------------------------------------------------
-
 export function beginDrawing(): void {
   raylib.symbols.BeginDrawing();
 }
 
 export function endDrawing(): void {
   raylib.symbols.EndDrawing();
+}
+
+export function beginTextureMode(renderTexture: RenderTexture): void {
+  raylib.symbols.BeginTextureMode(toRaylibRenderTexture(renderTexture));
+}
+
+export function endTextureMode(): void {
+  raylib.symbols.EndTextureMode();
 }
 
 // Basic shapes collision detection functions
@@ -836,7 +869,6 @@ export function checkCollisionCircleRec(
 
 // Basic shapes drawing functions
 // ----------------------------------------------------------------------------
-
 export function clearBackground(color: Color): void {
   raylib.symbols.ClearBackground(toUint8Array(color));
 }
@@ -966,6 +998,18 @@ export function drawRectangleRec(rectangle: Rectangle, color: Color): void {
       rectangle.height,
     ]),
     toUint8Array(color),
+  );
+}
+
+export function drawRectangleV(
+  position: Vector2,
+  size: Vector2,
+  color: Color,
+): void {
+  raylib.symbols.DrawRectangleV(
+    toRaylibVector2(position),
+    toRaylibVector2(size),
+    toRaylibColor(color),
   );
 }
 
@@ -1215,6 +1259,23 @@ export function drawTexture(args: {
     args.x,
     args.y,
     toRaylibColor(White),
+  );
+}
+export function drawTexturePro(args: {
+  texture: Texture;
+  source: Rectangle;
+  dest: Rectangle;
+  origin: Vector2;
+  rotation: number;
+  tint: Color;
+}): void {
+  raylib.symbols.DrawTexturePro(
+    toRaylibTexture(args.texture),
+    toRaylibRectangle(args.source),
+    toRaylibRectangle(args.dest),
+    toRaylibVector2(args.origin),
+    args.rotation,
+    toRaylibColor(args.tint),
   );
 }
 
