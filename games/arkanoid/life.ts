@@ -1,13 +1,13 @@
 import { LightGray } from "@src/raylib-bindings.ts";
 import { Entity } from "./engine/entity.ts";
-import { Vector } from "@src/math.ts";
+import { Vector2D } from "@src/math.ts";
 import { RectangleRenderer } from "./engine/renderer.ts";
 
 const WIDTH = 40;
 const HEIGHT = 10;
 
 interface Args {
-  pos: Vector;
+  pos: Vector2D;
 }
 
 export class Life extends Entity {

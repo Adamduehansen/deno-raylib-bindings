@@ -6,10 +6,10 @@ import {
   Rectangle,
   Red,
 } from "@src/raylib-bindings.ts";
-import { vec, Vector } from "@src/math.ts";
+import { vec, Vector2D } from "@src/math.ts";
 
 interface Circle {
-  vector: Vector;
+  vector: Vector2D;
   radius: number;
 }
 
@@ -18,10 +18,10 @@ type ColliderType = Rectangle | Circle;
 type CollisionType = "passive" | "active";
 
 export abstract class Body {
-  pos: Vector = vec(0, 0);
+  pos: Vector2D = vec(0, 0);
   collisionType: CollisionType = "passive";
 
-  abstract update(pos: Vector): void;
+  abstract update(pos: Vector2D): void;
   abstract render(): void;
   abstract getCollider(): ColliderType;
 
@@ -44,7 +44,7 @@ export class RectangleBody extends Body {
     this.height = height;
   }
 
-  override update(pos: Vector): void {
+  override update(pos: Vector2D): void {
     this.pos = vec(pos.x, pos.y);
   }
 
@@ -86,7 +86,7 @@ export class CircleBody extends Body {
     this.radius = radius;
   }
 
-  override update(pos: Vector): void {
+  override update(pos: Vector2D): void {
     this.pos = vec(pos.x, pos.y);
   }
 

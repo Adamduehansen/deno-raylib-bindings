@@ -1,12 +1,12 @@
 import { Entity } from "./engine/entity.ts";
-import { Vector } from "@src/math.ts";
+import { Vector2D } from "@src/math.ts";
 import { DarkGray, Gray } from "@src/raylib-bindings.ts";
 import { Body } from "./engine/physics.ts";
 import { RectangleRenderer } from "./engine/renderer.ts";
 import { Scene } from "./engine/scene.ts";
 
 interface BrickArgs {
-  pos: Vector;
+  pos: Vector2D;
   color: typeof Gray | typeof DarkGray;
 }
 

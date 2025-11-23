@@ -1,4 +1,4 @@
-import { Vector } from "@src/math.ts";
+import { Vector2D } from "@src/math.ts";
 import {
   beginDrawing,
   beginTextureMode,
@@ -77,7 +77,7 @@ map.tileFog = new Array(map.tilesX * map.tilesY).fill(0);
 map.tileIds = map.tileIds.map(() => getRandomValue(0, 1));
 
 // Player position on the screen (pixel coordinates, not tile coordinates)
-const playerPosition: Vector = {
+const playerPosition: Vector2D = {
   x: 180,
   y: 130,
 };

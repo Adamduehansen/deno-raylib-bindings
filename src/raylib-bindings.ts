@@ -62,7 +62,7 @@ const SoundStruct = {
   ],
 } as const;
 
-export const MusicStruct = {
+const MusicStruct = {
   struct: [
     AudioStreamStruct, // Stream
     "u32", // frameCount
@@ -72,7 +72,7 @@ export const MusicStruct = {
   ],
 } as const;
 
-export const FontStruct = {
+const FontStruct = {
   struct: [
     "u32", // baseSize
     "i32", // glyphCount
@@ -91,7 +91,7 @@ const RenderTexture2DStruct = {
   ],
 } as const;
 
-const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
+export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   BeginDrawing: {
     parameters: [],
     result: "void",
@@ -438,44 +438,6 @@ function toRaylibSound(sound: Sound): BufferSource {
   return new Uint8Array(buffer);
 }
 
-function toCamera2DArray(camera: Camera): BufferSource {
-  return new Float32Array([
-    camera.offset.x,
-    camera.offset.y,
-    camera.target.x,
-    camera.target.y,
-    camera.rotation,
-    camera.zoom,
-  ]);
-}
-
-// function toRaylibMusic(music: Music): BufferSource {
-//   // MusicStruct layout:
-//   // AudioStream: [sampleRate (u32), sampleSize (u32), channels (u32), bufferCount (u32), frameCount (u32), data (pointer)]
-//   // frameCount (u32)
-//   // looping (bool, 1 byte)
-//   // ctxType (i32, 4 bytes)
-//   // ctxData (pointer, 8 bytes)
-//   const buffer = new ArrayBuffer(45);
-//   const view = new DataView(buffer);
-
-//   // AudioStream fields
-//   view.setUint32(0, music.stream.sampleRate, true);
-//   view.setUint32(4, music.stream.sampleSize, true);
-//   view.setUint32(8, music.stream.channels, true);
-//   view.setUint32(12, music.stream.bufferCount, true);
-//   view.setUint32(16, music.stream.frameCount, true);
-//   view.setBigUint64(20, BigInt(music.stream.data), true);
-
-//   // Music fields
-//   view.setUint32(28, music.frameCount, true);
-//   view.setUint8(32, music.looping ? 1 : 0);
-//   view.setInt32(33, music.ctxType, true); // <-- updated
-//   view.setBigUint64(37, BigInt(music.ctxData), true); // <-- updated
-
-//   return new Uint8Array(buffer);
-// }
-
 function toRaylibRectangle(rec: Rectangle): BufferSource {
   return new Float32Array([rec.x, rec.y, rec.width, rec.height]);
 }
@@ -623,51 +585,6 @@ export function toSound(soundBuffer: Uint8Array): Sound {
   };
 }
 
-// export function toMusic(musicBuffer: BufferSource): Music {
-//   // MusicStruct layout:
-//   // AudioStream: [sampleRate (u32), sampleSize (u32), channels (u32), bufferCount (u32), frameCount (u32), data (pointer)]
-//   // frameCount (u32)
-//   // looping (bool, 1 byte)
-//   // ctxType (i32, 4 bytes)
-//   // ctxData (pointer, 8 bytes)
-//   const buffer = (musicBuffer as Uint8Array).buffer;
-//   const byteOffset = (musicBuffer as Uint8Array).byteOffset || 0;
-//   const view = new DataView(
-//     buffer,
-//     byteOffset,
-//     (musicBuffer as Uint8Array).byteLength,
-//   );
-
-//   // AudioStream fields
-//   const sampleRate = view.getUint32(0, true);
-//   const sampleSize = view.getUint32(4, true);
-//   const channels = view.getUint32(8, true);
-//   const bufferCount = view.getUint32(12, true);
-//   const streamFrameCount = view.getUint32(16, true);
-//   const data = view.getBigUint64(20, true);
-
-//   // Music fields
-//   const frameCount = view.getUint32(28, true);
-//   const looping = !!view.getUint8(32);
-//   const ctxType = view.getInt32(33, true); // <-- updated
-//   const ctxData = view.getBigUint64(37, true); // <-- updated
-
-//   return {
-//     stream: {
-//       sampleRate,
-//       sampleSize,
-//       channels,
-//       bufferCount,
-//       frameCount: streamFrameCount,
-//       data: Number(data),
-//     },
-//     frameCount,
-//     looping,
-//     ctxType,
-//     ctxData: Number(ctxData),
-//   };
-// }
-
 export interface Rectangle {
   x: number;
   y: number;
@@ -788,55 +705,8 @@ export function initWindow(options: {
   );
 }
 
-export function closeWindow(): void {
-  raylib.symbols.CloseWindow();
-}
-
-export function windowShouldClose(): boolean {
-  return raylib.symbols.WindowShouldClose();
-}
-
-export function getCurrentMonitor(): number {
-  return raylib.symbols.GetCurrentMonitor();
-}
-export function isWindowFullScreen(): boolean {
-  return raylib.symbols.IsWindowFullscreen();
-}
-
-export function setWindowSize(width: number, height: number): void {
-  raylib.symbols.SetWindowSize(width, height);
-}
-
-export function getMonitorWidth(monitor: number): number {
-  return raylib.symbols.GetMonitorWidth(monitor);
-}
-
-export function getMonitorHeight(monitor: number): number {
-  return raylib.symbols.GetMonitorHeight(monitor);
-}
-
-export function toggleFullScreen(): void {
-  raylib.symbols.ToggleFullscreen();
-}
-
-export function getScreenWidth(): number {
-  return raylib.symbols.GetScreenWidth();
-}
-
-export function getScreenHeight(): number {
-  return raylib.symbols.GetScreenHeight();
-}
-
 // Drawing-related functions
 // ----------------------------------------------------------------------------
-export function beginDrawing(): void {
-  raylib.symbols.BeginDrawing();
-}
-
-export function endDrawing(): void {
-  raylib.symbols.EndDrawing();
-}
-
 export function beginTextureMode(renderTexture: RenderTexture): void {
   raylib.symbols.BeginTextureMode(toRaylibRenderTexture(renderTexture));
 }
@@ -869,41 +739,6 @@ export function checkCollisionCircleRec(
 
 // Basic shapes drawing functions
 // ----------------------------------------------------------------------------
-export function clearBackground(color: Color): void {
-  raylib.symbols.ClearBackground(toUint8Array(color));
-}
-
-/**
- * Draw a color-filled circle
- */
-export function drawCircle(args: {
-  centerX: number;
-  centerY: number;
-  radius: number;
-  color: Color;
-}): void {
-  raylib.symbols.DrawCircle(
-    args.centerX,
-    args.centerY,
-    args.radius,
-    toUint8Array(args.color),
-  );
-}
-
-/**
- * Draw a color-filled circle (Vector version)
- */
-export function drawCircleV(args: {
-  center: Vector2;
-  radius: number;
-  color: Color;
-}): void {
-  raylib.symbols.DrawCircleV(
-    toFloat32Array([args.center.x, args.center.y]),
-    args.radius,
-    toUint8Array(args.color),
-  );
-}
 
 /**
  * Draw circle outline (Vector version)
@@ -1013,98 +848,14 @@ export function drawRectangleV(
   );
 }
 
-export function drawText(args: {
-  text: string;
-  posX: number;
-  posY: number;
-  fontSize: number;
-  color: Color;
-}): void {
-  raylib.symbols.DrawText(
-    toCString(args.text),
-    args.posX,
-    args.posY,
-    args.fontSize,
-    toUint8Array(args.color),
-  );
-}
-
-export function beginMode2D(camera: Camera) {
-  return raylib.symbols.BeginMode2D(toCamera2DArray(camera));
-}
-
-export function endMode2D(): void {
-  raylib.symbols.EndMode2D();
-}
-
 // Timing-related functions
 // ----------------------------------------------------------------------------
-export function setTargetFPS(fps: number): void {
-  raylib.symbols.SetTargetFPS(fps);
-}
-
 export function getFPS(): number {
   return raylib.symbols.GetFPS();
 }
 
 export function getFrameTime(): number {
   return raylib.symbols.GetFrameTime();
-}
-
-// Input related functions: keyboard
-// ----------------------------------------------------------------------------
-export function isKeyPressed(key: number): boolean {
-  return raylib.symbols.IsKeyPressed(key);
-}
-
-export function isKeyDown(key: number): boolean {
-  return raylib.symbols.IsKeyDown(key);
-}
-
-// Input-related functions: mouse
-// ----------------------------------------------------------------------------
-export function getMousePosition(): Vector2 {
-  const mousePosition = raylib.symbols.GetMousePosition();
-  const view = new DataView(
-    mousePosition.buffer,
-    mousePosition.byteOffset,
-    mousePosition.byteLength,
-  );
-
-  return {
-    x: view.getFloat32(0, true),
-    y: view.getFloat32(4, true),
-  };
-}
-
-export function getMouseWheelMove(): number {
-  return raylib.symbols.GetMouseWheelMove();
-}
-
-export function getMouseX(): number {
-  return raylib.symbols.GetMouseX();
-}
-
-export function getMouseY(): number {
-  return raylib.symbols.GetMouseY();
-}
-
-export function isMouseButtonDown(key: number) {
-  return raylib.symbols.IsMouseButtonDown(key);
-}
-
-export function getMouseDelta(): Vector2 {
-  const result = raylib.symbols.GetMouseDelta();
-  const view = new DataView(
-    result.buffer,
-    result.byteOffset,
-    result.byteLength,
-  );
-
-  return {
-    x: view.getFloat32(0, true),
-    y: view.getFloat32(4, true),
-  };
 }
 
 // Texture loading functions
@@ -1153,31 +904,6 @@ export function getRandomValue(min: number, max: number): number {
 export function fade(color: Color, alpha: number): Color {
   const result = raylib.symbols.Fade(toUint8Array(color), alpha);
   return [result[0], result[1], result[2], result[3]];
-}
-
-// Screen and space related functions
-// ----------------------------------------------------------------------------
-export function getScreenToWorld2D(position: Vector2, camera: Camera): Vector2 {
-  const result = raylib.symbols.GetScreenToWorld2D(
-    toFloat32Array([position.x, position.y]),
-    toCamera2DArray(camera),
-  );
-  const view = new DataView(
-    result.buffer,
-    result.byteOffset,
-    result.byteLength,
-  );
-
-  return {
-    x: view.getFloat32(0, true),
-    y: view.getFloat32(4, true),
-  };
-}
-
-// Basic geometric 3D shapes drawing functions
-// ----------------------------------------------------------------------------
-export function drawGrid(slices: number, spacing: number): void {
-  raylib.symbols.DrawGrid(slices, spacing);
 }
 
 // Math Utilities
@@ -1316,26 +1042,6 @@ export function measureText(str: string, fontSize: number): number {
 }
 
 // RLGH
-export function rlPushMatrix(): void {
-  raylib.symbols.rlPushMatrix();
-}
-
-export function rlPopMatrix(): void {
-  raylib.symbols.rlPopMatrix();
-}
-
-export function rlTranslatef(x: number, y: number, z: number): void {
-  raylib.symbols.rlTranslatef(x, y, z);
-}
-
-export function rlRotatef(
-  angle: number,
-  x: number,
-  y: number,
-  z: number,
-): void {
-  raylib.symbols.rlRotatef(angle, x, y, z);
-}
 
 // Audio device management functions
 export function closeAudioDevice(): void {
