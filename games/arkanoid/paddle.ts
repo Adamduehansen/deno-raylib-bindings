@@ -1,10 +1,10 @@
 import { Entity } from "./engine/entity.ts";
-import { Black, isKeyDown, KeyA, KeyD } from "@src/raylib-bindings.ts";
 import { Body } from "./engine/physics.ts";
 import { vec } from "@src/math.ts";
 import { RectangleRenderer } from "./engine/renderer.ts";
 import { Scene } from "./engine/scene.ts";
 import { GAME_HEIGHT, GAME_WIDTH } from "./consts.ts";
+import { Black, isKeyDown, KeyA, KeyD } from "@src/r-core.ts";
 
 export class Paddle extends Entity {
   static width = 80;

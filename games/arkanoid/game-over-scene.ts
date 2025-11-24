@@ -1,8 +1,8 @@
-import { Gray, isKeyPressed, KeyEnter } from "@src/raylib-bindings.ts";
 import { Scene } from "./engine/scene.ts";
 import { Text } from "./engine/entity.ts";
 import { vec } from "@src/math.ts";
 import { Game } from "./engine/game.ts";
+import { Gray, isKeyPressed, KeyEnter } from "@src/r-core.ts";
 
 export class GameOverScene extends Scene {
   #gameOverText = new Text("PRESS [ENTER] TO PLAY AGAIN", {

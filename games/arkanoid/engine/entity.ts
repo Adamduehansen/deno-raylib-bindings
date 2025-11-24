@@ -1,12 +1,12 @@
-import { type Color } from "@src/raylib-bindings.ts";
 import { EventEmitter } from "./event-emitter.ts";
 import { Renderer, TextRenderer } from "./renderer.ts";
-import { vec, type Vector2D } from "@src/math.ts";
 import { Body } from "./physics.ts";
 import { Scene } from "./scene.ts";
+import { Color, Vector } from "@src/r-core.ts";
+import { vec } from "@src/math.ts";
 
 interface EntityArgs {
-  pos: Vector2D;
+  pos: Vector;
   name?: string;
   width?: number;
   height?: number;
@@ -29,8 +29,8 @@ export abstract class Entity {
   readonly name?: string;
 
   #body?: Body;
-  pos: Vector2D;
-  velocity: Vector2D;
+  pos: Vector;
+  velocity: Vector;
 
   eventEmitter = new EventEmitter();
 
@@ -80,7 +80,7 @@ export abstract class Entity {
 interface TextOptions {
   color: Color;
   fontSize: number;
-  pos: Vector2D;
+  pos: Vector;
 }
 
 export class Text extends Entity {

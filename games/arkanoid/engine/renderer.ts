@@ -1,11 +1,6 @@
-import {
-  Color,
-  drawCircleV,
-  drawRectangleRec,
-  drawTextEx,
-  getFontDefault,
-  measureText,
-} from "@src/raylib-bindings.ts";
+import { Color } from "@src/r-core.ts";
+import { drawCircleV, drawRectangleRec } from "@src/r-shapes.ts";
+import { drawTextEx, getFontDefault, measureText } from "@src/r-text.ts";
 import { Entity, Text } from "./entity.ts";
 
 export abstract class Renderer<TEntity extends Entity> {

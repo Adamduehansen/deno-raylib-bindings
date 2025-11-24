@@ -2,7 +2,6 @@ import {
   beginDrawing,
   clearBackground,
   closeWindow,
-  drawFPS,
   endDrawing,
   getScreenHeight,
   getScreenWidth,
@@ -10,8 +9,9 @@ import {
   RayWhite,
   setTargetFPS,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
 import { Scene } from "./scene.ts";
+import { drawFPS } from "@src/r-text.ts";
 
 interface GameArgs {
   title: string;

@@ -1,14 +1,10 @@
 import { Entity } from "./engine/entity.ts";
-import {
-  getScreenHeight,
-  getScreenWidth,
-  Maroon,
-} from "@src/raylib-bindings.ts";
 import { Paddle } from "./paddle.ts";
 import { Body } from "./engine/physics.ts";
 import { Brick } from "./brick.ts";
 import { CircleRenderer } from "./engine/renderer.ts";
 import { Scene } from "./engine/scene.ts";
+import { getScreenHeight, getScreenWidth, Maroon } from "@src/r-core.ts";
 
 export class Ball extends Entity {
   static radius = 7;

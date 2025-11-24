@@ -1,11 +1,3 @@
-import {
-  DarkGray,
-  getScreenHeight,
-  Gray,
-  isKeyPressed,
-  KeyP,
-  KeySpace,
-} from "@src/raylib-bindings.ts";
 import { Scene } from "./engine/scene.ts";
 import { Text } from "./engine/entity.ts";
 import { Ball } from "./ball.ts";
@@ -14,6 +6,14 @@ import { Brick } from "./brick.ts";
 import { Life } from "./life.ts";
 import { Game } from "./engine/game.ts";
 import { vec } from "@src/math.ts";
+import {
+  DarkGray,
+  getScreenHeight,
+  Gray,
+  isKeyPressed,
+  KeyP,
+  KeySpace,
+} from "@src/r-core.ts";
 
 const MAX_LIFES = 1;
 

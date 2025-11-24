@@ -1,17 +1,23 @@
+import { Rectangle } from "@src/math.ts";
+import {
+  closeAudioDevice,
+  initAudioDevice,
+  loadMusicStream,
+  loadSound,
+  playMusicStream,
+  playSound,
+  unloadMusicStream,
+  unloadSound,
+  updateMusicStream,
+} from "@src/r-audio.ts";
 import {
   beginDrawing,
-  checkCollisionRecs,
   clearBackground,
-  closeAudioDevice,
   closeWindow,
-  drawFPS,
-  drawText,
-  drawTexture,
   endDrawing,
   getFrameTime,
   getScreenHeight,
   getScreenWidth,
-  initAudioDevice,
   initWindow,
   isKeyDown,
   isKeyPressed,
@@ -19,23 +25,15 @@ import {
   KeyD,
   KeyP,
   KeyR,
-  loadMusicStream,
-  loadSound,
-  loadTexture,
-  measureText,
-  playMusicStream,
-  playSound,
   RayWhite,
-  Rectangle,
   setTargetFPS,
   Texture,
-  unloadMusicStream,
-  unloadSound,
-  unloadTexture,
-  updateMusicStream,
   White,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
+import { checkCollisionRecs } from "@src/r-shapes.ts";
+import { drawFPS, drawText, measureText } from "@src/r-text.ts";
+import { drawTexture, loadTexture, unloadTexture } from "@src/r-textures.ts";
 
 let score = 0;
 let paused: boolean = false;

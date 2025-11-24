@@ -1,15 +1,13 @@
+import { Rectangle, vec } from "@src/math.ts";
+import { Green, Red, Vector } from "@src/r-core.ts";
 import {
   drawCircleLinesV,
   drawCircleV,
   drawRectangleLinesEx,
-  Green,
-  Rectangle,
-  Red,
-} from "@src/raylib-bindings.ts";
-import { vec, Vector2D } from "@src/math.ts";
+} from "@src/r-shapes.ts";
 
 interface Circle {
-  vector: Vector2D;
+  vector: Vector;
   radius: number;
 }
 
@@ -18,10 +16,10 @@ type ColliderType = Rectangle | Circle;
 type CollisionType = "passive" | "active";
 
 export abstract class Body {
-  pos: Vector2D = vec(0, 0);
+  pos: Vector = vec(0, 0);
   collisionType: CollisionType = "passive";
 
-  abstract update(pos: Vector2D): void;
+  abstract update(pos: Vector): void;
   abstract render(): void;
   abstract getCollider(): ColliderType;
 
@@ -44,7 +42,7 @@ export class RectangleBody extends Body {
     this.height = height;
   }
 
-  override update(pos: Vector2D): void {
+  override update(pos: Vector): void {
     this.pos = vec(pos.x, pos.y);
   }
 
@@ -86,7 +84,7 @@ export class CircleBody extends Body {
     this.radius = radius;
   }
 
-  override update(pos: Vector2D): void {
+  override update(pos: Vector): void {
     this.pos = vec(pos.x, pos.y);
   }
 
