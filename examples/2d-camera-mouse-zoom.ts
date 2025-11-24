@@ -1,31 +1,32 @@
 import {
+  beginDrawing,
+  beginMode2D,
+  Black,
+  Camera,
+  clearBackground,
   closeWindow,
-  getScreenHeight,
-  getScreenWidth,
-  initWindow,
-  windowShouldClose,
-} from "@src/window.ts";
-import { setTargetFPS } from "@src/timing.ts";
-import {
+  DarkGray,
+  DarkGreen,
+  endDrawing,
+  endMode2D,
   getMouseDelta,
   getMousePosition,
   getMouseWheelMove,
   getMouseX,
   getMouseY,
+  getScreenHeight,
+  getScreenToWorld2D,
+  getScreenWidth,
+  initWindow,
   isKeyPressed,
   isMouseButtonDown,
   KeyOne,
   KeyTwo,
   MouseButtonLeft,
-} from "@src/input.ts";
-import {
-  beginDrawing,
-  beginMode2D,
-  clearBackground,
-  endDrawing,
-  endMode2D,
-} from "@src/drawing.ts";
-import { Black, DarkGray, DarkGreen, RayWhite } from "@src/color.ts";
+  RayWhite,
+  setTargetFPS,
+  windowShouldClose,
+} from "@src/r-core.ts";
 import {
   clamp,
   rlPopMatrix,
@@ -35,11 +36,9 @@ import {
   vector2Add,
   vector2Scale,
 } from "@src/math.ts";
-import { Camera, getScreenToWorld2D } from "@src/screen-space.ts";
-import { drawGrid } from "@src/basic-geometric-3D-shapes-drawing.ts";
-import { drawCircle, drawCircleV } from "@src/basic-drawing.ts";
-import { drawTextEx } from "@src/raylib-bindings.ts";
-import { getFontDefault } from "@src/font.ts";
+import { drawGrid } from "@src/r-models.ts";
+import { drawCircle, drawCircleV } from "@src/r-shapes.ts";
+import { drawTextEx, getFontDefault } from "@src/r-text.ts";
 
 const screenWidth = 800;
 const screenHeight = 450;

@@ -1,19 +1,25 @@
 import {
+  beginDrawing,
+  clearBackground,
   closeWindow,
+  endDrawing,
   getCurrentMonitor,
   getMonitorHeight,
   getMonitorWidth,
   initWindow,
+  isKeyDown,
+  isKeyPressed,
   isWindowFullScreen,
+  KeyEnter,
+  KeyLeftAlt,
+  LightGray,
+  RayWhite,
+  setTargetFPS,
   setWindowSize,
   toggleFullScreen,
   windowShouldClose,
-} from "@src/window.ts";
-import { setTargetFPS } from "@src/timing.ts";
-import { isKeyDown, isKeyPressed, KeyEnter, KeyLeftAlt } from "@src/input.ts";
-import { beginDrawing, clearBackground, endDrawing } from "@src/drawing.ts";
-import { LightGray, RayWhite } from "@src/color.ts";
-import { drawText } from "@src/text.ts";
+} from "@src/r-core.ts";
+import { drawText } from "@src/r-text.ts";
 
 const screenWidth = 800;
 const screenHeight = 450;

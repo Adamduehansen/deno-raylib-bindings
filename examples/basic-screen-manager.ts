@@ -5,8 +5,6 @@ import {
   closeWindow,
   DarkBlue,
   DarkGreen,
-  drawRectangle,
-  drawText,
   endDrawing,
   GestureTap,
   Gray,
@@ -21,7 +19,9 @@ import {
   RayWhite,
   setTargetFPS,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
+import { drawRectangle } from "@src/r-shapes.ts";
+import { drawText } from "@src/r-text.ts";
 
 type Screen = "Logo" | "Title" | "GamePlay" | "Ending";
 

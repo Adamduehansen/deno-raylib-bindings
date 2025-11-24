@@ -1,16 +1,16 @@
+import { Timer } from "@src/timer.ts";
 import {
   beginDrawing,
   Black,
   clearBackground,
   closeWindow,
-  drawText,
   endDrawing,
   initWindow,
   RayWhite,
   setTargetFPS,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
-import { Timer } from "@src/timer.ts";
+} from "@src/r-core.ts";
+import { drawText } from "@src/r-text.ts";
 
 initWindow({
   title: "Timer example",

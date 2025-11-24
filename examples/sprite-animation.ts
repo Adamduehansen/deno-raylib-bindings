@@ -2,16 +2,15 @@ import {
   beginDrawing,
   clearBackground,
   closeWindow,
-  drawTextureRec,
   endDrawing,
   initWindow,
-  loadTexture,
   RayWhite,
   setTargetFPS,
   White,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
 import { Timer } from "@src/timer.ts";
+import { drawTextureRec, loadTexture } from "@src/r-textures.ts";
 
 let animationFrame = 0;
 const animationTimer = new Timer({

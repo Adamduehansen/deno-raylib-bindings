@@ -1,4 +1,4 @@
-import { Vector2D } from "@src/math.ts";
+import { fade } from "@src/pixel.ts";
 import {
   beginDrawing,
   beginTextureMode,
@@ -8,14 +8,8 @@ import {
   clearBackground,
   closeWindow,
   DarkBlue,
-  drawRectangle,
-  drawRectangleLines,
-  drawRectangleV,
-  drawText,
-  drawTexturePro,
   endDrawing,
   endTextureMode,
-  fade,
   getRandomValue,
   initWindow,
   isKeyDown,
@@ -23,15 +17,26 @@ import {
   KeyLeft,
   KeyRight,
   KeyUp,
-  loadRenderTexture,
   RayWhite,
   Red,
   setTargetFPS,
-  setTextureFilter,
-  unloadRenderTexture,
+  Vector,
   White,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
+import {
+  drawRectangle,
+  drawRectangleLines,
+  drawRectangleV,
+} from "@src/r-shapes.ts";
+import { drawText } from "@src/r-text.ts";
+import {
+  drawTexturePro,
+  loadRenderTexture,
+  setTextureFilter,
+  TEXTURE_FILTER_BILINEAR,
+  unloadRenderTexture,
+} from "@src/r-textures.ts";
 
 interface Map {
   tilesX: number; // Number of tiles in X axis
@@ -77,7 +82,7 @@ map.tileFog = new Array(map.tilesX * map.tilesY).fill(0);
 map.tileIds = map.tileIds.map(() => getRandomValue(0, 1));
 
 // Player position on the screen (pixel coordinates, not tile coordinates)
-const playerPosition: Vector2D = {
+const playerPosition: Vector = {
   x: 180,
   y: 130,
 };
@@ -88,7 +93,7 @@ let playerTileY = 0;
 // NOTE: To get an automatic smooth-fog effect we use a render texture to render fog
 // at a smaller size (one pixel per tile) and scale it on drawing with bilinear filtering
 const fogOfWar = loadRenderTexture(map.tilesX, map.tilesY);
-setTextureFilter(fogOfWar.texture, 1); // 1 = TEXTURE_FILTER_BILINEAR
+setTextureFilter(fogOfWar.texture, TEXTURE_FILTER_BILINEAR);
 
 // Set our game to run at 60 frames-per-second
 setTargetFPS(60);

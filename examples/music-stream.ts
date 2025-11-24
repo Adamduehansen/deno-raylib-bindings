@@ -1,19 +1,21 @@
 import {
-  beginDrawing,
-  clearBackground,
   closeAudioDevice,
-  closeWindow,
-  endDrawing,
   initAudioDevice,
-  initWindow,
   loadMusicStream,
   playMusicStream,
-  RayWhite,
-  setTargetFPS,
   unloadMusicStream,
   updateMusicStream,
+} from "@src/r-audio.ts";
+import {
+  beginDrawing,
+  clearBackground,
+  closeWindow,
+  endDrawing,
+  initWindow,
+  RayWhite,
+  setTargetFPS,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
+} from "@src/r-core.ts";
 
 initWindow({
   title: "raylib [audio] example - music stream",
@@ -24,7 +26,6 @@ initWindow({
 initAudioDevice();
 
 const music = loadMusicStream("examples/resources/country.mp3");
-// console.log("ctxData:", music.ctxType);
 
 playMusicStream(music);
 

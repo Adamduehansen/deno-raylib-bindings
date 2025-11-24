@@ -1,24 +1,25 @@
 import {
+  closeAudioDevice,
+  initAudioDevice,
+  loadSound,
+  playSound,
+  unloadSound,
+} from "@src/r-audio.ts";
+import {
   beginDrawing,
   Black,
   clearBackground,
-  closeAudioDevice,
   closeWindow,
-  drawText,
   endDrawing,
   getScreenHeight,
   getScreenWidth,
-  initAudioDevice,
   initWindow,
-  loadSound,
-  measureText,
-  playSound,
   RayWhite,
   setTargetFPS,
-  unloadSound,
   windowShouldClose,
-} from "@src/raylib-bindings.ts";
-import { Timer } from "../src/timer.ts";
+} from "@src/r-core.ts";
+import { drawText, measureText } from "@src/r-text.ts";
+import { Timer } from "@src/timer.ts";
 
 initWindow({
   title: "Sound example",

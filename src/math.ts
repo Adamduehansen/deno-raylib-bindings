@@ -1,8 +1,11 @@
+import { toRaylibVector2, toVector, Vector } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
-export interface Vector {
+export interface Rectangle {
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 /**
@@ -45,27 +48,8 @@ export function rlRotatef(
   raylib.symbols.rlRotatef(angle, x, y, z);
 }
 
-/**
- * Converts a {@linkcode Vector} to a Raylib vector2 struct.
- */
-export function toRaylibVector2(vector: Vector): BufferSource {
-  return new Float32Array([vector.x, vector.y]);
-}
-
-/**
- * TODO:
- */
-export function toVector(buffer: Uint8Array): Vector {
-  const view = new DataView(
-    buffer.buffer,
-    buffer.byteOffset,
-    buffer.byteLength,
-  );
-
-  return {
-    x: view.getFloat32(0, true),
-    y: view.getFloat32(4, true),
-  };
+export function toRaylibRectangle(rec: Rectangle): BufferSource {
+  return new Float32Array([rec.x, rec.y, rec.width, rec.height]);
 }
 
 export function vec(x: number, y: number): Vector {

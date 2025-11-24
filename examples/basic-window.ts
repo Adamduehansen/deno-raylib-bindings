@@ -1,8 +1,15 @@
-import { closeWindow, initWindow, windowShouldClose } from "@src/window.ts";
-import { setTargetFPS } from "@src/timing.ts";
-import { beginDrawing, clearBackground, endDrawing } from "@src/drawing.ts";
-import { drawText } from "@src/text.ts";
-import { LightGray, White } from "@src/color.ts";
+import {
+  beginDrawing,
+  clearBackground,
+  closeWindow,
+  endDrawing,
+  initWindow,
+  LightGray,
+  setTargetFPS,
+  White,
+  windowShouldClose,
+} from "@src/r-core.ts";
+import { drawText } from "@src/r-text.ts";
 
 initWindow({
   width: 800,

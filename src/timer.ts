@@ -1,4 +1,4 @@
-import { getFrameTime } from "./raylib-bindings.ts";
+import { getFrameTime } from "./r-core.ts";
 
 type TimerCallback = () => void;
 
