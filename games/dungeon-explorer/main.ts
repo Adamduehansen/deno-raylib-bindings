@@ -1,9 +1,12 @@
 import {
   beginDrawing,
+  beginMode2D,
   Black,
+  Camera,
   clearBackground,
   closeWindow,
   endDrawing,
+  endMode2D,
   initWindow,
   setTargetFPS,
   windowShouldClose,
@@ -29,11 +32,24 @@ ResourceManager.getInstance().load(
 );
 
 const player = new Player({
-  vector: vec(0, 0),
+  position: vec(0, 0),
 });
 const beholder = new Beholder({
-  vector: vec(10, 10),
+  position: vec(10, 10),
 });
+
+const camera: Camera = {
+  target: {
+    x: player.position.x,
+    y: player.position.y,
+  },
+  offset: {
+    x: screenWidth / 2,
+    y: screenHeight / 2,
+  },
+  rotation: 0,
+  zoom: 4,
+};
 
 while (windowShouldClose() === false) {
   // Update
@@ -41,14 +57,23 @@ while (windowShouldClose() === false) {
   player.update();
   beholder.update();
 
+  camera.target = {
+    x: player.position.x,
+    y: player.position.y,
+  };
+
   // Draw
   // --------------------------------------------------------------------------
   beginDrawing();
 
   clearBackground(Black);
 
+  beginMode2D(camera);
+
   player.render();
   beholder.render();
+
+  endMode2D();
 
   endDrawing();
 }

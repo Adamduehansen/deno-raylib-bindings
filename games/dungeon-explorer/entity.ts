@@ -1,21 +1,31 @@
-import { Texture, Vector, White } from "@src/r-core.ts";
+import {
+  isKeyDown,
+  KeyA,
+  KeyD,
+  KeyS,
+  KeyW,
+  Texture,
+  Vector,
+  White,
+} from "@src/r-core.ts";
 import ResourceManager from "./resource-manager.ts";
 import { drawTextureRec } from "@src/r-textures.ts";
 import { vec } from "@src/math.ts";
 
 interface EntityArgs {
-  vector: Vector;
+  position: Vector;
   spriteIndex: Vector;
 }
 
 abstract class Entity {
   private _texture: Texture;
-  private _position: Vector;
   private _spriteIndex: Vector;
+
+  position: Vector;
 
   constructor(args: EntityArgs) {
     this._texture = ResourceManager.getInstance().get("spritesheet");
-    this._position = args.vector;
+    this.position = args.position;
     this._spriteIndex = args.spriteIndex;
   }
 
@@ -35,30 +45,48 @@ abstract class Entity {
       },
       color: White,
       vector: {
-        x: this._position.x,
-        y: this._position.y,
+        x: this.position.x,
+        y: this.position.y,
       },
     });
   }
 }
 
 interface Args {
-  vector: Vector;
+  position: Vector;
 }
+
+const PLAYER_SPEED = 2;
 
 export class Player extends Entity {
   constructor(args: Args) {
     super({
-      vector: args.vector,
+      position: args.position,
       spriteIndex: vec(4, 0),
     });
+  }
+
+  override update(): void {
+    super.update();
+
+    if (isKeyDown(KeyD)) {
+      this.position.x += PLAYER_SPEED;
+    } else if (isKeyDown(KeyA)) {
+      this.position.x -= PLAYER_SPEED;
+    }
+
+    if (isKeyDown(KeyW)) {
+      this.position.y -= PLAYER_SPEED;
+    } else if (isKeyDown(KeyS)) {
+      this.position.y += PLAYER_SPEED;
+    }
   }
 }
 
 export class Beholder extends Entity {
   constructor(args: Args) {
     super({
-      vector: args.vector,
+      position: args.position,
       spriteIndex: vec(13, 0),
     });
   }
