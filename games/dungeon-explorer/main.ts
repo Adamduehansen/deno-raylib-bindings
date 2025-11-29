@@ -12,7 +12,10 @@ import {
   windowShouldClose,
 } from "@src/r-core.ts";
 import { Beholder, Player } from "./entity.ts";
-import ResourceManager from "./resource-manager.ts";
+import ResourceManager, {
+  TextureResource,
+  TiledResource,
+} from "./resource-manager.ts";
 import { vec } from "@src/math.ts";
 
 const screenWidth = 800;
@@ -28,7 +31,12 @@ setTargetFPS(60);
 
 ResourceManager.getInstance().load(
   "spritesheet",
-  "./games/dungeon-explorer/spritesheet.png",
+  new TextureResource("./games/dungeon-explorer/spritesheet.png"),
+);
+
+ResourceManager.getInstance().load(
+  "level1",
+  new TiledResource("./games/dungeon-explorer/level1.tmx"),
 );
 
 const player = new Player({
@@ -50,6 +58,9 @@ const camera: Camera = {
   rotation: 0,
   zoom: 4,
 };
+
+const level1Map = ResourceManager.getInstance().get("level1");
+console.log(level1Map);
 
 while (windowShouldClose() === false) {
   // Update

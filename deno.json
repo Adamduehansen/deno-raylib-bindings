@@ -4,6 +4,7 @@
     "gemcatcher:compile": "deno compile --allow-ffi --output ./bin/gem-catcher ./games/gem-catcher/main.ts"
   },
   "imports": {
+    "@libs/xml": "jsr:@libs/xml@^7.0.3",
     "@src/": "./src/"
   },
   "compilerOptions": {
@@ -14,7 +15,8 @@
   },
   "permissions": {
     "default": {
-      "ffi": true
+      "ffi": true,
+      "read": true
     }
   }
 }

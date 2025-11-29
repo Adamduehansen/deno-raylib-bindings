@@ -4,11 +4,10 @@ import {
   KeyD,
   KeyS,
   KeyW,
-  Texture,
   Vector,
   White,
 } from "@src/r-core.ts";
-import ResourceManager from "./resource-manager.ts";
+import ResourceManager, { TextureResource } from "./resource-manager.ts";
 import { drawTextureRec } from "@src/r-textures.ts";
 import { vec } from "@src/math.ts";
 
@@ -18,13 +17,16 @@ interface EntityArgs {
 }
 
 abstract class Entity {
-  private _texture: Texture;
+  private _textureResource: TextureResource;
   private _spriteIndex: Vector;
 
   position: Vector;
 
   constructor(args: EntityArgs) {
-    this._texture = ResourceManager.getInstance().get("spritesheet");
+    this._textureResource = ResourceManager.getInstance().get(
+      "spritesheet",
+      // TODO: Fix this casting!
+    ) as unknown as TextureResource;
     this.position = args.position;
     this._spriteIndex = args.spriteIndex;
   }
@@ -36,7 +38,7 @@ abstract class Entity {
     const textureMargin = 1;
 
     drawTextureRec({
-      texture: this._texture,
+      texture: this._textureResource.texture,
       rectangle: {
         x: 8 * this._spriteIndex.x + textureMargin * this._spriteIndex.x,
         y: this._spriteIndex.y,

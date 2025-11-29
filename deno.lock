@@ -1,0 +1,16 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@libs/xml@^7.0.3": "7.0.3"
+  },
+  "jsr": {
+    "@libs/xml@7.0.3": {
+      "integrity": "4caad75dfec0a4dd4ad5dc87dc559d9aa25ac53f17373923a9cd006f6c8d42e6"
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@libs/xml@^7.0.3"
+    ]
+  }
+}
