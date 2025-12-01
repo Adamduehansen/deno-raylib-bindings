@@ -14,13 +14,18 @@ import { vec } from "@src/math.ts";
 interface EntityArgs {
   position: Vector;
   spriteIndex: Vector;
+  name: string;
+  z: number;
 }
 
-abstract class Entity {
+export default abstract class Entity {
   private _textureResource: TextureResource;
   private _spriteIndex: Vector;
 
   position: Vector;
+  z: number;
+
+  readonly name: string;
 
   constructor(args: EntityArgs) {
     this._textureResource = ResourceManager.getInstance().get(
@@ -29,6 +34,8 @@ abstract class Entity {
     ) as unknown as TextureResource;
     this.position = args.position;
     this._spriteIndex = args.spriteIndex;
+    this.name = args.name;
+    this.z = args.z;
   }
 
   update(): void {
@@ -41,7 +48,7 @@ abstract class Entity {
       texture: this._textureResource.texture,
       rectangle: {
         x: 8 * this._spriteIndex.x + textureMargin * this._spriteIndex.x,
-        y: this._spriteIndex.y,
+        y: 8 * this._spriteIndex.y + textureMargin * this._spriteIndex.y,
         height: 8,
         width: 8,
       },
@@ -65,6 +72,8 @@ export class Player extends Entity {
     super({
       position: args.position,
       spriteIndex: vec(4, 0),
+      name: "player",
+      z: 10,
     });
   }
 
@@ -90,6 +99,30 @@ export class Beholder extends Entity {
     super({
       position: args.position,
       spriteIndex: vec(13, 0),
+      name: "beholder",
+      z: 10,
+    });
+  }
+}
+
+export class Wall extends Entity {
+  constructor(args: Args) {
+    super({
+      position: args.position,
+      spriteIndex: vec(1, 0),
+      name: "wall",
+      z: 0,
+    });
+  }
+}
+
+export class Floor extends Entity {
+  constructor(args: Args) {
+    super({
+      position: args.position,
+      spriteIndex: vec(1, 1),
+      name: "floor",
+      z: 0,
     });
   }
 }
