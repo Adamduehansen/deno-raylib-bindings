@@ -8,8 +8,7 @@ import {
   getScreenWidth,
   Vector,
 } from "@src/r-core.ts";
-
-type EntityKey = "f" | "b" | "cul" | "cur" | "cll" | "clr" | "ws" | "wl" | "wr";
+import level1 from "./level1.txt" with { type: "text" };
 
 interface FactoryEntityProps {
   position: Vector;
@@ -18,9 +17,9 @@ interface FactoryEntityProps {
 
 class EntityFactory {
   get(
-    entityKey: EntityKey,
+    entityKey: string,
     props: FactoryEntityProps,
-  ): Entity | never {
+  ): Entity {
     switch (entityKey) {
       case "ws":
         return new Wall({
@@ -74,19 +73,19 @@ class EntityFactory {
           level: props.level,
           variant: "LOWER_RIGHT",
         });
+      default:
+        throw new Error("");
     }
   }
 }
 
-type LevelLayout = EntityKey[][];
-
 interface LevelEnemy {
-  entityKey: EntityKey;
+  entityKey: string;
   position: Vector;
 }
 
 interface LevelArgs {
-  levelLayout: LevelLayout;
+  levelLayout: string;
   playerSpawnPosition: Vector;
   enemies: LevelEnemy[];
 }
@@ -155,12 +154,14 @@ export default abstract class Level {
     endMode2D();
   }
 
-  private _parseLevelLayout(levelLayout: LevelLayout): Entity[] {
+  private _parseLevelLayout(levelLayout: string): Entity[] {
     const entities: Entity[] = [];
-    for (let rowIndex = 0; rowIndex < levelLayout.length; rowIndex++) {
-      const row = levelLayout[rowIndex];
-      for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
-        const key = row[columnIndex];
+    const rows = levelLayout.split("\n");
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+      const row = rows[rowIndex];
+      const columns = row.split(",").map((column) => column.trim());
+      for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+        const key = columns[columnIndex];
         entities.push(
           this._entityFactory.get(key, {
             level: this,
@@ -186,46 +187,7 @@ export default abstract class Level {
 export class Level1 extends Level {
   constructor() {
     super({
-      levelLayout: [
-        [
-          "cul",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "cur",
-        ],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        ["wl", "f", "f", "f", "f", "f", "f", "f", "f", "f", "f", "wr"],
-        [
-          "cll",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "ws",
-          "clr",
-        ],
-      ],
+      levelLayout: level1,
       playerSpawnPosition: vec(2 * 8, 2 * 8),
       enemies: [{
         entityKey: "b",
