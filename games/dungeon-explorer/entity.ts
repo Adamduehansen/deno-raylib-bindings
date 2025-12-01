@@ -10,15 +10,9 @@ import {
 } from "@src/r-core.ts";
 import ResourceManager, { TextureResource } from "./resource-manager.ts";
 import { drawTextureRec } from "@src/r-textures.ts";
-import { vec } from "@src/math.ts";
-import { drawRectangleLinesEx } from "@src/r-shapes.ts";
-
-interface EntityArgs {
-  position: Vector;
-  spriteIndex: Vector;
-  name: string;
-  collide: boolean;
-}
+import { Rectangle, vec } from "@src/math.ts";
+import { checkCollisionRecs, drawRectangleLinesEx } from "@src/r-shapes.ts";
+import Level from "./level.ts";
 
 class Body {
   private readonly _owner: Entity;
@@ -46,13 +40,32 @@ class Body {
       },
     });
   }
+
+  getBounds(): Rectangle {
+    return {
+      x: this._position.x,
+      y: this._position.y,
+      width: 8,
+      height: 8,
+    };
+  }
+}
+
+interface EntityArgs {
+  position: Vector;
+  spriteIndex: Vector;
+  name: string;
+  collide: boolean;
+  level: Level;
 }
 
 export default abstract class Entity {
   private _textureResource: TextureResource;
   private _spriteIndex: Vector;
+  readonly level: Level;
 
   position: Vector;
+  velocity: Vector;
 
   readonly name: string;
   readonly body?: Body;
@@ -61,9 +74,12 @@ export default abstract class Entity {
     this._textureResource = ResourceManager.getInstance().get<TextureResource>(
       "spritesheet",
     );
-    this.position = args.position;
     this._spriteIndex = args.spriteIndex;
+    this.level = args.level;
+
+    this.position = args.position;
     this.name = args.name;
+    this.velocity = vec(0, 0);
 
     if (args.collide) {
       this.body = new Body(this);
@@ -71,6 +87,9 @@ export default abstract class Entity {
   }
 
   update(): void {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+
     this.body?.update();
   }
 
@@ -98,6 +117,7 @@ export default abstract class Entity {
 
 interface Args {
   position: Vector;
+  level: Level;
 }
 
 const PLAYER_SPEED = 2;
@@ -106,6 +126,7 @@ export class Player extends Entity {
   constructor(args: Args) {
     super({
       position: args.position,
+      level: args.level,
       spriteIndex: vec(4, 0),
       name: "player",
       collide: true,
@@ -115,16 +136,37 @@ export class Player extends Entity {
   override update(): void {
     super.update();
 
+    for (const levelLayoutEntity of this.level.levelLayout) {
+      if (levelLayoutEntity.body === undefined) {
+        continue;
+      }
+
+      if (
+        checkCollisionRecs(
+          this.body!.getBounds(),
+          levelLayoutEntity.body?.getBounds(),
+        )
+      ) {
+        this.velocity.x *= -1;
+        this.velocity.y *= -1;
+        return;
+      }
+    }
+
     if (isKeyDown(KeyD)) {
-      this.position.x += PLAYER_SPEED;
+      this.velocity.x = PLAYER_SPEED;
     } else if (isKeyDown(KeyA)) {
-      this.position.x -= PLAYER_SPEED;
+      this.velocity.x = -PLAYER_SPEED;
+    } else {
+      this.velocity.x = 0;
     }
 
     if (isKeyDown(KeyW)) {
-      this.position.y -= PLAYER_SPEED;
+      this.velocity.y = -PLAYER_SPEED;
     } else if (isKeyDown(KeyS)) {
-      this.position.y += PLAYER_SPEED;
+      this.velocity.y = PLAYER_SPEED;
+    } else {
+      this.velocity.y = 0;
     }
   }
 }
@@ -133,6 +175,7 @@ export class Beholder extends Entity {
   constructor(args: Args) {
     super({
       position: args.position,
+      level: args.level,
       spriteIndex: vec(13, 0),
       name: "beholder",
       collide: true,
@@ -144,6 +187,7 @@ export class Wall extends Entity {
   constructor(args: Args) {
     super({
       position: args.position,
+      level: args.level,
       spriteIndex: vec(1, 0),
       name: "wall",
       collide: true,
@@ -155,6 +199,7 @@ export class Floor extends Entity {
   constructor(args: Args) {
     super({
       position: args.position,
+      level: args.level,
       spriteIndex: vec(1, 1),
       name: "floor",
       collide: false,

@@ -11,19 +11,26 @@ import {
 
 type EntityKey = "w" | "f";
 
+interface FactoryEntityProps {
+  position: Vector;
+  level: Level;
+}
+
 class EntityFactory {
   get(
     entityKey: EntityKey,
-    position: Vector,
+    props: FactoryEntityProps,
   ): Entity | never {
     switch (entityKey) {
       case "w":
         return new Wall({
-          position: position,
+          position: props.position,
+          level: props.level,
         });
       case "f":
         return new Floor({
-          position: position,
+          position: props.position,
+          level: props.level,
         });
     }
   }
@@ -36,18 +43,20 @@ interface LevelArgs {
   playerSpawnPosition: Vector;
 }
 
-abstract class Level {
+export default abstract class Level {
   private _entityFactory = new EntityFactory();
 
   private _player: Player;
-  private _levelLayout: Entity[];
   private _camera: Camera;
 
+  readonly levelLayout: Entity[];
+
   constructor({ levelLayout, playerSpawnPosition }: LevelArgs) {
-    this._levelLayout = this._parseLevelLayout(levelLayout);
+    this.levelLayout = this._parseLevelLayout(levelLayout);
 
     this._player = new Player({
       position: playerSpawnPosition,
+      level: this,
     });
     this._camera = {
       target: {
@@ -64,7 +73,7 @@ abstract class Level {
   }
 
   update(): void {
-    for (const entity of this._levelLayout) {
+    for (const entity of this.levelLayout) {
       entity.update();
     }
 
@@ -79,7 +88,7 @@ abstract class Level {
   render(): void {
     beginMode2D(this._camera);
 
-    for (const entity of this._levelLayout) {
+    for (const entity of this.levelLayout) {
       entity.render();
     }
 
@@ -95,7 +104,10 @@ abstract class Level {
       for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
         const key = row[columnIndex];
         entities.push(
-          this._entityFactory.get(key, vec(columnIndex * 8, rowIndex * 8)),
+          this._entityFactory.get(key, {
+            level: this,
+            position: vec(columnIndex * 8, rowIndex * 8),
+          }),
         );
       }
     }
