@@ -10,7 +10,7 @@ interface AudioStream {
   data: number;
 }
 
-interface Sound {
+export interface RaylibSound {
   stream: AudioStream;
   frameCount: number;
 }
@@ -19,7 +19,7 @@ interface Sound {
 // Converters
 // ----------------------------------------------------------------------------
 
-function toSound(soundBuffer: Uint8Array): Sound {
+function toSound(soundBuffer: Uint8Array): RaylibSound {
   const buffer = soundBuffer.buffer;
   const byteOffset = soundBuffer.byteOffset;
   const view = new DataView(buffer, byteOffset, soundBuffer.byteLength);
@@ -48,7 +48,7 @@ function toSound(soundBuffer: Uint8Array): Sound {
   };
 }
 
-function toRaylibSound(sound: Sound): BufferSource {
+function toRaylibSound(sound: RaylibSound): BufferSource {
   const buffer = new ArrayBuffer(32);
   const view = new DataView(buffer);
 
@@ -120,14 +120,14 @@ export function unloadMusicStream(music: BufferSource): void {
 // Wave/Sound loading/unloading functions
 // ----------------------------------------------------------------------------
 
-export function loadSound(fileName: string): Sound {
+export function loadSound(fileName: string): RaylibSound {
   return toSound(raylib.symbols.LoadSound(toCString(fileName)));
 }
 
-export function unloadSound(sound: Sound): void {
+export function unloadSound(sound: RaylibSound): void {
   return raylib.symbols.UnloadSound(toRaylibSound(sound));
 }
 
-export function playSound(sound: Sound): void {
+export function playSound(sound: RaylibSound): void {
   return raylib.symbols.PlaySound(toRaylibSound(sound));
 }

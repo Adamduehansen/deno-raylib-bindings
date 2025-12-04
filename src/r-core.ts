@@ -14,7 +14,7 @@ export interface Vector {
   y: number;
 }
 
-export interface Texture {
+export interface RaylibTexture {
   id: number;
   width: number;
   height: number;
@@ -24,8 +24,8 @@ export interface Texture {
 
 export interface RenderTexture {
   id: number;
-  texture: Texture;
-  depth: Texture;
+  texture: RaylibTexture;
+  depth: RaylibTexture;
 }
 
 export type Color = [number, number, number, number];

@@ -25,9 +25,9 @@ import {
   KeyD,
   KeyP,
   KeyR,
+  RaylibTexture,
   RayWhite,
   setTargetFPS,
-  Texture,
   White,
   windowShouldClose,
 } from "@src/r-core.ts";
@@ -45,13 +45,13 @@ interface Vector {
 }
 
 interface EntityArgs {
-  texture: Texture;
+  texture: RaylibTexture;
   name: string;
 }
 
 abstract class Entity {
   pos: Vector;
-  texture: Texture;
+  texture: RaylibTexture;
 
   readonly name: string;
   readonly id: string;

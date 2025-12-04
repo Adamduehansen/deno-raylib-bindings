@@ -1,8 +1,8 @@
 import { raylib } from "./raylib-bindings.ts";
 import {
   Color,
+  RaylibTexture,
   RenderTexture,
-  Texture,
   toCString,
   toRaylibColor,
   toRaylibRenderTexture,
@@ -15,7 +15,7 @@ import { Rectangle, toRaylibRectangle } from "./math.ts";
 // Converters
 // ----------------------------------------------------------------------------
 
-function toTexture(textureBuffer: Uint8Array): Texture {
+function toTexture(textureBuffer: Uint8Array): RaylibTexture {
   const buffer = textureBuffer.buffer;
   const byteOffset = textureBuffer.byteOffset;
   const view = new DataView(buffer, byteOffset, textureBuffer.byteLength);
@@ -29,7 +29,7 @@ function toTexture(textureBuffer: Uint8Array): Texture {
   };
 }
 
-function toRaylibTexture(texture: Texture): BufferSource {
+function toRaylibTexture(texture: RaylibTexture): BufferSource {
   return new Uint32Array([
     texture.id,
     texture.width,
@@ -49,7 +49,7 @@ function toRenderTexture(renderTexture: Uint8Array): RenderTexture {
 
   // TextureStruct starts at offset 2 (u32 + i32 + i32 + i32 + i32) = 20 bytes
   const texOffset = 4;
-  const texture: Texture = {
+  const texture: RaylibTexture = {
     id: view.getUint32(texOffset + 0, true),
     width: view.getInt32(texOffset + 4, true),
     height: view.getInt32(texOffset + 8, true),
@@ -59,7 +59,7 @@ function toRenderTexture(renderTexture: Uint8Array): RenderTexture {
 
   // Depth texture follows the first TextureStruct (offset 2 + 20 = 22)
   const depthOffset = texOffset + 20;
-  const depth: Texture = {
+  const depth: RaylibTexture = {
     id: view.getUint32(depthOffset + 0, true),
     width: view.getInt32(depthOffset + 4, true),
     height: view.getInt32(depthOffset + 8, true),
@@ -92,7 +92,7 @@ export function loadRenderTexture(
 /**
  * Set texture scaling filter mode
  */
-export function setTextureFilter(texture: Texture, filter: number): void {
+export function setTextureFilter(texture: RaylibTexture, filter: number): void {
   raylib.symbols.SetTextureFilter(toRaylibTexture(texture), filter);
 }
 
@@ -100,7 +100,7 @@ export function setTextureFilter(texture: Texture, filter: number): void {
  * Draw a part of a texture defined by a rectangle with 'pro' parameters.
  */
 export function drawTexturePro(args: {
-  texture: Texture;
+  texture: RaylibTexture;
   source: Rectangle;
   dest: Rectangle;
   origin: Vector;
@@ -124,7 +124,7 @@ export function drawTexturePro(args: {
 /**
  * Load texture from file into GPU memory (VRAM)
  */
-export function loadTexture(fileName: string): Texture {
+export function loadTexture(fileName: string): RaylibTexture {
   const texture = raylib.symbols.LoadTexture(toCString(fileName));
   return toTexture(texture);
 }
@@ -132,7 +132,7 @@ export function loadTexture(fileName: string): Texture {
 /**
  * Unload texture from GPU memory (VRAM).
  */
-export function unloadTexture(texture: Texture): void {
+export function unloadTexture(texture: RaylibTexture): void {
   return raylib.symbols.UnloadTexture(toRaylibTexture(texture));
 }
 
@@ -151,7 +151,7 @@ export function unloadRenderTexture(texture: RenderTexture): void {
  * Draw a Texture2D.
  */
 export function drawTexture(args: {
-  texture: Texture;
+  texture: RaylibTexture;
   x: number;
   y: number;
   color: Color;
@@ -168,7 +168,7 @@ export function drawTexture(args: {
  * Draw a part of a texture defined by a rectangle
  */
 export function drawTextureRec(args: {
-  texture: Texture;
+  texture: RaylibTexture;
   rectangle: Rectangle;
   vector: Vector;
   color: Color;

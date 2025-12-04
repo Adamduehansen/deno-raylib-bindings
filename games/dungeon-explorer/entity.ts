@@ -14,6 +14,7 @@ import { Rectangle, vec } from "@src/math.ts";
 import { checkCollisionRecs, drawRectangleLinesEx } from "@src/r-shapes.ts";
 import Level from "./level.ts";
 import { DEBUG } from "./settings.ts";
+import Inventory from "./inventory.ts";
 
 class Body {
   private readonly _owner: Entity;
@@ -54,16 +55,23 @@ class Body {
 
 interface EntityArgs {
   position: Vector;
-  spriteIndex: Vector;
-  name?: string;
-  collide?: boolean;
   level: Level;
+  spriteIndex: Vector;
+  inventory: Inventory;
+  name?: Lowercase<string>;
+  collide?: boolean;
 }
+
+let entityCounter = 0;
 
 export default abstract class Entity {
   private _textureResource: TextureResource;
   private _spriteIndex: Vector;
+
   readonly level: Level;
+  readonly id: number;
+
+  protected readonly inventory: Inventory;
 
   position: Vector;
   velocity: Vector;
@@ -79,9 +87,12 @@ export default abstract class Entity {
     );
     this._spriteIndex = args.spriteIndex;
     this.level = args.level;
-
     this.position = args.position;
     this.name = args.name;
+    this.inventory = args.inventory;
+
+    this.id = entityCounter++;
+
     this.velocity = vec(0, 0);
 
     if (args.collide) {
@@ -123,6 +134,7 @@ export default abstract class Entity {
 interface Args {
   position: Vector;
   level: Level;
+  inventory: Inventory;
 }
 
 const PLAYER_SPEED = 2;
@@ -132,6 +144,7 @@ export class Player extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: vec(4, 0),
       name: "player",
       collide: true,
@@ -181,6 +194,7 @@ export class Beholder extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: vec(13, 0),
       name: "beholder",
       collide: true,
@@ -229,6 +243,7 @@ export class Wall extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: WallSpriteMap[args.variant],
       name: "wall",
       collide: true,
@@ -252,6 +267,7 @@ export class Corner extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: CornerSpriteMap[args.variant],
       name: "",
       collide: true,
@@ -264,6 +280,7 @@ export class Floor extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: vec(1, 1),
       name: "floor",
     });
@@ -275,12 +292,15 @@ export class StairsUp extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: vec(5, 3),
       collide: true,
     });
   }
 
   override update(): void {
+    super.update();
+
     if (
       checkCollisionRecs(
         this.level.player.body!.getBounds(),
@@ -297,12 +317,15 @@ export class StairsDown extends Entity {
     super({
       position: args.position,
       level: args.level,
+      inventory: args.inventory,
       spriteIndex: vec(4, 3),
       collide: true,
     });
   }
 
   override update(): void {
+    super.update();
+
     if (
       checkCollisionRecs(
         this.level.player.body!.getBounds(),
@@ -310,6 +333,34 @@ export class StairsDown extends Entity {
       )
     ) {
       this.level.goDownstairs();
+    }
+  }
+}
+
+export class Sword extends Entity {
+  constructor(args: Args) {
+    super({
+      position: args.position,
+      level: args.level,
+      inventory: args.inventory,
+      spriteIndex: vec(6, 4),
+      collide: true,
+      name: "sword",
+    });
+  }
+
+  override update(): void {
+    super.update();
+
+    if (
+      checkCollisionRecs(
+        this.level.player.body!.getBounds(),
+        this.body!.getBounds(),
+      )
+    ) {
+      this.level.destroy(this);
+      console.log(this.inventory);
+      this.inventory.add(this);
     }
   }
 }

@@ -1,13 +1,13 @@
 import * as xml from "@libs/xml";
 import { loadTexture, unloadTexture } from "@src/r-textures.ts";
-import { Texture } from "@src/r-core.ts";
+import { RaylibTexture } from "@src/r-core.ts";
 
 interface Resource {
   unload: () => void;
 }
 
 export class TextureResource implements Resource {
-  texture: Texture;
+  texture: RaylibTexture;
 
   constructor(path: string) {
     this.texture = loadTexture(path);
@@ -27,7 +27,7 @@ interface Layer {
 
 export class TiledResource implements Resource {
   private _layers: Layer[] = [];
-  private _tileset: Texture;
+  private _tileset: RaylibTexture;
 
   constructor(path: string) {
     const levelFileContent = Deno.readTextFileSync(path);
@@ -55,7 +55,7 @@ export class TiledResource implements Resource {
     unloadTexture(this._tileset);
   }
 
-  private getTileset(pathToTileset: string): Texture {
+  private getTileset(pathToTileset: string): RaylibTexture {
     const tilesetFileContent = Deno.readTextFileSync(pathToTileset);
     const tilesetXml = xml.parse(tilesetFileContent);
     const imageSource = tilesetXml.tileset.image["@source"];

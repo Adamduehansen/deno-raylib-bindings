@@ -6,6 +6,7 @@ import Entity, {
   Player,
   StairsDown,
   StairsUp,
+  Sword,
   Wall,
 } from "./entity.ts";
 import {
@@ -18,10 +19,12 @@ import {
 } from "@src/r-core.ts";
 import level1Layout from "./level1.txt" with { type: "text" };
 import level2Layout from "./level2.txt" with { type: "text" };
+import Inventory from "./inventory.ts";
 
 interface FactoryEntityProps {
   position: Vector;
   level: Level;
+  inventory: Inventory;
 }
 
 class EntityFactory {
@@ -34,63 +37,80 @@ class EntityFactory {
         return new Wall({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "SIDE",
         });
       case "wl":
         return new Wall({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "LEFT",
         });
       case "wr":
         return new Wall({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "RIGHT",
         });
       case "f":
         return new Floor({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
         });
       case "b":
         return new Beholder({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
         });
       case "cll":
         return new Corner({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "LOWER_LEFT",
         });
       case "cul":
         return new Corner({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "UPPER_LEFT",
         });
       case "cur":
         return new Corner({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "UPPER_RIGHT",
         });
       case "clr":
         return new Corner({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
           variant: "LOWER_RIGHT",
         });
       case "su":
         return new StairsUp({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
         });
       case "sd":
         return new StairsDown({
           position: props.position,
           level: props.level,
+          inventory: props.inventory,
+        });
+      case "is":
+        return new Sword({
+          position: props.position,
+          level: props.level,
+          inventory: props.inventory,
         });
       default:
         throw new Error(`Not implemented key "${entityKey}"`);
@@ -106,7 +126,7 @@ interface LevelEnemy {
 interface LevelArgs {
   levelLayout: string;
   playerSpawnPosition: Vector;
-  enemies: LevelEnemy[];
+  entities: LevelEnemy[];
   levelManager: LevelManager;
 }
 
@@ -114,8 +134,9 @@ export default abstract class Level {
   private _entityFactory = new EntityFactory();
 
   private _camera: Camera;
-  private _enemies: Entity[];
+  private _entities: Entity[];
   private readonly _levelManager: LevelManager;
+  private readonly _inventory: Inventory;
 
   readonly player: Player;
   readonly levelLayout: Entity[];
@@ -123,17 +144,19 @@ export default abstract class Level {
   constructor({
     levelLayout,
     playerSpawnPosition,
-    enemies,
+    entities,
     levelManager,
   }: LevelArgs) {
     this._levelManager = levelManager;
+    this._inventory = new Inventory();
 
     this.levelLayout = this._parseLevelLayout(levelLayout);
-    this._enemies = this._parseEnemies(enemies);
+    this._entities = this._parseEntities(entities);
 
     this.player = new Player({
       position: playerSpawnPosition,
       level: this,
+      inventory: this._inventory,
     });
     this._camera = {
       target: {
@@ -154,7 +177,7 @@ export default abstract class Level {
       levelLayout.update();
     }
 
-    for (const enemy of this._enemies) {
+    for (const enemy of this._entities) {
       enemy.update();
     }
 
@@ -173,13 +196,23 @@ export default abstract class Level {
       levelLayout.render();
     }
 
-    for (const enemy of this._enemies) {
+    for (const enemy of this._entities) {
       enemy.render();
     }
 
     this.player.render();
 
     endMode2D();
+
+    for (const entity of this._inventory.items) {
+      entity.render();
+    }
+  }
+
+  destroy(entityToRemove: Entity): void {
+    this._entities = this._entities.filter((entity) =>
+      entity.id !== entityToRemove.id
+    );
   }
 
   goUpstairs(): void {
@@ -202,6 +235,7 @@ export default abstract class Level {
           this._entityFactory.get(key, {
             level: this,
             position: vec(columnIndex * 8, rowIndex * 8),
+            inventory: this._inventory,
           }),
         );
       }
@@ -210,11 +244,12 @@ export default abstract class Level {
     return entities;
   }
 
-  private _parseEnemies(enemies: LevelEnemy[]): Entity[] {
+  private _parseEntities(enemies: LevelEnemy[]): Entity[] {
     return enemies.map((enemy) =>
       this._entityFactory.get(enemy.entityKey, {
         position: enemy.position,
         level: this,
+        inventory: this._inventory,
       })
     );
   }
@@ -226,7 +261,7 @@ export class Level1 extends Level {
       levelLayout: level1Layout,
       playerSpawnPosition: vec(2 * 8, 2 * 8),
       levelManager: levelManager,
-      enemies: [{
+      entities: [{
         entityKey: "b",
         position: vec(8 * 8, 8 * 8),
       }],
@@ -240,7 +275,10 @@ export class Level2 extends Level {
       levelLayout: level2Layout,
       playerSpawnPosition: vec(8 * 8, 4 * 8),
       levelManager: levelManager,
-      enemies: [],
+      entities: [{
+        entityKey: "is",
+        position: vec(2 * 8, 4 * 8),
+      }],
     });
   }
 }
