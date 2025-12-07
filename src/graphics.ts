@@ -14,27 +14,27 @@ interface SpriteArgs {
 }
 
 export class Sprite implements Graphic {
-  private _image: Image;
-  private _sourceView: Rectangle;
+  readonly image: Image;
+  readonly sourceView: Rectangle;
 
   constructor(args: SpriteArgs) {
-    this._image = args.image;
-    this._sourceView = args.sourceView;
+    this.image = args.image;
+    this.sourceView = args.sourceView;
   }
 
   render(pos: Vector): void {
-    if (this._image.resource === undefined) {
+    if (this.image.resource === undefined) {
       return;
     }
 
     drawTextureRec({
       color: White,
-      texture: this._image.resource,
+      texture: this.image.resource,
       vector: vec(
-        pos.x - this._sourceView.width / 2,
-        pos.y - this._sourceView.height / 2,
+        pos.x - this.sourceView.width / 2,
+        pos.y - this.sourceView.height / 2,
       ),
-      rectangle: this._sourceView,
+      rectangle: this.sourceView,
     });
   }
 }

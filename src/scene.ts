@@ -10,13 +10,19 @@ import {
   RayWhite,
 } from "./r-core.ts";
 import { drawFPS } from "./r-text.ts";
+import ScreenElement from "./screen-element.ts";
 
 class EntityManager {
   private _entities: Entity[] = [];
+  private _screenElements: ScreenElement[] = [];
   private _scene: Scene;
 
   get entities(): readonly Entity[] {
     return this._entities;
+  }
+
+  get screenElements(): readonly ScreenElement[] {
+    return this._screenElements;
   }
 
   constructor(scene: Scene) {
@@ -24,7 +30,12 @@ class EntityManager {
   }
 
   add(entity: Entity): void {
-    this._entities.push(entity);
+    if (entity instanceof ScreenElement) {
+      this._screenElements.push(entity);
+    } else {
+      this._entities.push(entity);
+    }
+
     entity.onInitialize(this._scene);
   }
 
@@ -71,6 +82,10 @@ export default abstract class Scene {
   protected entityManager = new EntityManager(this);
   protected camera = DefaultCamera;
 
+  get currentCamera(): Camera {
+    return this.camera;
+  }
+
   /**
    * Called once when the scene is added to the game. USe this to setup entities
    * that needs to live across scene changes.
@@ -104,9 +119,13 @@ export default abstract class Scene {
 
     beginMode2D(this.camera);
     for (const entity of this.entityManager.entities) {
-      entity.render();
+      entity.render(this);
     }
     endMode2D();
+
+    for (const screenElement of this.entityManager.screenElements) {
+      screenElement.render(this);
+    }
 
     drawFPS(0, 0);
     endDrawing();

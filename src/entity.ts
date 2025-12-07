@@ -14,15 +14,19 @@ export default abstract class Entity {
 
   // Graphic stuff
   // --------------------------------------------------------------------------
-  private _graphicsMap = new Map<string, Graphic>();
-  private _currentGraphicKey = "";
+  protected graphicsMap = new Map<string, Graphic>();
+  protected currentGraphicKey = "";
+
+  get currentGraphic(): Graphic | undefined {
+    return this.graphicsMap.get(this.currentGraphicKey);
+  }
 
   addGraphic(key: string, graphic: Graphic): void {
-    this._graphicsMap.set(key, graphic);
+    this.graphicsMap.set(key, graphic);
   }
 
   useGraphic(key: string): void {
-    this._currentGraphicKey = key;
+    this.currentGraphicKey = key;
   }
   // --------------------------------------------------------------------------
 
@@ -48,8 +52,9 @@ export default abstract class Entity {
     this.position.y += this.velocity.y;
   }
 
-  render(): void {
-    const currentGraphic = this._graphicsMap.get(this._currentGraphicKey);
+  // deno-lint-ignore no-unused-vars
+  render(scene: Scene): void {
+    const currentGraphic = this.graphicsMap.get(this.currentGraphicKey);
     if (currentGraphic === undefined) {
       return;
     }
