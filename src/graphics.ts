@@ -1,11 +1,10 @@
-import { vec } from "./r-math.ts";
 import { Vector, White } from "./r-core.ts";
 import { drawTextureRec } from "./r-textures.ts";
 import { Rectangle } from "./r-shapes.ts";
 import { Image } from "./resource.ts";
 
-interface Graphic {
-  render(): void;
+export default interface Graphic {
+  render(pos: Vector): void;
 }
 
 interface SpriteArgs {
@@ -22,7 +21,7 @@ export class Sprite implements Graphic {
     this._sourceView = args.sourceView;
   }
 
-  render(): void {
+  render(pos: Vector): void {
     if (this._image.resource === undefined) {
       return;
     }
@@ -30,7 +29,7 @@ export class Sprite implements Graphic {
     drawTextureRec({
       color: White,
       texture: this._image.resource,
-      vector: vec(0, 0),
+      vector: pos,
       rectangle: this._sourceView,
     });
   }
@@ -89,21 +88,5 @@ export class SpriteSheet {
       columns: grid.columns,
       rows: grid.rows,
     });
-  }
-}
-
-export class Graphics {
-  private _currentGraphic?: Graphic;
-
-  render(): void {
-    if (this._currentGraphic === undefined) {
-      return;
-    }
-
-    this._currentGraphic.render();
-  }
-
-  use(graphic: Graphic): void {
-    this._currentGraphic = graphic;
   }
 }

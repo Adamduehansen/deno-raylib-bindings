@@ -41,13 +41,6 @@ export function rlRotatef(
   raylib.symbols.rlRotatef(angle, x, y, z);
 }
 
-export function vec(x: number, y: number): Vector {
-  return {
-    x: x,
-    y: y,
-  };
-}
-
 /**
  * Scale vector (multiply by value)
  */

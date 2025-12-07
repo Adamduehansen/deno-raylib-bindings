@@ -3,6 +3,8 @@ import {
   clearBackground,
   closeWindow,
   endDrawing,
+  getScreenHeight,
+  getScreenWidth,
   initWindow,
   RayWhite,
   setTargetFPS,
@@ -11,6 +13,16 @@ import {
 import { drawFPS } from "./r-text.ts";
 import { ResourceManager } from "./resource.ts";
 import Scene from "./scene.ts";
+
+class Window {
+  get width(): number {
+    return getScreenWidth();
+  }
+
+  get height(): number {
+    return getScreenHeight();
+  }
+}
 
 type SceneFactory = Record<string, Scene>;
 
@@ -32,7 +44,10 @@ export default class Game {
   private _height: number;
   private _fps: number;
   private _resourceManager: ResourceManager;
+  private _scenes: SceneFactory;
   private _currentScene: Scene;
+
+  readonly window: Window;
 
   constructor(args: GameArgs) {
     this._title = args.title;
@@ -40,7 +55,10 @@ export default class Game {
     this._height = args.height;
     this._fps = args.fps;
     this._resourceManager = args.resourceManager;
+    this._scenes = args.scenes;
     this._currentScene = args.scenes[args.currentScene];
+
+    this.window = new Window();
   }
 
   /**
@@ -56,6 +74,10 @@ export default class Game {
     setTargetFPS(this._fps);
 
     this._resourceManager.load();
+
+    for (const scene of Object.values(this._scenes)) {
+      scene.onInitialize(this);
+    }
   }
 
   /**

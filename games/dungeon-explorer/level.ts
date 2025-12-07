@@ -22,6 +22,8 @@
 // import Inventory from "./inventory.ts";
 
 import Scene from "@src/scene.ts";
+import Game from "../../src/game.ts";
+import Player from "./player.ts";
 
 // interface FactoryEntityProps {
 //   position: Vector;
@@ -303,4 +305,16 @@ import Scene from "@src/scene.ts";
 // }
 
 export default class LevelScene extends Scene {
+  private _player = new Player();
+
+  override onInitialize(game: Game): void {
+    console.log("Initializing level scene!");
+
+    this._player.pos = {
+      x: game.window.width / 2,
+      y: game.window.height / 2,
+    };
+
+    this.entityManager.add(this._player);
+  }
 }

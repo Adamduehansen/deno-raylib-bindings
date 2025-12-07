@@ -1,6 +1,52 @@
+import Entity from "./entity.ts";
 import Game from "./game.ts";
 
+class EntityManager {
+  private _entities: Entity[] = [];
+  private _scene: Scene;
+
+  get entities(): readonly Entity[] {
+    return this._entities;
+  }
+
+  constructor(scene: Scene) {
+    this._scene = scene;
+  }
+
+  add(entity: Entity): void {
+    this._entities.push(entity);
+    entity.onInitialize(this._scene);
+  }
+
+  clear(): void {
+    for (const entity of this._entities) {
+      this.remove(entity);
+    }
+  }
+
+  getByName(name: string): readonly Entity[] {
+    return this._entities.filter((entity) => entity.name === name);
+  }
+
+  query(predicate: (entity: Entity) => boolean): readonly Entity[] {
+    return this._entities.filter(predicate);
+  }
+
+  remove(entityToRemove: Entity | undefined): void {
+    if (entityToRemove === undefined) {
+      return;
+    }
+
+    this._entities = this._entities.filter((entity) =>
+      entity.id !== entityToRemove.id
+    );
+    entityToRemove.onRemoved(this._scene);
+  }
+}
+
 export default abstract class Scene {
+  protected entityManager = new EntityManager(this);
+
   /**
    * Called once when the scene is added to the game. USe this to setup entities
    * that needs to live across scene changes.
@@ -29,5 +75,8 @@ export default abstract class Scene {
    * Called on each tick of the game.
    */
   onRender(): void {
+    for (const entity of this.entityManager.entities) {
+      entity.render();
+    }
   }
 }
