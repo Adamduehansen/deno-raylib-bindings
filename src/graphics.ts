@@ -2,6 +2,7 @@ import { Vector, White } from "./r-core.ts";
 import { drawTextureRec } from "./r-textures.ts";
 import { Rectangle } from "./r-shapes.ts";
 import { Image } from "./resource.ts";
+import { vec } from "./math.ts";
 
 export default interface Graphic {
   render(pos: Vector): void;
@@ -29,7 +30,10 @@ export class Sprite implements Graphic {
     drawTextureRec({
       color: White,
       texture: this._image.resource,
-      vector: pos,
+      vector: vec(
+        pos.x - this._sourceView.width / 2,
+        pos.y - this._sourceView.height / 2,
+      ),
       rectangle: this._sourceView,
     });
   }

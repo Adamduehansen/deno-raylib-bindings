@@ -1,4 +1,4 @@
-import GraphicsComponent from "./components/graphic-component.ts";
+import Graphic from "./graphics.ts";
 import { vec } from "./math.ts";
 import Scene from "./scene.ts";
 
@@ -10,7 +10,19 @@ export default abstract class Entity {
 
   pos = vec(0, 0);
 
-  graphics = new GraphicsComponent(this);
+  // Graphic stuff
+  // --------------------------------------------------------------------------
+  private _graphicsMap = new Map<string, Graphic>();
+  private _currentGraphicKey = "";
+
+  addGraphic(key: string, graphic: Graphic): void {
+    this._graphicsMap.set(key, graphic);
+  }
+
+  useGraphic(key: string): void {
+    this._currentGraphicKey = key;
+  }
+  // --------------------------------------------------------------------------
 
   /**
    * Called once the entity is added to a scene.
@@ -29,6 +41,11 @@ export default abstract class Entity {
   onRemoved(scene: Scene): void {}
 
   render(): void {
-    this.graphics.render();
+    const currentGraphic = this._graphicsMap.get(this._currentGraphicKey);
+    if (currentGraphic === undefined) {
+      return;
+    }
+
+    currentGraphic.render(this.pos);
   }
 }

@@ -18,8 +18,8 @@ export default class Player extends Entity {
   constructor() {
     super();
 
-    this.graphics.add("player", spriteSheet.getSprite(4, 0));
-    this.graphics.use("player");
+    this.addGraphic("player", spriteSheet.getSprite(4, 0));
+    this.useGraphic("player");
   }
 
   override onInitialize(_scene: Scene): void {
