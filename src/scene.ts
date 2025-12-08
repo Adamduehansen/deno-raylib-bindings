@@ -79,8 +79,9 @@ const DefaultCamera: Camera = {
 };
 
 export default abstract class Scene {
-  protected entityManager = new EntityManager(this);
   protected camera = DefaultCamera;
+
+  entityManager = new EntityManager(this);
 
   get currentCamera(): Camera {
     return this.camera;
@@ -106,7 +107,7 @@ export default abstract class Scene {
    */
   onUpdate(game: Game): void {
     for (const entity of this.entityManager.entities) {
-      entity.update(game);
+      entity.update(this, game);
     }
   }
 

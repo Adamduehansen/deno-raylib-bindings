@@ -1,8 +1,9 @@
 import Entity from "@src/entity.ts";
 import Game from "@src/game.ts";
 import spriteSheet from "./spriteSheet.ts";
+import Scene from "@src/scene.ts";
 
-const PLAYER_SPEED = 2;
+const PLAYER_SPEED = 1;
 
 export default class Player extends Entity {
   constructor() {
@@ -12,8 +13,8 @@ export default class Player extends Entity {
     this.useGraphic("player");
   }
 
-  override update(game: Game): void {
-    super.update(game);
+  override update(scene: Scene, game: Game): void {
+    super.update(scene, game);
 
     if (game.input.keyboard.isKeyDown("S")) {
       this.velocity.y = PLAYER_SPEED;

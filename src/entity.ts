@@ -2,6 +2,7 @@ import Body, { RectangleBody } from "./body.ts";
 import Game from "./game.ts";
 import Graphic from "./graphics.ts";
 import { vec } from "./math.ts";
+import { checkCollisionRecs } from "./r-shapes.ts";
 import Scene from "./scene.ts";
 
 let entityIdentifier = 0;
@@ -54,9 +55,49 @@ export default abstract class Entity {
   onRemoved(scene: Scene): void {}
 
   // deno-lint-ignore no-unused-vars
-  update(game: Game): void {
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
+  update(scene: Scene, game: Game): void {
+    // Calculate new position
+    const oldX = this.position.x;
+    const oldY = this.position.y;
+
+    const newX = this.position.x + this.velocity.x;
+    const newY = this.position.y + this.velocity.y;
+
+    let updatePosition = true;
+
+    // Check for collision
+    for (const other of scene.entityManager.entities) {
+      if (this.id === other.id) {
+        continue;
+      }
+
+      if (this.body === null || other.body === null) {
+        continue;
+      }
+
+      if ((this.body instanceof RectangleBody) === false) {
+        continue;
+      }
+
+      if ((other.body instanceof RectangleBody) === false) {
+        continue;
+      }
+
+      const newBody = this.body.clone();
+      newBody.x = newX - newBody.width / 2;
+      newBody.y = newY - newBody.height / 2;
+
+      if (checkCollisionRecs(newBody, other.body.getBounds())) {
+        updatePosition = false;
+        break;
+      }
+    }
+
+    if (updatePosition) {
+      this.position = vec(newX, newY);
+    } else {
+      this.position = vec(oldX, oldY);
+    }
 
     // Post update
     if (this.body !== null) {

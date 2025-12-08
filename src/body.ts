@@ -1,20 +1,36 @@
 import { vec } from "./math.ts";
 import { Green, Vector } from "./r-core.ts";
-import { drawRectangleLinesEx } from "./r-shapes.ts";
+import { drawRectangleLinesEx, Rectangle } from "./r-shapes.ts";
 
-export default abstract class Body {
+export default abstract class Body<TBodyType = unknown> {
   protected position: Vector = vec(0, 0);
 
+  abstract clone(): TBodyType;
   abstract update(position: Vector): void;
   abstract render(): void;
+  abstract getBounds(): TBodyType;
 }
 
-export class RectangleBody extends Body {
+export class RectangleBody extends Body<Rectangle> {
   constructor(readonly width: number, readonly height: number) {
     super();
   }
 
-  update(position: Vector): void {
+  override clone(): Rectangle {
+    return {
+      ...this.getBounds(),
+    };
+  }
+
+  override getBounds(): Rectangle {
+    return {
+      ...this.position,
+      height: this.height,
+      width: this.width,
+    };
+  }
+
+  override update(position: Vector): void {
     this.position = {
       x: position.x - this.width / 2,
       y: position.y - this.height / 2,
