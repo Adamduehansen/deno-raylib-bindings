@@ -7,7 +7,7 @@ import Scene from "./scene.ts";
 
 let entityIdentifier = 0;
 
-export default abstract class Entity {
+export default class Entity {
   readonly id = entityIdentifier++;
   readonly name?: string;
 

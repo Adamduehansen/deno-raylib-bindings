@@ -9,9 +9,6 @@ import Entity from "@src/entity.ts";
 
 const PLAYER_MAX_LIFE = 6;
 
-class Wall extends Entity {
-}
-
 class EntityFactory {
   static get(spriteId: string, args: {
     x: number;
@@ -26,12 +23,10 @@ class EntityFactory {
       return null;
     }
 
-    const wall = new Wall();
+    const wall = new Entity();
     wall.addGraphic("wall", sprite);
     wall.useGraphic("wall");
-    if (
-      spriteId === "70" || spriteId === "69"
-    ) {
+    if (spriteId === "70" || spriteId === "69") {
       wall.body = null;
     }
     wall.position = vec(args.x, args.y);
