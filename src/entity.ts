@@ -106,7 +106,7 @@ export default class Entity {
   }
 
   // deno-lint-ignore no-unused-vars
-  render(scene: Scene): void {
+  render(scene: Scene, game: Game): void {
     const currentGraphic = this.graphicsMap.get(this.currentGraphicKey);
     if (currentGraphic === undefined) {
       return;
@@ -115,7 +115,7 @@ export default class Entity {
     currentGraphic.render(this.position);
 
     // Post draw
-    if (this.body !== null) {
+    if (game.debug && this.body !== null) {
       this.body.render();
     }
   }

@@ -114,13 +114,13 @@ export default abstract class Scene {
   /**
    * Called on each tick of the game.
    */
-  onRender(): void {
+  onRender(game: Game): void {
     beginDrawing();
     clearBackground(Black);
 
     beginMode2D(this.camera);
     for (const entity of this.entityManager.entities) {
-      entity.render(this);
+      entity.render(this, game);
     }
     endMode2D();
 

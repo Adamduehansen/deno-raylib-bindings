@@ -32,6 +32,7 @@ interface GameArgs {
   resourceManager: ResourceManager;
   scenes: SceneFactory;
   currentScene: SceneKey;
+  debug?: boolean;
 }
 
 export default class Game {
@@ -45,6 +46,7 @@ export default class Game {
 
   readonly window = new Window();
   readonly input = new Input();
+  readonly debug: boolean;
 
   constructor(args: GameArgs) {
     this._title = args.title;
@@ -54,6 +56,7 @@ export default class Game {
     this._resourceManager = args.resourceManager;
     this._scenes = args.scenes;
     this._currentScene = args.scenes[args.currentScene];
+    this.debug = args.debug ?? false;
   }
 
   /**
@@ -86,7 +89,7 @@ export default class Game {
 
       // Render
       // ======================================================================
-      this._currentScene.onRender();
+      this._currentScene.onRender(this);
     }
   }
 
