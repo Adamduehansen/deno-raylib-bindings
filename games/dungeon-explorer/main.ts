@@ -18,7 +18,6 @@ const game = new Game({
     "level": level,
   },
   currentScene: "level",
-  debug: true,
 });
 
 game.initialize();

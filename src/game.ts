@@ -49,6 +49,8 @@ export default class Game {
   readonly debug: boolean;
 
   constructor(args: GameArgs) {
+    const cliArgs = Deno.args;
+
     this._title = args.title;
     this._width = args.width;
     this._height = args.height;
@@ -56,7 +58,7 @@ export default class Game {
     this._resourceManager = args.resourceManager;
     this._scenes = args.scenes;
     this._currentScene = args.scenes[args.currentScene];
-    this.debug = args.debug ?? false;
+    this.debug = args.debug ?? cliArgs.some((cliArg) => cliArg === "--debug");
   }
 
   /**
