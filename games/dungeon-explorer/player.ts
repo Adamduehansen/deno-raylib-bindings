@@ -2,6 +2,7 @@ import Entity from "@src/entity.ts";
 import Game from "@src/game.ts";
 import spriteSheet from "./spriteSheet.ts";
 import Scene from "@src/scene.ts";
+import { RectangleBody } from "@src/body.ts";
 
 const PLAYER_SPEED = 1;
 
@@ -11,6 +12,8 @@ export default class Player extends Entity {
 
     this.addGraphic("player", spriteSheet.getSprite(4, 0));
     this.useGraphic("player");
+
+    this.body = new RectangleBody(8, 8);
   }
 
   override update(scene: Scene, game: Game): void {

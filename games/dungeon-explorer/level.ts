@@ -6,6 +6,7 @@ import { vec } from "@src/math.ts";
 import level from "./level.txt" with { type: "text" };
 import spriteSheet from "./spriteSheet.ts";
 import Entity from "@src/entity.ts";
+import { RectangleBody } from "@src/body.ts";
 
 const PLAYER_MAX_LIFE = 6;
 
@@ -23,13 +24,19 @@ class EntityFactory {
       return null;
     }
 
-    const wall = new Entity();
-    wall.useGraphic(sprite);
+    const entity = new Entity();
+    entity.useGraphic(sprite);
     if (spriteId === "70" || spriteId === "69") {
-      wall.body = null;
+      entity.body = null;
+    } else {
+      if (spriteId === "17" || spriteId === "20") {
+        entity.body = new RectangleBody(1, 8);
+      } else {
+        entity.body = new RectangleBody(8, 8);
+      }
     }
-    wall.position = vec(args.x, args.y);
-    return wall;
+    entity.position = vec(args.x, args.y);
+    return entity;
   }
 }
 

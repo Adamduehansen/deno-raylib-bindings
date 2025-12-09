@@ -14,7 +14,7 @@ export default class Entity {
   velocity = vec(0, 0);
   position = vec(0, 0);
 
-  body: Body | null;
+  body: Body | null = null;
 
   // Graphic stuff
   // --------------------------------------------------------------------------
@@ -41,10 +41,6 @@ export default class Entity {
     }
   }
   // --------------------------------------------------------------------------
-
-  constructor() {
-    this.body = new RectangleBody(8, 8);
-  }
 
   /**
    * Called once the entity is added to a scene.
