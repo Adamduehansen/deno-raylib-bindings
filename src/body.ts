@@ -1,6 +1,6 @@
 import { vec } from "./math.ts";
-import { Green, Vector } from "./r-core.ts";
-import { drawRectangleLinesEx, Rectangle } from "./r-shapes.ts";
+import { Green, Red, Vector } from "./r-core.ts";
+import { drawCircleV, drawRectangleLinesEx, Rectangle } from "./r-shapes.ts";
 
 export default abstract class Body<TBodyType = unknown> {
   protected position: Vector = vec(0, 0);
@@ -46,6 +46,14 @@ export class RectangleBody extends Body<Rectangle> {
         height: this.height,
         width: this.width,
       },
+    });
+    drawCircleV({
+      center: {
+        x: this.position.x + this.width / 2,
+        y: this.position.y + this.height / 2,
+      },
+      color: Red,
+      radius: 1,
     });
   }
 }
