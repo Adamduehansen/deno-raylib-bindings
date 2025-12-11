@@ -29,9 +29,9 @@ interface GameArgs {
   height: number;
   width: number;
   fps: number;
-  resourceManager: ResourceManager;
   scenes: SceneFactory;
   currentScene: SceneKey;
+  resourceManager?: ResourceManager;
   debug?: boolean;
 }
 
@@ -40,9 +40,10 @@ export default class Game {
   private _width: number;
   private _height: number;
   private _fps: number;
-  private _resourceManager: ResourceManager;
   private _scenes: SceneFactory;
   private _currentScene: Scene;
+
+  private _resourceManager?: ResourceManager;
 
   readonly window = new Window();
   readonly input = new Input();
@@ -73,7 +74,9 @@ export default class Game {
 
     setTargetFPS(this._fps);
 
-    this._resourceManager.load();
+    if (this._resourceManager !== undefined) {
+      this._resourceManager.load();
+    }
 
     for (const scene of Object.values(this._scenes)) {
       scene.onInitialize(this);
@@ -99,7 +102,9 @@ export default class Game {
    * Closes the game.
    */
   close(): void {
-    this._resourceManager.unload();
+    if (this._resourceManager !== undefined) {
+      this._resourceManager.unload();
+    }
 
     closeWindow();
   }
