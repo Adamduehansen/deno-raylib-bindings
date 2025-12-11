@@ -7,6 +7,7 @@ import level from "./level.txt" with { type: "text" };
 import spriteSheet from "./spriteSheet.ts";
 import Entity from "@src/entity.ts";
 import { RectangleBody } from "@src/body.ts";
+import Orc from "./orc.ts";
 
 const PLAYER_MAX_LIFE = 6;
 
@@ -70,6 +71,10 @@ export default class LevelScene extends Scene {
     };
 
     this._parseLevel(level);
+
+    const orc = new Orc();
+    orc.position = vec(64, 32);
+    this.entityManager.add(orc);
 
     this._player.position = vec(16, 16);
     this.entityManager.add(this._player);
