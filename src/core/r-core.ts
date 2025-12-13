@@ -64,7 +64,10 @@ export function toCString(str: string): BufferSource {
   return cEncoder.encode(`${str}\0`);
 }
 
-export function toRaylibColor(arr: number[]): BufferSource {
+/**
+ * Converts a {@linkcode Color} to a Raylib color
+ */
+export function toRaylibColor(arr: Color): BufferSource {
   return new Uint8Array(arr);
 }
 

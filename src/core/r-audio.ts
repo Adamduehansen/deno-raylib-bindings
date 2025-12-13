@@ -16,6 +16,9 @@ interface AudioStream {
   data: number;
 }
 
+/**
+ * Represents a sound in Raylib.
+ */
 export interface RaylibSound {
   stream: AudioStream;
   frameCount: number;
@@ -117,6 +120,8 @@ export function updateMusicStream(music: BufferSource): void {
 
 /**
  * Unload music stream.
+ *
+ * @param music The music stream to unload.
  */
 export function unloadMusicStream(music: BufferSource): void {
   return raylib.symbols.UnloadMusicStream(music);
@@ -126,14 +131,30 @@ export function unloadMusicStream(music: BufferSource): void {
 // Wave/Sound loading/unloading functions
 // ----------------------------------------------------------------------------
 
+/**
+ * Load sound from file.
+ *
+ * @param fileName The path and name to the file.
+ * @returns The loaded sound.
+ */
 export function loadSound(fileName: string): RaylibSound {
   return toSound(raylib.symbols.LoadSound(toCString(fileName)));
 }
 
+/**
+ * Unload sound
+ *
+ * @param sound The sound to unload.
+ */
 export function unloadSound(sound: RaylibSound): void {
   return raylib.symbols.UnloadSound(toRaylibSound(sound));
 }
 
+/**
+ * Play a sound
+ *
+ * @param sound The sound to play.
+ */
 export function playSound(sound: RaylibSound): void {
   return raylib.symbols.PlaySound(toRaylibSound(sound));
 }
