@@ -1,6 +1,6 @@
 {
   "name": "@adamduehansen/raylib-bindings",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "tasks": {
     "gemcatcher": "deno run --allow-ffi ./games/gem-catcher/main.ts",
     "gemcatcher:compile": "deno compile --allow-ffi --output ./bin/gem-catcher ./games/gem-catcher/main.ts"
@@ -21,5 +21,14 @@
     }
   },
   "license": "MIT",
-  "exports": "./mod.ts"
+  "exports": {
+    ".": "./mod.ts",
+    "./r-audio": "./src/core/r-audio.ts",
+    "./r-core": "./src/core/r-core.ts",
+    "./r-math": "./src/core/r-math.ts",
+    "./r-models": "./src/core/r-models.ts",
+    "./r-shapes": "./src/core/r-shapes.ts",
+    "./r-text": "./src/core/r-text.ts",
+    "./r-textures": "./src/core/r-textures.ts"
+  }
 }

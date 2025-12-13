@@ -1,4 +1,4 @@
-import { toRaylibVector2, toVector, Vector } from "./r-core.ts";
+import { toRaylibVector2, toVector, type Vector } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
 /**
