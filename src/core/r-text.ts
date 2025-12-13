@@ -1,3 +1,9 @@
+/**
+ * Includes bindings for functions in the {@link https://www.raylib.com/cheatsheet/cheatsheet.html#ptext|rtext module}.
+ *
+ * @module
+ */
+
 import {
   type Color,
   toCString,

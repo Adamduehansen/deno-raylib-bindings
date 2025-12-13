@@ -1,15 +1,21 @@
+/**
+ * Includes bindings for functions in the {@link https://www.raylib.com/cheatsheet/cheatsheet.html#ptextures|rtextures module}.
+ *
+ * @module
+ */
+
 import { raylib } from "./raylib-bindings.ts";
 import {
-  Color,
-  RaylibTexture,
-  RenderTexture,
+  type Color,
+  type RaylibTexture,
+  type RenderTexture,
   toCString,
   toRaylibColor,
   toRaylibRenderTexture,
   toRaylibVector2,
-  Vector,
+  type Vector,
 } from "./r-core.ts";
-import { RaylibRectangle, toRaylibRectangle } from "./r-shapes.ts";
+import { type RaylibRectangle, toRaylibRectangle } from "./r-shapes.ts";
 
 //-----------------------------------------------------------------------------
 // Converters

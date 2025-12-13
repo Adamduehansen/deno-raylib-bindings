@@ -1,3 +1,9 @@
+/**
+ * Includes bindings for functions in the {@link https://www.raylib.com/cheatsheet/cheatsheet.html#pmodels|rmodels module}.
+ *
+ * @module
+ */
+
 import { raylib } from "./raylib-bindings.ts";
 
 // ----------------------------------------------------------------------------

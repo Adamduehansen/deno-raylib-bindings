@@ -1,4 +1,15 @@
-import { Color, toRaylibColor, toRaylibVector2, Vector } from "./r-core.ts";
+/**
+ * Includes bindings for functions in the {@link https://www.raylib.com/cheatsheet/cheatsheet.html#pshapes|rshapes module}.
+ *
+ * @module
+ */
+
+import {
+  type Color,
+  toRaylibColor,
+  toRaylibVector2,
+  type Vector,
+} from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
 export interface RaylibRectangle {

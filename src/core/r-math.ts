@@ -1,3 +1,9 @@
+/**
+ * Includes bindings for functions in the Raymath file.
+ *
+ * @module
+ */
+
 import { toRaylibVector2, toVector, type Vector } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 

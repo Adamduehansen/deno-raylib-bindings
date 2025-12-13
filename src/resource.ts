@@ -1,5 +1,5 @@
-import { loadSound, RaylibSound, unloadSound } from "./core/r-audio.ts";
-import { RaylibTexture } from "./core/r-core.ts";
+import { loadSound, type RaylibSound, unloadSound } from "./core/r-audio.ts";
+import type { RaylibTexture } from "./core/r-core.ts";
 import { loadTexture, unloadTexture } from "./core/r-textures.ts";
 
 abstract class Resource<T = unknown> {

@@ -1,3 +1,9 @@
+/**
+ * Includes bindings for functions in the {@link https://www.raylib.com/cheatsheet/cheatsheet.html#paudio|raudio module}.
+ *
+ * @module
+ */
+
 import { toCString } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 

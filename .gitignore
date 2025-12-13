@@ -1,9 +1,1 @@
-# Project
-*.tiled-session
-
-# binaries
-lib
-bin
-
-# assets
-spritesheet.png
+docs
