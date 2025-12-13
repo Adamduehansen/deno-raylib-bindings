@@ -1,6 +1,6 @@
 {
   "name": "@adamduehansen/raylib-bindings",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "tasks": {
     "gemcatcher": "deno run --allow-ffi ./games/gem-catcher/main.ts",
     "gemcatcher:compile": "deno compile --allow-ffi --output ./bin/gem-catcher ./games/gem-catcher/main.ts"
