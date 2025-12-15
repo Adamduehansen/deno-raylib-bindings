@@ -1,6 +1,6 @@
 {
   "name": "@adamduehansen/raylib-bindings",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "tasks": {},
   "license": "MIT",
   "exports": {
@@ -12,6 +12,5 @@
     "./r-shapes": "./src/core/r-shapes.ts",
     "./r-text": "./src/core/r-text.ts",
     "./r-textures": "./src/core/r-textures.ts"
-  },
-  "exclude": ["./examples/"]
+  }
 }

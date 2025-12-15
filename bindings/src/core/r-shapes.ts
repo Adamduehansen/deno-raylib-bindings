@@ -134,28 +134,28 @@ export function drawRectangleLines(args: {
 /**
  * Draw a color-filled rectangle.
  */
-export function drawRectangleRec(
-  rectangle: RaylibRectangle,
-  color: Color,
-): void {
+export function drawRectangleRec(args: {
+  rectangle: RaylibRectangle;
+  color: Color;
+}): void {
   raylib.symbols.DrawRectangleRec(
-    toRaylibRectangle(rectangle),
-    toRaylibColor(color),
+    toRaylibRectangle(args.rectangle),
+    toRaylibColor(args.color),
   );
 }
 
 /**
  * Draw a color-filled rectangle (Vector version).
  */
-export function drawRectangleV(
-  position: RaylibVector,
-  size: RaylibVector,
-  color: Color,
-): void {
+export function drawRectangleV(args: {
+  position: RaylibVector;
+  size: RaylibVector;
+  color: Color;
+}): void {
   raylib.symbols.DrawRectangleV(
-    toRaylibVector2(position),
-    toRaylibVector2(size),
-    toRaylibColor(color),
+    toRaylibVector2(args.position),
+    toRaylibVector2(args.size),
+    toRaylibColor(args.color),
   );
 }
 
