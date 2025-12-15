@@ -1,16 +1,3 @@
 {
-  "name": "@adamduehansen/raylib-bindings",
-  "version": "0.1.5",
-  "tasks": {},
-  "license": "MIT",
-  "exports": {
-    ".": "./mod.ts",
-    "./r-audio": "./src/core/r-audio.ts",
-    "./r-core": "./src/core/r-core.ts",
-    "./r-math": "./src/core/r-math.ts",
-    "./r-models": "./src/core/r-models.ts",
-    "./r-shapes": "./src/core/r-shapes.ts",
-    "./r-text": "./src/core/r-text.ts",
-    "./r-textures": "./src/core/r-textures.ts"
-  }
+  "workspace": ["./bindings", "./arkanoid"]
 }
