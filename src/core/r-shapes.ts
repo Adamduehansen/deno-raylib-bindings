@@ -6,9 +6,9 @@
 
 import {
   type Color,
+  type RaylibVector,
   toRaylibColor,
   toRaylibVector2,
-  type Vector,
 } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
@@ -48,7 +48,7 @@ export function drawCircle(args: {
  * Draw circle outline (Vector version)
  */
 export function drawCircleLinesV(args: {
-  center: Vector;
+  center: RaylibVector;
   radius: number;
   color: Color;
 }): void {
@@ -63,7 +63,7 @@ export function drawCircleLinesV(args: {
  * Draw a color-filled circle (Vector version)
  */
 export function drawCircleV(args: {
-  center: Vector;
+  center: RaylibVector;
   radius: number;
   color: Color;
 }): void {
@@ -148,8 +148,8 @@ export function drawRectangleRec(
  * Draw a color-filled rectangle (Vector version).
  */
 export function drawRectangleV(
-  position: Vector,
-  size: Vector,
+  position: RaylibVector,
+  size: RaylibVector,
   color: Color,
 ): void {
   raylib.symbols.DrawRectangleV(
@@ -195,7 +195,7 @@ export function checkCollisionRecs(
  * Check collision between circle and rectangle.
  */
 export function checkCollisionCircleRec(
-  vector: Vector,
+  vector: RaylibVector,
   radius: number,
   rectangle: RaylibRectangle,
 ): boolean {

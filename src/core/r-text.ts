@@ -6,10 +6,10 @@
 
 import {
   type Color,
+  type RaylibVector,
   toCString,
   toRaylibColor,
   toRaylibVector2,
-  type Vector,
 } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
@@ -108,7 +108,7 @@ export function drawText(args: {
 export function drawTextEx(args: {
   font: Font;
   text: string;
-  position: Vector;
+  position: RaylibVector;
   fontSize: number;
   spacing: number;
   tint: Color;

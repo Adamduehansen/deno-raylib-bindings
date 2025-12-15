@@ -8,12 +8,12 @@ import { raylib } from "./raylib-bindings.ts";
 import {
   type Color,
   type RaylibTexture,
+  type RaylibVector,
   type RenderTexture,
   toCString,
   toRaylibColor,
   toRaylibRenderTexture,
   toRaylibVector2,
-  type Vector,
 } from "./r-core.ts";
 import { type RaylibRectangle, toRaylibRectangle } from "./r-shapes.ts";
 
@@ -109,7 +109,7 @@ export function drawTexturePro(args: {
   texture: RaylibTexture;
   source: RaylibRectangle;
   dest: RaylibRectangle;
-  origin: Vector;
+  origin: RaylibVector;
   rotation: number;
   tint: Color;
 }): void {
@@ -176,7 +176,7 @@ export function drawTexture(args: {
 export function drawTextureRec(args: {
   texture: RaylibTexture;
   rectangle: RaylibRectangle;
-  vector: Vector;
+  vector: RaylibVector;
   color: Color;
 }): void {
   return raylib.symbols.DrawTextureRec(

@@ -9,13 +9,13 @@ import { raylib } from "./raylib-bindings.ts";
 // Types
 // ----------------------------------------------------------------------------
 export interface Camera {
-  target: Vector;
-  offset: Vector;
+  target: RaylibVector;
+  offset: RaylibVector;
   rotation: number;
   zoom: number;
 }
 
-export interface Vector {
+export interface RaylibVector {
   x: number;
   y: number;
 }
@@ -72,16 +72,16 @@ export function toRaylibColor(arr: Color): BufferSource {
 }
 
 /**
- * Converts a {@linkcode Vector} to a Raylib vector2 struct.
+ * Converts a {@linkcode RaylibVector} to a Raylib vector2 struct.
  */
-export function toRaylibVector2(vector: Vector): BufferSource {
+export function toRaylibVector2(vector: RaylibVector): BufferSource {
   return new Float32Array([vector.x, vector.y]);
 }
 
 /**
- * Converts a Raylib vector buffer to a {@linkcode Vector}.
+ * Converts a Raylib vector buffer to a {@linkcode RaylibVector}.
  */
-export function toVector(buffer: Uint8Array): Vector {
+export function toVector(buffer: Uint8Array): RaylibVector {
   const view = new DataView(
     buffer.buffer,
     buffer.byteOffset,
@@ -281,14 +281,14 @@ export function isMouseButtonDown(key: number): boolean {
 /**
  * Get mouse delta between frames.
  */
-export function getMouseDelta(): Vector {
+export function getMouseDelta(): RaylibVector {
   return toVector(raylib.symbols.GetMouseDelta());
 }
 
 /**
  * Get mouse position XY.
  */
-export function getMousePosition(): Vector {
+export function getMousePosition(): RaylibVector {
   return toVector(raylib.symbols.GetMousePosition());
 }
 
@@ -366,9 +366,9 @@ export function endTextureMode(): void {
 
 // Screen-space-related functions
 export function getScreenToWorld2D(
-  position: Vector,
+  position: RaylibVector,
   camera: Camera,
-): Vector {
+): RaylibVector {
   return toVector(raylib.symbols.GetScreenToWorld2D(
     toRaylibVector2(position),
     toRaylibCamera2D(camera),

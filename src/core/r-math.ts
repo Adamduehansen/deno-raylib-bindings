@@ -4,7 +4,7 @@
  * @module
  */
 
-import { toRaylibVector2, toVector, type Vector } from "./r-core.ts";
+import { type RaylibVector, toRaylibVector2, toVector } from "./r-core.ts";
 import { raylib } from "./raylib-bindings.ts";
 
 /**
@@ -50,7 +50,10 @@ export function rlRotatef(
 /**
  * Scale vector (multiply by value)
  */
-export function vector2Scale(vector: Vector, scale: number): Vector {
+export function vector2Scale(
+  vector: RaylibVector,
+  scale: number,
+): RaylibVector {
   return toVector(raylib.symbols.Vector2Scale(
     toRaylibVector2(vector),
     scale,
@@ -60,7 +63,10 @@ export function vector2Scale(vector: Vector, scale: number): Vector {
 /**
  * Add two vectors (v1 + v2)
  */
-export function vector2Add(vector2A: Vector, vector2B: Vector): Vector {
+export function vector2Add(
+  vector2A: RaylibVector,
+  vector2B: RaylibVector,
+): RaylibVector {
   return toVector(raylib.symbols.Vector2Add(
     toRaylibVector2(vector2A),
     toRaylibVector2(vector2B),
