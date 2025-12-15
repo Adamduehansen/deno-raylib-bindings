@@ -1,4 +1,3 @@
-import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 import {
   Black,
   getFrameTime,
@@ -7,15 +6,50 @@ import {
   isKeyDown,
   KeyA,
   KeyD,
+  RaylibVector,
+  Red,
 } from "@adamduehansen/raylib-bindings/r-core";
-import Entity from "./entity.ts";
 import { vec } from "./vector.ts";
+import {
+  drawCircleV,
+  drawRectangleRec,
+} from "@adamduehansen/raylib-bindings/r-shapes";
+
+abstract class Entity {
+  pos: RaylibVector = vec(0, 0);
+
+  abstract update(): void;
+  abstract draw(): void;
+}
+
+// Ball
+// ----------------------------------------------------------------------------
+
+export class Ball extends Entity {
+  constructor() {
+    super();
+  }
+
+  override update(): void {
+  }
+
+  override draw(): void {
+    drawCircleV({
+      center: this.pos,
+      color: Red,
+      radius: 8,
+    });
+  }
+}
+
+// Paddle
+// ----------------------------------------------------------------------------
 
 const PADDLE_SPEED = 100;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 
-export default class Paddle extends Entity {
+export class Paddle extends Entity {
   constructor() {
     super();
 

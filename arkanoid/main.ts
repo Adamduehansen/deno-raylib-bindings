@@ -8,8 +8,8 @@ import {
   setTargetFPS,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
-import Paddle from "./paddle.ts";
-import Ball from "./ball.ts";
+import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
+import { GameScene } from "./scene.ts";
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 450;
@@ -22,14 +22,12 @@ initWindow({
 
 setTargetFPS(60);
 
-const player = new Paddle();
-const ball = new Ball();
+let currentScene = new GameScene();
 
 while (windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  player.update();
-  ball.update();
+  currentScene.update();
 
   // Draw
   // --------------------------------------------------------------------------
@@ -37,8 +35,9 @@ while (windowShouldClose() === false) {
 
   clearBackground(RayWhite);
 
-  player.draw();
-  ball.draw();
+  currentScene.draw();
+
+  drawFPS(0, 0);
 
   endDrawing();
 }
