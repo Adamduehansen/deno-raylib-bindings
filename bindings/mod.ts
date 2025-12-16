@@ -7,3 +7,4 @@ export * as "text" from "./src/core/r-text.ts";
 export * as "textures" from "./src/core/r-textures.ts";
 
 export * from "./src/resource.ts";
+export * from "./src/event-emitter.ts";

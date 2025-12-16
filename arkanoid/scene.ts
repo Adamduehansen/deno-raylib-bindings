@@ -1,6 +1,9 @@
+import { EventEmitter } from "@adamduehansen/raylib-bindings";
 import { Ball, Paddle } from "./entities.ts";
+import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 
 abstract class Scene {
+  abstract initialize(): void;
   abstract update(): void;
   abstract draw(): void;
 }
@@ -11,10 +14,22 @@ abstract class Scene {
 export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
+  readonly events = new EventEmitter();
+
+  override initialize(): void {
+    this.paddle.initialize(this);
+    this.ball.initialize(this);
+  }
 
   override update(): void {
+    // Handle input
+    if (isKeyPressed(KeySpace)) {
+      this.events.emit("activate");
+    }
+
+    // Update entities
     this.paddle.update();
-    this.ball.update();
+    this.ball.update(this);
   }
 
   override draw(): void {
@@ -27,6 +42,9 @@ export class GameScene extends Scene {
 // ----------------------------------------------------------------------------
 
 export class EndScene extends Scene {
+  override initialize(): void {
+  }
+
   override update(): void {
   }
 

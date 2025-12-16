@@ -14,11 +14,13 @@ import {
   drawCircleV,
   drawRectangleRec,
 } from "@adamduehansen/raylib-bindings/r-shapes";
+import { GameScene } from "./scene.ts";
 
 abstract class Entity {
   pos: RaylibVector = vec(0, 0);
 
-  abstract update(): void;
+  abstract initialize(scene: GameScene): void;
+  abstract update(scene: GameScene): void;
   abstract draw(): void;
 }
 
@@ -26,11 +28,18 @@ abstract class Entity {
 // ----------------------------------------------------------------------------
 
 export class Ball extends Entity {
-  constructor() {
-    super();
+  private _active: boolean = false;
+
+  override initialize(scene: GameScene): void {
+    scene.events.on("activate", () => {
+      console.log("Activate ball!");
+    });
   }
 
-  override update(): void {
+  override update(scene: GameScene): void {
+    if (this._active === false) {
+      this.pos = vec(scene.paddle.pos.x, scene.paddle.pos.y - 25);
+    }
   }
 
   override draw(): void {
@@ -50,9 +59,7 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 
 export class Paddle extends Entity {
-  constructor() {
-    super();
-
+  override initialize(_scene: GameScene): void {
     this.pos = vec(
       getScreenWidth() / 2,
       getScreenHeight() - getScreenHeight() / 10,

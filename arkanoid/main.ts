@@ -22,7 +22,10 @@ initWindow({
 
 setTargetFPS(60);
 
-let currentScene = new GameScene();
+const gameScene = new GameScene();
+gameScene.initialize();
+
+let currentScene = gameScene;
 
 while (windowShouldClose() === false) {
   // Update
