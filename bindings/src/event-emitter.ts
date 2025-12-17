@@ -1,23 +1,35 @@
-type EventMap = Record<string, ((data?: unknown) => void)[]>;
+type EventHandler<TEventData> = (data?: TEventData) => void;
 
-export class EventEmitter {
-  private readonly _eventMap: EventMap = {};
+export class EventEmitter<TEventMap extends Record<string, unknown>> {
+  private readonly _eventMap = new Map<
+    keyof TEventMap,
+    EventHandler<unknown>[]
+  >();
 
-  emit(event: string, data?: unknown) {
-    if (this._eventMap[event] === undefined) {
+  emit<TEvent extends keyof TEventMap>(
+    event: TEvent,
+    data?: TEventMap[TEvent],
+  ) {
+    const handlers = this._eventMap.get(event);
+    if (!handlers) {
       return;
     }
 
-    for (const handler of this._eventMap[event]) {
-      handler(data);
+    for (const handler of handlers) {
+      (handler as EventHandler<TEventMap[TEvent]>)(data);
     }
   }
 
-  on(event: string, handler: (data: unknown) => void) {
-    if (this._eventMap[event] === undefined) {
-      this._eventMap[event] = [];
+  on<TEvent extends keyof TEventMap>(
+    event: TEvent,
+    handler: EventHandler<TEventMap[TEvent]>,
+  ) {
+    let handlers = this._eventMap.get(event);
+    if (handlers === undefined) {
+      handlers = [];
+      this._eventMap.set(event, handlers);
     }
 
-    this._eventMap[event].push(handler);
+    handlers.push(handler as EventHandler<unknown>);
   }
 }

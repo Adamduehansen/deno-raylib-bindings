@@ -14,7 +14,12 @@ abstract class Scene {
 export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
-  readonly events = new EventEmitter();
+  readonly events = new EventEmitter<{
+    "activate": undefined;
+    "game_over": { score: number };
+  }>();
+
+  private _isActive = false;
 
   override initialize(): void {
     this.paddle.initialize(this);
@@ -23,7 +28,8 @@ export class GameScene extends Scene {
 
   override update(): void {
     // Handle input
-    if (isKeyPressed(KeySpace)) {
+    if (isKeyPressed(KeySpace) && this._isActive === false) {
+      this._isActive = true;
       this.events.emit("activate");
     }
 
