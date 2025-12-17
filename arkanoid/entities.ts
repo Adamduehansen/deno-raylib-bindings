@@ -18,9 +18,14 @@ import { GameScene } from "./scene.ts";
 
 abstract class Entity {
   pos: RaylibVector = vec(0, 0);
+  vel: RaylibVector = vec(0, 0);
+
+  update(_scene: GameScene): void {
+    this.pos.x += this.vel.x * getFrameTime();
+    this.pos.y += this.vel.y * getFrameTime();
+  }
 
   abstract initialize(scene: GameScene): void;
-  abstract update(scene: GameScene): void;
   abstract draw(): void;
 }
 
@@ -32,11 +37,14 @@ export class Ball extends Entity {
 
   override initialize(scene: GameScene): void {
     scene.events.on("activate", () => {
-      console.log("Activate ball!");
+      this.vel = vec(0, -150);
+      this._active = true;
     });
   }
 
   override update(scene: GameScene): void {
+    super.update(scene);
+
     if (this._active === false) {
       this.pos = vec(scene.paddle.pos.x, scene.paddle.pos.y - 25);
     }
@@ -54,7 +62,7 @@ export class Ball extends Entity {
 // Paddle
 // ----------------------------------------------------------------------------
 
-const PADDLE_SPEED = 100;
+const PADDLE_SPEED = 600;
 const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 
@@ -66,11 +74,14 @@ export class Paddle extends Entity {
     );
   }
 
-  override update(): void {
+  override update(scene: GameScene): void {
+    super.update(scene);
     if (isKeyDown(KeyA)) {
-      this.pos.x -= PADDLE_SPEED * 6 * getFrameTime();
+      this.vel.x = -PADDLE_SPEED;
     } else if (isKeyDown(KeyD)) {
-      this.pos.x += PADDLE_SPEED * 6 * getFrameTime();
+      this.vel.x = PADDLE_SPEED;
+    } else {
+      this.vel.x = 0;
     }
 
     if (this.pos.x - PADDLE_WIDTH / 2 < 0) {

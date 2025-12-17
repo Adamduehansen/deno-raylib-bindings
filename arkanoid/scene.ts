@@ -34,7 +34,7 @@ export class GameScene extends Scene {
     }
 
     // Update entities
-    this.paddle.update();
+    this.paddle.update(this);
     this.ball.update(this);
   }
 
