@@ -3,6 +3,7 @@ import {
   getFrameTime,
   getScreenHeight,
   getScreenWidth,
+  Green,
   isKeyDown,
   KeyA,
   KeyD,
@@ -11,8 +12,12 @@ import {
 } from "@adamduehansen/raylib-bindings/r-core";
 import { vec } from "./vector.ts";
 import {
+  checkCollisionCircleRec,
+  drawCircleLinesV,
   drawCircleV,
+  drawRectangleLinesEx,
   drawRectangleRec,
+  RaylibRectangle,
 } from "@adamduehansen/raylib-bindings/r-shapes";
 import { GameScene } from "./scene.ts";
 
@@ -29,17 +34,82 @@ abstract class Entity {
   abstract draw(): void;
 }
 
+abstract class Body {
+  constructor(protected readonly entity: Entity) {}
+
+  update(): void {}
+
+  abstract draw(): void;
+}
+
+class CircleBody extends Body {
+  private readonly _radius: number;
+
+  constructor(entity: Entity, radius: number) {
+    super(entity);
+    this._radius = radius;
+  }
+
+  override draw(): void {
+    drawCircleLinesV({
+      center: this.entity.pos,
+      color: Green,
+      radius: this._radius,
+    });
+  }
+}
+
+class RectangleBody extends Body {
+  private readonly _width: number;
+  private readonly _height: number;
+
+  constructor(entity: Entity, width: number, height: number) {
+    super(entity);
+    this._height = height;
+    this._width = width;
+  }
+
+  getBounds(): RaylibRectangle {
+    return {
+      x: this.entity.pos.x - this._width / 2,
+      y: this.entity.pos.y - this._height / 2,
+      width: this._width,
+      height: this._height,
+    };
+  }
+
+  override draw(): void {
+    drawRectangleLinesEx({
+      color: Green,
+      lineThick: 1,
+      rec: {
+        height: this._height,
+        width: this._width,
+        x: this.entity.pos.x - this._width / 2,
+        y: this.entity.pos.y - this._height / 2,
+      },
+    });
+  }
+}
+
 // Ball
 // ----------------------------------------------------------------------------
+
+const BALL_RADIUS = 8;
+const INITIAL_BALL_VECTOR = vec(0, -250);
 
 export class Ball extends Entity {
   private _active: boolean = false;
 
+  readonly body = new CircleBody(this, BALL_RADIUS);
+
   override initialize(scene: GameScene): void {
     scene.events.on("activate", () => {
-      this.vel = vec(0, -150);
+      this.vel = INITIAL_BALL_VECTOR;
       this._active = true;
     });
+
+    this.pos = vec(getScreenWidth() / 2, 100);
   }
 
   override update(scene: GameScene): void {
@@ -48,13 +118,34 @@ export class Ball extends Entity {
     if (this._active === false) {
       this.pos = vec(scene.paddle.pos.x, scene.paddle.pos.y - 25);
     }
+
+    // Check collision with borders.
+    if (this.pos.y < BALL_RADIUS) {
+      this.vel.y *= -1;
+    } else if (
+      this.pos.x < BALL_RADIUS || this.pos.x > getScreenWidth() - BALL_RADIUS
+    ) {
+      this.vel.x *= -1;
+    }
+
+    // Check collision with paddle
+    if (
+      checkCollisionCircleRec(
+        this.pos,
+        BALL_RADIUS,
+        scene.paddle.body.getBounds(),
+      )
+    ) {
+      this.vel.y *= -1;
+      this.vel.x = (this.pos.x - scene.paddle.pos.x) / 5 * 25;
+    }
   }
 
   override draw(): void {
     drawCircleV({
       center: this.pos,
       color: Red,
-      radius: 8,
+      radius: BALL_RADIUS,
     });
   }
 }
@@ -67,6 +158,8 @@ const PADDLE_WIDTH = 100;
 const PADDLE_HEIGHT = 20;
 
 export class Paddle extends Entity {
+  readonly body = new RectangleBody(this, PADDLE_WIDTH, PADDLE_HEIGHT);
+
   override initialize(_scene: GameScene): void {
     this.pos = vec(
       getScreenWidth() / 2,

@@ -39,8 +39,11 @@ export class GameScene extends Scene {
   }
 
   override draw(): void {
-    this.paddle.draw();
     this.ball.draw();
+    this.paddle.draw();
+
+    this.ball.body.draw();
+    this.paddle.body.draw();
   }
 }
 
