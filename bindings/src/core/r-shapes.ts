@@ -195,12 +195,12 @@ export function checkCollisionRecs(
  * Check collision between circle and rectangle.
  */
 export function checkCollisionCircleRec(
-  vector: RaylibVector,
+  center: RaylibVector,
   radius: number,
   rectangle: RaylibRectangle,
 ): boolean {
   return raylib.symbols.CheckCollisionCircleRec(
-    toRaylibVector2(vector),
+    toRaylibVector2(center),
     radius,
     toRaylibRectangle(rectangle),
   );
