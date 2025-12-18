@@ -1,5 +1,6 @@
 import {
   Black,
+  DarkGray,
   getFrameTime,
   getScreenHeight,
   getScreenWidth,
@@ -43,18 +44,18 @@ abstract class Body {
 }
 
 class CircleBody extends Body {
-  private readonly _radius: number;
+  readonly radius: number;
 
   constructor(entity: Entity, radius: number) {
     super(entity);
-    this._radius = radius;
+    this.radius = radius;
   }
 
   override draw(): void {
     drawCircleLinesV({
       center: this.entity.pos,
       color: Green,
-      radius: this._radius,
+      radius: this.radius,
     });
   }
 }
@@ -139,6 +140,15 @@ export class Ball extends Entity {
       this.vel.y *= -1;
       this.vel.x = (this.pos.x - scene.paddle.pos.x) / 5 * 25;
     }
+
+    // Check collision with brick
+    for (const brick of scene.bricks) {
+      if (
+        checkCollisionCircleRec(this.pos, BALL_RADIUS, brick.body.getBounds())
+      ) {
+        this.vel.y *= -1;
+      }
+    }
   }
 
   override draw(): void {
@@ -194,6 +204,50 @@ export class Paddle extends Entity {
         y: this.pos.y - PADDLE_HEIGHT / 2,
         height: PADDLE_HEIGHT,
         width: PADDLE_WIDTH,
+      },
+    });
+  }
+}
+
+// Paddle
+// ----------------------------------------------------------------------------
+
+const BRICK_WIDTH = 50;
+const BRICK_HEIGHT = 20;
+
+let brickId = 0;
+
+export class Brick extends Entity {
+  readonly id = brickId++;
+  readonly body = new RectangleBody(this, BRICK_WIDTH, BRICK_HEIGHT);
+
+  override initialize(_scene: GameScene): void {}
+
+  override update(scene: GameScene): void {
+    super.update(scene);
+
+    // Check for collision with ball
+    if (
+      checkCollisionCircleRec(
+        scene.ball.pos,
+        scene.ball.body.radius,
+        this.body.getBounds(),
+      )
+    ) {
+      scene.events.emit("brick_destroyed", {
+        id: this.id,
+      });
+    }
+  }
+
+  override draw(): void {
+    drawRectangleRec({
+      color: DarkGray,
+      rectangle: {
+        x: this.pos.x - BRICK_WIDTH / 2,
+        y: this.pos.y - BRICK_HEIGHT / 2,
+        width: BRICK_WIDTH,
+        height: BRICK_HEIGHT,
       },
     });
   }
