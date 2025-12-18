@@ -272,6 +272,13 @@ export function isKeyPressed(key: number): boolean {
 export const MouseButtonLeft = 0;
 
 /**
+ * Check if a mouse button has been pressed once.
+ */
+export function isMouseButtonPressed(key: number): boolean {
+  return raylib.symbols.IsMouseButtonPressed(key);
+}
+
+/**
  * Check if a mouse button is being pressed.
  */
 export function isMouseButtonDown(key: number): boolean {
