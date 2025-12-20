@@ -110,7 +110,21 @@ export class Ball extends Entity {
       this._active = true;
     });
 
-    this.pos = vec(getScreenWidth() / 2, 100);
+    // Spawn bottom
+    // this.pos = vec(getScreenWidth() / 2, 200);
+    // this.vel.y = -100;
+
+    // Spawn top
+    // this.pos = vec(getScreenWidth() / 2, 50);
+    // this.vel.y = 100;
+
+    // Spawn left
+    // this.pos = vec(getScreenWidth() / 2 - 100, 100);
+    // this.vel.x = 100;
+
+    // Spawn right
+    // this.pos = vec(getScreenWidth() / 2 + 100, 100);
+    // this.vel.x = -100;
   }
 
   override update(scene: GameScene): void {
@@ -146,7 +160,38 @@ export class Ball extends Entity {
       if (
         checkCollisionCircleRec(this.pos, BALL_RADIUS, brick.body.getBounds())
       ) {
-        this.vel.y *= -1;
+        // Change velocity according to which side is hit.
+        const brickBounds = brick.body.getBounds();
+
+        // Left side
+        if (
+          this.pos.x < brick.pos.x &&
+          this.pos.y < brick.pos.y + brickBounds.height / 2 &&
+          this.pos.y > brick.pos.y - brickBounds.height / 2
+        ) {
+          this.vel.x *= -1;
+        } // Right side
+        else if (
+          this.pos.x > brick.pos.x &&
+          this.pos.y < brick.pos.y + brickBounds.height / 2 &&
+          this.pos.y > brick.pos.y - brickBounds.height / 2
+        ) {
+          this.vel.x *= -1;
+        } // Top side
+        else if (
+          this.pos.y < brick.pos.y &&
+          this.pos.x < brick.pos.x + brickBounds.width / 2 &&
+          this.pos.x > brick.pos.x - brickBounds.width / 2
+        ) {
+          this.vel.y *= -1;
+        } // Bottom side
+        else if (
+          this.pos.y > brick.pos.y &&
+          this.pos.x < brick.pos.x + brickBounds.width / 2 &&
+          this.pos.x > brick.pos.x - brickBounds.width / 2
+        ) {
+          this.vel.y *= -1;
+        }
       }
     }
   }
