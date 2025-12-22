@@ -31,20 +31,34 @@ initWindow({
 setTargetFPS(60);
 
 let gameState: "waiting" | "playing" | "gameOver" = "waiting";
-let score = 0;
+
+interface Score {
+  value: number;
+}
+
+const initialScore: Score = { value: 0 };
+const score = new Proxy(initialScore, {
+  get(target: Score, property: keyof Score) {
+    return target[property];
+  },
+  set<T extends keyof Score>(
+    target: Score,
+    property: keyof Score,
+    newValue: Score[T],
+  ) {
+    target[property] = newValue;
+    scoreLabel.score = newValue;
+    return true;
+  },
+});
 
 const dino = new Dino();
 const scoreLabel = new ScoreLabel();
 const instructionsLabel = new InstructionsLabel();
 
-function updateScore(): void {
-  scoreLabel.score = score;
-}
-
 function startGame(): void {
   gameState = "playing";
-  score = 0;
-  updateScore();
+  score.value = 0;
 }
 
 function updatePhysics(): void {
@@ -54,8 +68,7 @@ function updatePhysics(): void {
 
   dino.update();
 
-  score += 0.1;
-  updateScore();
+  score.value += 0.1;
 }
 
 function resetGame(): void {
