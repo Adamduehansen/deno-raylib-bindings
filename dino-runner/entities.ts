@@ -27,18 +27,18 @@ abstract class Entity {
 // Dino
 // ----------------------------------------------------------------------------
 
-const DINO_WIDTH = 40;
-const DINO_HEIGHT = 40;
-
 const JUMP_STRENGTH = -12;
 const GRAVITY = 0.6;
 const GROUND_Y = 150;
 
-export default class Dino extends Entity {
+export class Dino extends Entity {
   pos: RaylibVector = {
     x: 50,
     y: 150,
   };
+
+  readonly width = 40;
+  readonly height = 40;
 
   private _velocityY = 0;
 
@@ -61,8 +61,8 @@ export default class Dino extends Entity {
       rectangle: {
         x: this.pos.x,
         y: this.pos.y,
-        width: DINO_WIDTH,
-        height: DINO_HEIGHT,
+        width: this.width,
+        height: this.height,
       },
     });
     drawRectangleRec({
@@ -111,6 +111,72 @@ export default class Dino extends Entity {
     if (this.isJumping === false) {
       this._velocityY = JUMP_STRENGTH;
       this.isJumping = true;
+    }
+  }
+}
+
+// Obstacle
+// ----------------------------------------------------------------------------
+
+interface ObstacleArgs {
+  width: number;
+  height: number;
+  type: "small" | "medium" | "wide";
+}
+
+let obstacleId = 0;
+
+export class Obstacle extends Entity {
+  pos: RaylibVector = {
+    x: 0,
+    y: 0,
+  };
+
+  readonly id = obstacleId++;
+  readonly width: number;
+  readonly height: number;
+
+  constructor(args: ObstacleArgs) {
+    super();
+    this.width = args.width;
+    this.height = args.height;
+  }
+
+  override update(): void {}
+  override draw(): void {
+    drawRectangleRec({
+      color: Green,
+      rectangle: {
+        x: this.pos.x,
+        y: this.pos.y,
+        height: this.height,
+        width: this.width,
+      },
+    });
+  }
+}
+
+export class ObstacleFactory {
+  get(type: ObstacleArgs["type"]): Obstacle | never {
+    switch (type) {
+      case "small":
+        return new Obstacle({
+          width: 20,
+          height: 40,
+          type: "small",
+        });
+      case "medium":
+        return new Obstacle({
+          width: 25,
+          height: 50,
+          type: "small",
+        });
+      case "wide":
+        return new Obstacle({
+          width: 30,
+          height: 35,
+          type: "small",
+        });
     }
   }
 }
