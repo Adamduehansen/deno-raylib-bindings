@@ -46,6 +46,7 @@ import Ground from "./ground.ts";
 import { RectangleBody, vec } from "@adamduehansen/engine";
 import Obstacle from "./obstacle.ts";
 import { checkCollisionRecs } from "@adamduehansen/raylib-bindings/r-shapes";
+import ScoreLabel from "./score-label.ts";
 
 // const SKY_BLUE: Color = [135, 206, 235, 255];
 // const SANDY_BROWN: Color = [244, 164, 96, 255];
@@ -265,7 +266,7 @@ initWindow({
 
 setTargetFPS(60);
 
-// Entities
+// Game entities
 const ground = new Ground();
 ground.pos = vec(0, 158);
 ground.width = SCREEN_WIDTH;
@@ -279,24 +280,31 @@ const obstacle = new Obstacle();
 obstacle.pos = vec(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 50);
 obstacles.push(obstacle);
 
+// UI entities
+const scoreLabel = new ScoreLabel();
+scoreLabel.pos = vec(5, 2);
+
 // Game properties
 let gameState: "waiting" | "playing" | "gameover" = "waiting";
 let obstacleSpawnTimer = 0;
-const obstacleSpawnRate = 1;
+const obstacleSpawnRate = 2;
+let score = 0;
 
 // Run game
 while (windowShouldClose() === false) {
   // Update game
   // --------------------------------------------------------------------------
 
-  if (isKeyDown(KeySpace)) {
-    if (gameState === "waiting") {
-      gameState = "playing";
-    }
+  if (isKeyDown(KeySpace) && gameState === "waiting") {
+    gameState = "playing";
+    score = 0;
   }
 
   // Main game looop
   if (gameState === "playing") {
+    score += 0.1;
+    scoreLabel.score = score;
+
     // Update obstacle spawn rate
     obstacleSpawnTimer += getFrameTime();
     if (obstacleSpawnTimer >= obstacleSpawnRate) {
@@ -331,6 +339,8 @@ while (windowShouldClose() === false) {
   beginDrawing();
 
   clearBackground(SKY_BLUE);
+
+  // Draw game entities
   ground.draw();
   dino.draw();
   dino.postDraw();
@@ -338,6 +348,9 @@ while (windowShouldClose() === false) {
     obstacle.draw();
     obstacle.postDraw();
   }
+
+  // Draw UI
+  scoreLabel.draw();
 
   endDrawing();
 }
