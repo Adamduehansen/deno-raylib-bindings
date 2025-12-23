@@ -1,4 +1,4 @@
-import { Green, Red } from "@adamduehansen/raylib-bindings/r-core";
+import { type Color, Green, Red } from "@adamduehansen/raylib-bindings/r-core";
 import {
   drawCircleLinesV,
   drawCircleV,
@@ -8,6 +8,8 @@ import {
 import type { Entity } from "./entity.ts";
 
 export abstract class Body {
+  color: Color = Green;
+
   constructor(protected readonly entity: Entity) {}
 
   update(): void {}
@@ -29,7 +31,7 @@ export class CircleBody extends Body {
   override draw(): void {
     drawCircleLinesV({
       center: this.entity.pos,
-      color: Green,
+      color: this.color,
       radius: this.radius,
     });
   }
@@ -60,7 +62,7 @@ export class RectangleBody extends Body {
   override draw(): void {
     // Draw outline
     drawRectangleLinesEx({
-      color: Green,
+      color: this.color,
       lineThick: 1,
       rec: {
         height: this._height,

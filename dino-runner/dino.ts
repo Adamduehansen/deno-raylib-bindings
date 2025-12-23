@@ -1,5 +1,6 @@
 import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 import {
+  Black,
   DarkGreen,
   Green,
   isKeyPressed,
@@ -20,6 +21,7 @@ export default class Dino extends Entity {
     this.width = 40;
     this.height = 40;
     this.body = new RectangleBody(this, this.width, this.height);
+    this.body.color = Black;
   }
 
   jump(): void {

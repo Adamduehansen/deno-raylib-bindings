@@ -1,6 +1,6 @@
 import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 import { Entity, RectangleBody } from "@adamduehansen/engine";
-import { Green } from "@adamduehansen/raylib-bindings/r-core";
+import { Black, Green } from "@adamduehansen/raylib-bindings/r-core";
 
 export default class Obstacle extends Entity {
   constructor() {
@@ -9,6 +9,7 @@ export default class Obstacle extends Entity {
     this.width = 20;
     this.height = 40;
     this.body = new RectangleBody(this, this.width, this.height);
+    this.body.color = Black;
   }
 
   override update(): void {
