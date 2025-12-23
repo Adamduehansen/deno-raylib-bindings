@@ -47,6 +47,7 @@ import { RectangleBody, vec } from "@adamduehansen/engine";
 import Obstacle from "./obstacle.ts";
 import { checkCollisionRecs } from "@adamduehansen/raylib-bindings/r-shapes";
 import ScoreLabel from "./score-label.ts";
+import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 
 // const SKY_BLUE: Color = [135, 206, 235, 255];
 // const SANDY_BROWN: Color = [244, 164, 96, 255];
@@ -255,8 +256,11 @@ import ScoreLabel from "./score-label.ts";
 
 const SKY_BLUE: Color = [135, 206, 235, 255];
 
+const enableDebug = Deno.args.some((args) => args === "--debug");
+
 const SCREEN_HEIGHT = 200;
 const SCREEN_WIDTH = 800;
+const OBSTACLE_MAX_SPAWN_RATE = 2;
 
 initWindow({
   title: "Dino Runner",
@@ -287,7 +291,7 @@ scoreLabel.pos = vec(5, 2);
 // Game properties
 let gameState: "waiting" | "playing" | "gameover" = "waiting";
 let obstacleSpawnTimer = 0;
-let obstacleSpawnRate = 2;
+let obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
 const obstacleMinRate = 1;
 let score = 0;
 
@@ -299,7 +303,7 @@ while (windowShouldClose() === false) {
   if (isKeyDown(KeySpace) && gameState === "waiting") {
     gameState = "playing";
     score = 0;
-    obstacleSpawnRate = 2;
+    obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
   }
 
   // Main game looop
@@ -346,14 +350,15 @@ while (windowShouldClose() === false) {
   // Draw game entities
   ground.draw();
   dino.draw();
-  dino.postDraw();
+  enableDebug && dino.postDraw();
   for (const obstacle of obstacles) {
     obstacle.draw();
-    obstacle.postDraw();
+    enableDebug && obstacle.postDraw();
   }
 
   // Draw UI
   scoreLabel.draw();
+  drawFPS(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 20);
 
   endDrawing();
 }
