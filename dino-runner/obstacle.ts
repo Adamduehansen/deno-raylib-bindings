@@ -5,15 +5,16 @@ import { Green } from "@adamduehansen/raylib-bindings/r-core";
 export default class Obstacle extends Entity {
   constructor() {
     super();
+
     this.width = 20;
     this.height = 40;
+    this.body = new RectangleBody(this, this.width, this.height);
   }
 
   override update(): void {
     super.update();
 
     this.vel.x = -250;
-    this.body = new RectangleBody(this, this.width, this.height);
   }
 
   override draw(): void {
