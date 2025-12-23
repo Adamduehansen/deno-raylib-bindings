@@ -287,7 +287,8 @@ scoreLabel.pos = vec(5, 2);
 // Game properties
 let gameState: "waiting" | "playing" | "gameover" = "waiting";
 let obstacleSpawnTimer = 0;
-const obstacleSpawnRate = 2;
+let obstacleSpawnRate = 2;
+const obstacleMinRate = 1;
 let score = 0;
 
 // Run game
@@ -298,16 +299,18 @@ while (windowShouldClose() === false) {
   if (isKeyDown(KeySpace) && gameState === "waiting") {
     gameState = "playing";
     score = 0;
+    obstacleSpawnRate = 2;
   }
 
   // Main game looop
   if (gameState === "playing") {
     score += 0.1;
     scoreLabel.score = score;
+    obstacleSpawnRate -= 0.001;
 
     // Update obstacle spawn rate
     obstacleSpawnTimer += getFrameTime();
-    if (obstacleSpawnTimer >= obstacleSpawnRate) {
+    if (obstacleSpawnTimer >= Math.max(obstacleSpawnRate, obstacleMinRate)) {
       const obstacle = new Obstacle();
       obstacle.pos = vec(SCREEN_WIDTH, SCREEN_HEIGHT - 50);
       obstacles.push(obstacle);
