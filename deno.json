@@ -1,3 +1,9 @@
 {
-  "workspace": ["./bindings", "./arkanoid", "./dino-runner", "./engine"]
+  "workspace": [
+    "./bindings",
+    "./arkanoid",
+    "./dino-runner",
+    "./engine",
+    "./physics"
+  ]
 }
