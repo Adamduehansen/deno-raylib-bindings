@@ -28,6 +28,10 @@ export class GameScene extends Scene {
     return this._bricks;
   }
 
+  private get _hasNoBricksLeft(): boolean {
+    return this._bricks.length === 0;
+  }
+
   readonly events = new EventEmitter<{
     "activate": undefined;
     "game_over": { score: number };
@@ -48,6 +52,10 @@ export class GameScene extends Scene {
     // Initialize event listeners
     this.events.on("brick_destroyed", (data) => {
       this._bricks = this._bricks.filter((brick) => brick.id !== data?.id);
+
+      if (this._hasNoBricksLeft) {
+        console.log("All bricks are destroyed!");
+      }
     });
   }
 

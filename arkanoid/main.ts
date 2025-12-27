@@ -14,35 +14,46 @@ import { GameScene } from "./scene.ts";
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 450;
 
-initWindow({
-  title: "Arkanoid",
-  height: SCREEN_HEIGHT,
-  width: SCREEN_WIDTH,
-});
+class Game {
+  private _gameScene: GameScene = new GameScene();
 
-setTargetFPS(60);
+  init(): void {
+    initWindow({
+      title: "Arkanoid",
+      height: SCREEN_HEIGHT,
+      width: SCREEN_WIDTH,
+    });
 
-const gameScene = new GameScene();
-gameScene.initialize();
+    setTargetFPS(60);
 
-let currentScene = gameScene;
+    this._gameScene.initialize();
+  }
 
-while (windowShouldClose() === false) {
-  // Update
-  // --------------------------------------------------------------------------
-  currentScene.update();
+  run(): void {
+    while (windowShouldClose() === false) {
+      // Update
+      // --------------------------------------------------------------------------
+      this._gameScene.update();
 
-  // Draw
-  // --------------------------------------------------------------------------
-  beginDrawing();
+      // Draw
+      // --------------------------------------------------------------------------
+      beginDrawing();
 
-  clearBackground(RayWhite);
+      clearBackground(RayWhite);
 
-  currentScene.draw();
+      this._gameScene.draw();
 
-  drawFPS(0, 0);
+      drawFPS(0, 0);
 
-  endDrawing();
+      endDrawing();
+    }
+  }
+  close(): void {
+    closeWindow();
+  }
 }
 
-closeWindow();
+const game = new Game();
+game.init();
+game.run();
+game.close();
