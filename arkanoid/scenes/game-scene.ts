@@ -1,5 +1,5 @@
 import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
-import { RectangleBody, Scene, vec } from "@adamduehansen/engine";
+import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "../level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
 import Brick from "../entities/brick.ts";
@@ -26,8 +26,8 @@ export class GameScene extends Scene {
     ).length === 0;
   }
 
-  override initialize(): void {
-    super.initialize();
+  override initialize(game: Game): void {
+    super.initialize(game);
 
     this.entities.add(this.paddle);
     this.entities.add(this.ball);
@@ -44,7 +44,7 @@ export class GameScene extends Scene {
       this.entities.remove(data);
 
       if (this._hasNoBricksLeft) {
-        console.log("All bricks are destroyed!");
+        game.goToScene("end-scene");
       }
     });
   }
@@ -56,10 +56,6 @@ export class GameScene extends Scene {
       this._isActive = true;
       this.events.emit("activate");
     }
-  }
-
-  override draw(): void {
-    super.draw();
   }
 
   private _parseLevelData(levelData: string): ParsedLevel {
