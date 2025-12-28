@@ -1,14 +1,9 @@
-import { EventEmitter } from "@adamduehansen/raylib-bindings";
-import { Ball, Brick, Paddle } from "./entities.ts";
 import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
+import { RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "./level.txt" with { type: "text" };
-import { vec } from "./vector.ts";
-
-abstract class Scene {
-  abstract initialize(): void;
-  abstract update(): void;
-  abstract draw(): void;
-}
+import Paddle from "./paddle.ts";
+import Brick from "./brick.ts";
+import Ball from "./ball.ts";
 
 // GameScene
 // ----------------------------------------------------------------------------
@@ -21,7 +16,7 @@ export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
 
-  private _bricks: Brick[] = [];
+  private _bricks: Brick[] = this._parseLevelData(level).bricks;
   private _isActive = false;
 
   get bricks(): readonly Brick[] {
@@ -29,29 +24,27 @@ export class GameScene extends Scene {
   }
 
   private get _hasNoBricksLeft(): boolean {
-    return this._bricks.length === 0;
+    return this.entities.filter((entity) =>
+      entity.name !== undefined && entity.name?.includes("brick")
+    ).length === 0;
   }
 
-  readonly events = new EventEmitter<{
-    "activate": undefined;
-    "game_over": { score: number };
-    "brick_destroyed": { id: number };
-  }>();
-
   override initialize(): void {
-    // Initialize game objects.
-    this.paddle.initialize(this);
-    this.ball.initialize(this);
-    const { bricks } = this._parseLevelData(level);
-    this._bricks = bricks;
+    super.initialize();
 
+    this.entities.add(this.paddle);
+    this.entities.add(this.ball);
     for (const brick of this._bricks) {
-      brick.initialize(this);
+      this.entities.add(brick);
     }
 
     // Initialize event listeners
     this.events.on("brick_destroyed", (data) => {
-      this._bricks = this._bricks.filter((brick) => brick.id !== data?.id);
+      if (typeof data !== "number") {
+        return;
+      }
+
+      this.entities.remove(data);
 
       if (this._hasNoBricksLeft) {
         console.log("All bricks are destroyed!");
@@ -60,32 +53,16 @@ export class GameScene extends Scene {
   }
 
   override update(): void {
-    // Handle input
+    super.update();
+
     if (isKeyPressed(KeySpace) && this._isActive === false) {
       this._isActive = true;
       this.events.emit("activate");
     }
-
-    // Update entities
-    this.paddle.update(this);
-    this.ball.update(this);
-    for (const brick of this._bricks) {
-      brick.update(this);
-    }
   }
 
   override draw(): void {
-    this.ball.draw();
-    this.paddle.draw();
-    for (const brick of this._bricks) {
-      brick.draw();
-    }
-
-    this.ball.body.draw();
-    this.paddle.body.draw();
-    for (const brick of this._bricks) {
-      brick.body.draw();
-    }
+    super.draw();
   }
 
   private _parseLevelData(levelData: string): ParsedLevel {
@@ -98,7 +75,7 @@ export class GameScene extends Scene {
 
         if (column === "=") {
           const brick = new Brick();
-          const { height, width } = brick.body.getBounds();
+          const { height, width } = (brick.body as RectangleBody).getBounds();
           brick.pos = vec(
             columnIndex * width + width / 2,
             rowIndex * height + height / 2,

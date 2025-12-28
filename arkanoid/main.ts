@@ -15,7 +15,7 @@ const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 450;
 
 class Game {
-  private _gameScene: GameScene = new GameScene();
+  private _gameScene = new GameScene();
 
   init(): void {
     initWindow({
