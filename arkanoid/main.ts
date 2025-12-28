@@ -9,7 +9,7 @@ import {
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import { GameScene } from "./scene.ts";
+import { GameScene } from "./scenes/game-scene.ts";
 
 const SCREEN_WIDTH = 800;
 const SCREEN_HEIGHT = 450;

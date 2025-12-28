@@ -1,12 +1,9 @@
 import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 import { RectangleBody, Scene, vec } from "@adamduehansen/engine";
-import level from "./level.txt" with { type: "text" };
-import Paddle from "./entities/paddle.ts";
-import Brick from "./entities/brick.ts";
-import Ball from "./entities/ball.ts";
-
-// GameScene
-// ----------------------------------------------------------------------------
+import level from "../level.txt" with { type: "text" };
+import Paddle from "../entities/paddle.ts";
+import Brick from "../entities/brick.ts";
+import Ball from "../entities/ball.ts";
 
 interface ParsedLevel {
   bricks: Brick[];
@@ -88,19 +85,5 @@ export class GameScene extends Scene {
     return {
       bricks: bricks,
     };
-  }
-}
-
-// EndScene
-// ----------------------------------------------------------------------------
-
-export class EndScene extends Scene {
-  override initialize(): void {
-  }
-
-  override update(): void {
-  }
-
-  override draw(): void {
   }
 }
