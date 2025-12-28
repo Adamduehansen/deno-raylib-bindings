@@ -4,13 +4,15 @@ import type { Entity } from "./entity.ts";
 class EntityCollection {
   private _entities: Entity[] = [];
   private _scene: Scene;
+  private _game?: Game;
 
   get length(): number {
     return this._entities.length;
   }
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, game?: Game) {
     this._scene = scene;
+    this._game = game;
   }
 
   add(entity: Entity): void {
@@ -54,14 +56,17 @@ class EntityCollection {
 }
 
 export abstract class Scene {
-  entities = new EntityCollection(this);
-  events = new EventEmitter();
+  private _game?: Game;
 
-  // deno-lint-ignore no-unused-vars
+  get game(): Game | undefined {
+    return this._game;
+  }
+
+  readonly entities = new EntityCollection(this);
+  readonly events = new EventEmitter();
+
   initialize(game: Game): void {
-    for (const entity of this.entities) {
-      entity.initialize(this);
-    }
+    this._game = game;
   }
 
   update(): void {
