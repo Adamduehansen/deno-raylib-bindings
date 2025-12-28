@@ -1,9 +1,9 @@
 import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 import { RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "./level.txt" with { type: "text" };
-import Paddle from "./paddle.ts";
-import Brick from "./brick.ts";
-import Ball from "./ball.ts";
+import Paddle from "./entities/paddle.ts";
+import Brick from "./entities/brick.ts";
+import Ball from "./entities/ball.ts";
 
 // GameScene
 // ----------------------------------------------------------------------------
