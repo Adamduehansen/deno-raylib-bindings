@@ -1,0 +1,81 @@
+import {
+  getFrameTime,
+  isKeyDown,
+  KeySpace,
+} from "@adamduehansen/raylib-bindings/r-core";
+import { checkCollisionRecs } from "@adamduehansen/raylib-bindings/r-shapes";
+import { Game, RectangleBody, Scene } from "@adamduehansen/engine";
+import Ground from "./ground.ts";
+import Dino from "./dino.ts";
+import Obstacle from "./obstacle.ts";
+import ScoreLabel from "./score-label.ts";
+
+const OBSTACLE_MAX_SPAWN_RATE = 2;
+
+export default class GameScene extends Scene {
+  private _ground = new Ground();
+  private _dino = new Dino();
+  private _scoreLabel = new ScoreLabel();
+
+  private _gameState: "waiting" | "playing" | "gameover" = "waiting";
+  private _obstacleSpawnTimer = 0;
+  private _obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
+  private _obstacleMinRate = 1;
+  private _score = 0;
+
+  override initialize(game: Game): void {
+    super.initialize(game);
+
+    this.entities.add(this._ground);
+    this.entities.add(this._dino);
+    this.entities.add(this._scoreLabel);
+  }
+
+  override update(): void {
+    super.update();
+
+    if (isKeyDown(KeySpace) && this._gameState === "waiting") {
+      this._gameState = "playing";
+      this._score = 0;
+      this._obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
+      this.events.emit("game_started");
+    }
+
+    // Main game looop
+    if (this._gameState === "playing") {
+      this._score += 0.1;
+      this._scoreLabel.score = this._score;
+      this._obstacleSpawnRate -= 0.001;
+
+      // Update obstacle spawn rate
+      this._obstacleSpawnTimer += getFrameTime();
+      if (
+        this._obstacleSpawnTimer >=
+          Math.max(this._obstacleSpawnRate, this._obstacleMinRate)
+      ) {
+        const obstacle = new Obstacle();
+        this.entities.add(obstacle);
+
+        this._obstacleSpawnTimer = 0;
+      }
+
+      // Check collision
+      const obstacles = this.entities.filter((entity) =>
+        entity.name !== undefined && entity.name?.includes("obstacle")
+      );
+      for (const obstacle of obstacles) {
+        if (
+          this._dino.body instanceof RectangleBody &&
+          obstacle.body instanceof RectangleBody &&
+          checkCollisionRecs(
+            this._dino.body.getBounds(),
+            obstacle.body.getBounds(),
+          )
+        ) {
+          this._gameState = "gameover";
+          this.events.emit("game_ended");
+        }
+      }
+    }
+  }
+}

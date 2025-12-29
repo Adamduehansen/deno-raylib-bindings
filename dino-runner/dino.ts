@@ -6,14 +6,15 @@ import {
   isKeyPressed,
   KeySpace,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity, RectangleBody } from "@adamduehansen/engine";
+import { Entity, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 
 const JUMP_STRENGTH = -400;
 const GRAVITY = 15;
 const GROUND_Y = 150;
 
 export default class Dino extends Entity {
-  isJumping = false;
+  private _isRunning = false;
+  private _isJumping = false;
 
   constructor() {
     super();
@@ -25,26 +26,41 @@ export default class Dino extends Entity {
   }
 
   jump(): void {
-    if (this.isJumping === true) {
+    if (this._isJumping === true) {
       return;
     }
 
     this.vel.y = JUMP_STRENGTH;
-    this.isJumping = true;
+    this._isJumping = true;
   }
 
-  override update(): void {
-    super.update();
+  override initialize(scene: Scene): void {
+    super.initialize(scene);
 
-    this.vel.y += GRAVITY;
-    if (this.pos.y > GROUND_Y) {
-      this.pos.y = GROUND_Y;
-      this.vel.y = 0;
-      this.isJumping = false;
-    }
+    this.pos = vec(50, 150);
+    scene.events.on("game_started", () => {
+      this._isRunning = true;
+    });
+    scene.events.on("game_ended", () => {
+      this._isRunning = false;
+      this.vel = vec(0, 0);
+    });
+  }
 
-    if (isKeyPressed(KeySpace)) {
-      this.jump();
+  override update(scene: Scene): void {
+    super.update(scene);
+
+    if (this._isRunning) {
+      this.vel.y += GRAVITY;
+      if (this.pos.y > GROUND_Y) {
+        this.pos.y = GROUND_Y;
+        this.vel.y = 0;
+        this._isJumping = false;
+      }
+
+      if (isKeyPressed(KeySpace)) {
+        this.jump();
+      }
     }
   }
 
@@ -79,7 +95,7 @@ export default class Dino extends Entity {
       },
     });
 
-    if (this.isJumping === false) {
+    if (this._isJumping === false) {
       drawRectangleRec({
         color: Green,
         rectangle: {

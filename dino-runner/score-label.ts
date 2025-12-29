@@ -1,9 +1,13 @@
-import { Entity } from "@adamduehansen/engine";
+import { Entity, Scene, vec } from "@adamduehansen/engine";
 import { drawText } from "@adamduehansen/raylib-bindings/r-text";
 import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
 
 export default class ScoreLabel extends Entity {
   score = 0;
+
+  override initialize(_scene: Scene): void {
+    this.pos = vec(5, 2);
+  }
 
   override draw(): void {
     drawText({

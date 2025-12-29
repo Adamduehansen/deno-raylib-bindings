@@ -1,5 +1,5 @@
 import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
-import { Entity, RectangleBody } from "@adamduehansen/engine";
+import { Entity, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import { Black, Green } from "@adamduehansen/raylib-bindings/r-core";
 
 export default class Obstacle extends Entity {
@@ -10,12 +10,19 @@ export default class Obstacle extends Entity {
     this.height = 40;
     this.body = new RectangleBody(this, this.width, this.height);
     this.body.color = Black;
+    this.name = "obstacle";
   }
 
-  override update(): void {
-    super.update();
+  override initialize(scene: Scene): void {
+    super.initialize(scene);
 
     this.vel.x = -250;
+    this.pos.x = scene.game?.width ?? 0;
+    this.pos.y = (scene.game?.height ?? 0) - 50;
+
+    scene.events.on("game_ended", () => {
+      this.vel = vec(0, 0);
+    });
   }
 
   override draw(): void {
