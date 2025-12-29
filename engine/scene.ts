@@ -77,6 +77,10 @@ export abstract class Scene {
 
   draw(): void {
     for (const entity of this.entities) {
+      if (entity.hide) {
+        continue;
+      }
+
       entity.draw();
     }
   }

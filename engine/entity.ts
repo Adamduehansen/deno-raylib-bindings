@@ -13,8 +13,10 @@ export abstract class Entity {
   vel: RaylibVector = vec(0, 0);
 
   readonly id = entityId++;
+
   width = 0;
   height = 0;
+  hide = false;
 
   body?: Body;
   name?: string;
