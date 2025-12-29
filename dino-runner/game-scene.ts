@@ -9,6 +9,8 @@ import Ground from "./ground.ts";
 import Dino from "./dino.ts";
 import Obstacle from "./obstacle.ts";
 import ScoreLabel from "./score-label.ts";
+import IntroductionLabel from "./introduction-label.ts";
+import GameOverLabel from "./game-over-label.ts";
 
 const OBSTACLE_MAX_SPAWN_RATE = 2;
 
@@ -16,6 +18,8 @@ export default class GameScene extends Scene {
   private _ground = new Ground();
   private _dino = new Dino();
   private _scoreLabel = new ScoreLabel();
+  private _introductionLabel = new IntroductionLabel();
+  private _gameOverLabel = new GameOverLabel();
 
   private _gameState: "waiting" | "playing" | "gameover" = "waiting";
   private _obstacleSpawnTimer = 0;
@@ -29,6 +33,12 @@ export default class GameScene extends Scene {
     this.entities.add(this._ground);
     this.entities.add(this._dino);
     this.entities.add(this._scoreLabel);
+    this.entities.add(this._introductionLabel);
+    this.entities.add(this._gameOverLabel);
+
+    this.events.on("game_started", () => {
+      this.entities.add(new Obstacle());
+    });
   }
 
   override update(): void {
