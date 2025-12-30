@@ -26,6 +26,7 @@ export default class GameScene extends Scene {
   private _obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
   private _obstacleMinRate = 1;
   private _score = 0;
+  private _highscore = 0;
 
   override initialize(game: Game): void {
     super.initialize(game);
@@ -39,6 +40,15 @@ export default class GameScene extends Scene {
     this.events.on("game_started", () => {
       this.entities.add(new Obstacle());
     });
+
+    this.events.on("game_ended", () => {
+      if (this._score <= this._highscore) {
+        return;
+      }
+
+      this._highscore = this._score;
+      this.events.emit("new_highscore", this._highscore);
+    });
   }
 
   override update(): void {
@@ -47,12 +57,12 @@ export default class GameScene extends Scene {
     if (isKeyPressed(KeySpace)) {
       if (this._gameState === "waiting") {
         this._gameState = "playing";
-        this._score = 0;
         this._obstacleSpawnTimer = 0;
         this._obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
         this.events.emit("game_started");
       } else if (this._gameState === "gameover") {
         this._gameState = "waiting";
+        this._score = 0;
         const obstacles = this.entities.filter(({ name }) =>
           name !== undefined && name.includes("obstacle")
         );
