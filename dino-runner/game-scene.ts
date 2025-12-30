@@ -1,8 +1,4 @@
-import {
-  getFrameTime,
-  isKeyPressed,
-  KeySpace,
-} from "@adamduehansen/raylib-bindings/r-core";
+import { getFrameTime, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 import { checkCollisionRecs } from "@adamduehansen/raylib-bindings/r-shapes";
 import { Game, RectangleBody, Scene } from "@adamduehansen/engine";
 import Ground from "./ground.ts";
@@ -68,25 +64,6 @@ export default class GameScene extends Scene {
   override update(): void {
     super.update();
 
-    if (isKeyPressed(KeySpace)) {
-      if (this._gameState === "waiting") {
-        this._gameState = "playing";
-        this._obstacleSpawnTimer = 0;
-        this._obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
-        this.events.emit("game_started");
-      } else if (this._gameState === "gameover") {
-        this._gameState = "waiting";
-        this._score = 0;
-        const obstacles = this.entities.filter(({ name }) =>
-          name !== undefined && name.includes("obstacle")
-        );
-        for (const obstacle of obstacles) {
-          this.entities.remove(obstacle.id);
-        }
-        this.events.emit("game_waiting");
-      }
-    }
-
     // Main game looop
     if (this._gameState === "playing") {
       this._score += 0.1;
@@ -122,6 +99,29 @@ export default class GameScene extends Scene {
           this.events.emit("game_ended");
         }
       }
+    }
+  }
+
+  override onKeyPress(key: number): void {
+    if (key !== KeySpace) {
+      return;
+    }
+
+    if (this._gameState === "waiting") {
+      this._gameState = "playing";
+      this._obstacleSpawnTimer = 0;
+      this._obstacleSpawnRate = OBSTACLE_MAX_SPAWN_RATE;
+      this.events.emit("game_started");
+    } else if (this._gameState === "gameover") {
+      this._gameState = "waiting";
+      this._score = 0;
+      const obstacles = this.entities.filter(({ name }) =>
+        name !== undefined && name.includes("obstacle")
+      );
+      for (const obstacle of obstacles) {
+        this.entities.remove(obstacle.id);
+      }
+      this.events.emit("game_waiting");
     }
   }
 
