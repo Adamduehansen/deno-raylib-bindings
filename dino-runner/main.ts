@@ -17,44 +17,6 @@ const game = new Game({
   background: SKY_BLUE,
 });
 
-game.init();
+await game.init();
 game.run();
 game.close();
-
-// Game entities
-
-// // UI entities
-// const scoreLabel = new ScoreLabel();
-// scoreLabel.pos = vec(5, 2);
-
-// // Game properties
-
-// // Run game
-// while (windowShouldClose() === false) {
-//   // Update game
-//   // --------------------------------------------------------------------------
-
-//   // Draw game
-//   // --------------------------------------------------------------------------
-
-//   beginDrawing();
-
-//   clearBackground(SKY_BLUE);
-
-//   // Draw game entities
-//   ground.draw();
-//   dino.draw();
-//   enableDebug && dino.postDraw();
-//   for (const obstacle of obstacles) {
-//     obstacle.draw();
-//     enableDebug && obstacle.postDraw();
-//   }
-
-//   // Draw UI
-//   scoreLabel.draw();
-//   drawFPS(SCREEN_WIDTH - 80, SCREEN_HEIGHT - 20);
-
-//   endDrawing();
-// }
-
-// closeWindow();

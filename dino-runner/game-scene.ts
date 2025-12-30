@@ -13,6 +13,15 @@ import IntroductionLabel from "./introduction-label.ts";
 import GameOverLabel from "./game-over-label.ts";
 
 const OBSTACLE_MAX_SPAWN_RATE = 2;
+const DATA_FILE_PATH = "./data";
+
+interface Data {
+  highscore: number;
+}
+
+const DEFAULT_DATA: Data = {
+  highscore: 0,
+};
 
 export default class GameScene extends Scene {
   private _ground = new Ground();
@@ -28,8 +37,12 @@ export default class GameScene extends Scene {
   private _score = 0;
   private _highscore = 0;
 
-  override initialize(game: Game): void {
+  override async initialize(game: Game): Promise<void> {
     super.initialize(game);
+
+    const highscoreFromData = await this._getHighscore();
+    this._highscore = highscoreFromData;
+    this._scoreLabel.highscore = highscoreFromData;
 
     this.entities.add(this._ground);
     this.entities.add(this._dino);
@@ -41,13 +54,14 @@ export default class GameScene extends Scene {
       this.entities.add(new Obstacle());
     });
 
-    this.events.on("game_ended", () => {
+    this.events.on("game_ended", async () => {
       if (this._score <= this._highscore) {
         return;
       }
 
       this._highscore = this._score;
       this.events.emit("new_highscore", this._highscore);
+      await this._setHighscore(this._highscore);
     });
   }
 
@@ -109,5 +123,42 @@ export default class GameScene extends Scene {
         }
       }
     }
+  }
+
+  private async _dataFileExists(): Promise<boolean> {
+    try {
+      await Deno.stat(DATA_FILE_PATH);
+      return true;
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        return false;
+      }
+      throw error;
+    }
+  }
+
+  private async _readDataFileContent(): Promise<string> {
+    if (await this._dataFileExists() === false) {
+      await this._writeDataFileContent(DEFAULT_DATA);
+    }
+
+    return await Deno.readTextFile(DATA_FILE_PATH);
+  }
+
+  private async _writeDataFileContent(data: Data): Promise<void> {
+    await Deno.writeTextFile(DATA_FILE_PATH, JSON.stringify(data));
+  }
+
+  private async _getHighscore(): Promise<number> {
+    const dataFileContent = await this._readDataFileContent();
+    const data = JSON.parse(dataFileContent) as Data;
+    return data.highscore;
+  }
+
+  private async _setHighscore(score: number): Promise<void> {
+    const dataFileContent = await this._readDataFileContent();
+    const data = JSON.parse(dataFileContent) as Data;
+    data.highscore = score;
+    await this._writeDataFileContent(data);
   }
 }
