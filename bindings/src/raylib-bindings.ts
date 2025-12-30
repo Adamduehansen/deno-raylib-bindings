@@ -238,6 +238,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [],
     result: "i32",
   },
+  GetKeyPressed: {
+    parameters: [],
+    result: "i16",
+  },
   GetMonitorWidth: {
     parameters: ["i32"],
     result: "i32",

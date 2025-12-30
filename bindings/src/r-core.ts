@@ -264,6 +264,14 @@ export function isKeyPressed(key: number): boolean {
   return raylib.symbols.IsKeyPressed(key);
 }
 
+/**
+ * Get key pressed (keycode), call it multiple times for keys queued, returns 0
+ * when the queue is empty
+ */
+export function getKeyPressed(): number {
+  return raylib.symbols.GetKeyPressed();
+}
+
 //-----------------------------------------------------------------------------
 // Input-related functions: mouse
 // ----------------------------------------------------------------------------
