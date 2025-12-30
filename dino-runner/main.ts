@@ -17,6 +17,6 @@ const game = new Game({
   background: SKY_BLUE,
 });
 
-await game.init();
+game.init();
 game.run();
 game.close();

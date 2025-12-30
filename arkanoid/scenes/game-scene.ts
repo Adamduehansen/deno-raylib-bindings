@@ -26,7 +26,7 @@ export class GameScene extends Scene {
     ).length === 0;
   }
 
-  override initialize(game: Game): void {
+  override initialize(game: Game): Promise<void> {
     super.initialize(game);
 
     this.entities.add(this.paddle);
@@ -47,6 +47,8 @@ export class GameScene extends Scene {
         game.goToScene("end-scene");
       }
     });
+
+    return Promise.resolve();
   }
 
   override update(): void {

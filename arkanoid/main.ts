@@ -1,3 +1,4 @@
+import { RayWhite } from "@adamduehansen/raylib-bindings/r-core";
 import { Game } from "@adamduehansen/engine";
 import { GameScene } from "./scenes/game-scene.ts";
 import { EndScene } from "./scenes/end-scene.ts";
@@ -14,6 +15,7 @@ const game = new Game({
     "game-scene": new GameScene(),
     "end-scene": new EndScene(),
   },
+  background: RayWhite,
 });
 game.init();
 game.run();
