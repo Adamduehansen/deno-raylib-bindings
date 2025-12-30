@@ -19,6 +19,10 @@ export default class IntroductionLabel extends Entity {
     scene.events.on("game_started", () => {
       this.hide = true;
     });
+
+    scene.events.on("game_waiting", () => {
+      this.hide = false;
+    });
   }
 
   override draw(): void {

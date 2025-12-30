@@ -21,6 +21,10 @@ export default class GameOverLabel extends Entity {
     scene.events.on("game_ended", () => {
       this.hide = false;
     });
+
+    scene.events.on("game_waiting", () => {
+      this.hide = true;
+    });
   }
 
   override draw(): void {
