@@ -1,5 +1,6 @@
 import { EventEmitter, type Game } from "@adamduehansen/engine";
 import type { Entity } from "./entity.ts";
+import { getKeyPressed } from "@adamduehansen/raylib-bindings/r-core";
 
 class EntityCollection {
   private _entities: Entity[] = [];
@@ -70,6 +71,13 @@ export abstract class Scene {
   }
 
   update(): void {
+    // Handle keyboard events
+    const keyPressed = getKeyPressed();
+    if (keyPressed !== 0) {
+      this.onKeyPress(keyPressed);
+    }
+
+    // Update entities
     for (const entity of this.entities) {
       entity.update(this);
     }
@@ -84,4 +92,10 @@ export abstract class Scene {
       entity.draw();
     }
   }
+
+  // deno-lint-ignore no-unused-vars
+  onKeyPress(key: number): void {}
+
+  // deno-lint-ignore no-unused-vars
+  onKeyDown(key: number): void {}
 }
