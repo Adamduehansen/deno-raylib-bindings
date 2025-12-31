@@ -1,23 +1,20 @@
-import { Scene } from "@adamduehansen/engine";
-import { drawText } from "@adamduehansen/raylib-bindings/r-text";
-import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
-import { Game } from "../../engine/game.ts";
+import { KeySpace } from "@adamduehansen/raylib-bindings/r-core";
+import { Game, Scene } from "@adamduehansen/engine";
+import GameOverLabel from "../entities/game-over-label.ts";
 
 export class EndScene extends Scene {
-  override initialize(game: Game): Promise<void> {
-    return Promise.resolve();
+  private readonly _gameOverLabel = new GameOverLabel();
+
+  override initialize(game: Game): void {
+    super.initialize(game);
+    this.entities.add(this._gameOverLabel);
   }
 
-  override update(): void {
-  }
+  override onKeyPress(key: number, scene: Scene): void {
+    if (key !== KeySpace) {
+      return;
+    }
 
-  override draw(): void {
-    drawText({
-      color: DarkGray,
-      fontSize: 24,
-      posX: 0,
-      posY: 0,
-      text: "Game over!",
-    });
+    scene.game?.goToScene("game-scene");
   }
 }
