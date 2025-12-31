@@ -74,7 +74,7 @@ export abstract class Scene {
     // Handle keyboard events
     const keyPressed = getKeyPressed();
     if (keyPressed !== 0) {
-      this.onKeyPress(keyPressed);
+      this.onKeyPress(keyPressed, this);
     }
 
     // Update entities
@@ -94,7 +94,7 @@ export abstract class Scene {
   }
 
   // deno-lint-ignore no-unused-vars
-  onKeyPress(key: number): void {}
+  onKeyPress(key: number, scene: Scene): void {}
 
   // deno-lint-ignore no-unused-vars
   onKeyDown(key: number): void {}
