@@ -66,6 +66,12 @@ export abstract class Scene {
   readonly entities = new EntityCollection(this);
   readonly events = new EventEmitter();
 
+  /**
+   * The {@linkcode onActivate} hook on a scene is called when the scene is
+   * switched to. This can be used to reset a scene.
+   */
+  onActivate(): void {}
+
   initialize(game: Game): void {
     this._game = game;
   }

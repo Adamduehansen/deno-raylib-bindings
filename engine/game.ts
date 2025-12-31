@@ -63,6 +63,7 @@ export class Game {
 
   goToScene(sceneName: string) {
     this._currentScene = this._scenes[sceneName];
+    this._currentScene.onActivate();
   }
 
   init(): void {
@@ -77,6 +78,8 @@ export class Game {
     for (const scene of Object.values(this._scenes)) {
       scene.initialize(this);
     }
+
+    this._currentScene.onActivate();
   }
 
   run(): void {
