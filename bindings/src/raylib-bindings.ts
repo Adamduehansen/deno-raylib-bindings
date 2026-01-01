@@ -350,7 +350,6 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [SoundStruct],
     result: "void",
   },
-
   rlPushMatrix: {
     parameters: [],
     result: "void",
@@ -375,12 +374,20 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [TextureStruct, "i16"],
     result: "void",
   },
+  SetTraceLogLevel: {
+    parameters: ["i16"],
+    result: "void",
+  },
   SetWindowSize: {
     parameters: ["i32", "i32"],
     result: "void",
   },
   ToggleFullscreen: {
     parameters: [],
+    result: "void",
+  },
+  TraceLog: {
+    parameters: ["i32", "buffer"],
     result: "void",
   },
   UnloadTexture: {

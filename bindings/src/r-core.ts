@@ -435,6 +435,57 @@ export function getRandomValue(min: number, max: number): number {
 }
 
 //-----------------------------------------------------------------------------
+// Misc. functions
+//-----------------------------------------------------------------------------
+
+/**
+ * Display all logs
+ */
+export const LOG_ALL = 0;
+/**
+ * Trace logging, intended for internal use only
+ */
+export const LOG_TRACE = 1;
+/**
+ * Debug logging, used for internal debugging, it should be disabled on release builds
+ */
+export const LOG_DEBUG = 2;
+/**
+ * Info logging, used for program execution info
+ */
+export const LOG_INFO = 3;
+/**
+ * Warning logging, used on recoverable failures
+ */
+export const LOG_WARNING = 4;
+/**
+ * Error logging, used on unrecoverable failures
+ */
+export const LOG_ERROR = 5;
+/**
+ * Fatal logging, used to abort program: exit(EXIT_FAILURE)
+ */
+export const LOG_FATAL = 6;
+/**
+ * Disable logging
+ */
+export const LOG_NONE = 7;
+
+/**
+ * // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+ */
+export function traceLog(logLevel: number, ...text: string[]): void {
+  raylib.symbols.TraceLog(logLevel, toCString(text.join(" ")));
+}
+
+/**
+ * // Set the current threshold (minimum) log level
+ */
+export function setTraceLogLevel(logLevel: number): void {
+  raylib.symbols.SetTraceLogLevel(logLevel);
+}
+
+//-----------------------------------------------------------------------------
 // Gestures and Touch Handling Functions (Module: rgestures)
 //-----------------------------------------------------------------------------
 
