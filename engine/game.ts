@@ -32,6 +32,7 @@ export class Game {
   private readonly _enableDebug: boolean;
 
   private _currentScene: Scene;
+  private _queredNextScene?: string;
 
   get width(): number {
     return getScreenWidth();
@@ -61,11 +62,23 @@ export class Game {
     this._currentScene = defaultScene[1];
   }
 
+  /**
+   * Queries a scene switch. The scene will be switched during the end of the
+   * game loop.
+   *
+   * @param sceneName The name of the scene.
+   */
   goToScene(sceneName: string) {
-    this._currentScene = this._scenes[sceneName];
-    this._currentScene.onActivate();
+    this._queredNextScene = sceneName;
   }
 
+  /**
+   * Initializes the game in order of these steps:
+   * 1. Initializes Raylib with `initWindow` and `setTargetFPS`.
+   * 2. Calls {@linkcode Scene.initialize} on all scenes.
+   * 3. Calls {@linkcode Scene.onActivate} and emits the "activated" on the current
+   * scene.
+   */
   init(): void {
     initWindow({
       title: this._title,
@@ -80,6 +93,7 @@ export class Game {
     }
 
     this._currentScene.onActivate();
+    this._currentScene.events.emit("activated");
   }
 
   run(): void {
@@ -103,6 +117,18 @@ export class Game {
       }
 
       endDrawing();
+
+      // Go to next scene if any is given.
+      // This is to prevent a bug where entities will be drawn on the
+      // ----------------------------------------------------------------------
+      if (this._queredNextScene !== undefined) {
+        this._currentScene.onDestroy();
+        this._currentScene.events.emit("destroyed");
+        this._currentScene = this._scenes[this._queredNextScene];
+        this._currentScene.onActivate();
+        this._currentScene.events.emit("activated");
+        this._queredNextScene = undefined;
+      }
     }
   }
 

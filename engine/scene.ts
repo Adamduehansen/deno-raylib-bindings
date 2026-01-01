@@ -72,6 +72,8 @@ export abstract class Scene {
    */
   onActivate(): void {}
 
+  onDestroy(): void {}
+
   initialize(game: Game): void {
     this._game = game;
   }
