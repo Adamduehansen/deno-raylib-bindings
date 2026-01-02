@@ -21,11 +21,15 @@ export default class Paddle extends Entity {
     this.body = new RectangleBody(this, PADDLE_WIDTH, PADDLE_HEIGHT);
   }
 
-  override initialize(_scene: Scene): void {
-    this.pos = vec(
-      getScreenWidth() / 2,
-      getScreenHeight() - getScreenHeight() / 10,
-    );
+  override initialize(scene: Scene): void {
+    super.initialize(scene);
+
+    scene.events.on("activated", () => {
+      this.pos = vec(
+        getScreenWidth() / 2,
+        getScreenHeight() - getScreenHeight() / 10,
+      );
+    });
   }
 
   override update(scene: Scene): void {

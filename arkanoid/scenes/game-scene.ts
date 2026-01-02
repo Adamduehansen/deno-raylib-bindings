@@ -1,4 +1,9 @@
-import { isKeyPressed, KeySpace } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  isKeyPressed,
+  KeySpace,
+  LOG_INFO,
+  traceLog,
+} from "@adamduehansen/raylib-bindings/r-core";
 import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "../level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
@@ -26,7 +31,7 @@ export class GameScene extends Scene {
     ).length === 0;
   }
 
-  override initialize(game: Game): Promise<void> {
+  override initialize(game: Game): void {
     super.initialize(game);
 
     this.entities.add(this.paddle);
@@ -47,8 +52,15 @@ export class GameScene extends Scene {
         game.goToScene("end-scene");
       }
     });
+  }
 
-    return Promise.resolve();
+  override onActivate(): void {
+    traceLog(LOG_INFO, "Game scene", "activated");
+    this._isActive = false;
+  }
+
+  override onDisable(): void {
+    traceLog(LOG_INFO, "Game scene destroyed");
   }
 
   override update(): void {

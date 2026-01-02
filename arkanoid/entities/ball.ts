@@ -29,6 +29,10 @@ export default class Ball extends Entity {
       this.vel = INITIAL_BALL_VECTOR;
       this._active = true;
     });
+
+    scene.events.on("disabled", () => {
+      this._active = false;
+    });
   }
 
   override update(scene: Scene): void {

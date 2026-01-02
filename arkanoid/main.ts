@@ -12,8 +12,8 @@ const game = new Game({
   width: SCREEN_WIDTH,
   targetFps: 60,
   scenes: {
-    "end-scene": new EndScene(),
     "game-scene": new GameScene(),
+    "end-scene": new EndScene(),
   },
   background: RayWhite,
 });
