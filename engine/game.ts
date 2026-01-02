@@ -122,8 +122,8 @@ export class Game {
       // This is to prevent a bug where entities will be drawn on the
       // ----------------------------------------------------------------------
       if (this._queredNextScene !== undefined) {
-        this._currentScene.onDestroy();
-        this._currentScene.events.emit("destroyed");
+        this._currentScene.onDisable();
+        this._currentScene.events.emit("disabled");
         this._currentScene = this._scenes[this._queredNextScene];
         this._currentScene.onActivate();
         this._currentScene.events.emit("activated");

@@ -67,12 +67,14 @@ export abstract class Scene {
   readonly events = new EventEmitter();
 
   /**
-   * The {@linkcode onActivate} hook on a scene is called when the scene is
-   * switched to. This can be used to reset a scene.
+   * The {@linkcode onActivate} hook is called after the scene is switched to.
    */
   onActivate(): void {}
 
-  onDestroy(): void {}
+  /**
+   * The {@linkcode onDisable} hook is called before the scene is switched from.
+   */
+  onDisable(): void {}
 
   initialize(game: Game): void {
     this._game = game;
