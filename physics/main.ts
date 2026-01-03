@@ -1,60 +1,131 @@
+import { Game, Scene } from "@adamduehansen/engine";
 import {
-  beginDrawing,
-  clearBackground,
-  closeWindow,
-  endDrawing,
   getFrameTime,
   getMousePosition,
-  initWindow,
   isMouseButtonDown,
   isMouseButtonUp,
   MouseButtonLeft,
   MouseButtonRight,
   RayWhite,
-  setTargetFPS,
-  windowShouldClose,
+  Red,
 } from "@adamduehansen/raylib-bindings/r-core";
+import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 
-initWindow({
-  title: "Physics",
-  height: 720,
-  width: 1280,
-});
+class Vector {
+  private _length = 0;
 
-setTargetFPS(60);
+  constructor(public x: number, public y: number) {}
 
-let mousePos = [0, 0];
-let mouseDownLeft = false;
-let mouseDownRight = false;
-
-while (windowShouldClose() === false) {
-  beginDrawing();
-
-  clearBackground(RayWhite);
-
-  const mouse = getMousePosition();
-  mousePos = [mouse.x, mouse.y];
-  console.log(mousePos);
-
-  if (isMouseButtonDown(MouseButtonLeft)) {
-    mouseDownLeft = true;
-  }
-  if (isMouseButtonUp(MouseButtonLeft)) {
-    mouseDownLeft = false;
+  normalize(): void {
+    this._length = this.length();
+    this.x /= this._length;
+    this.y /= this._length;
   }
 
-  if (isMouseButtonDown(MouseButtonRight)) {
-    mouseDownRight = true;
+  length2(): number {
+    return this.x * this.x + this.y * this.y;
   }
 
-  if (isMouseButtonUp(MouseButtonRight)) {
-    mouseDownRight = false;
+  length(): number {
+    return Math.sqrt(this.length2());
   }
 
-  console.log(mouseDownLeft, mouseDownRight);
-  // console.log(getFrameTime());
+  getNormal(): Vector {
+    return new Vector(this.y, -this.x);
+  }
 
-  endDrawing();
+  dot(vec: Vector): number {
+    return this.x * vec.x + this.y * vec.y;
+  }
+
+  copy(): Vector {
+    return new Vector(this.x, this.y);
+  }
+
+  add(vec: Vector): void {
+    this.x += vec.x;
+    this.y += vec.y;
+  }
+
+  sub(vec: Vector): void {
+    this.x -= vec.x;
+    this.y -= vec.y;
+  }
+
+  scale(scalar: number): void {
+    this.x *= scalar;
+    this.y *= scalar;
+  }
+
+  cross(vec: Vector): number {
+    return this.x * vec.x - this.y * vec.y;
+  }
+
+  log(): void {
+    console.log("x: ", this.x, " - y: ", this.y);
+  }
 }
 
-closeWindow();
+class MainScene extends Scene {
+  private _mousePos = [0, 0];
+  private _mouseDownLeft = false;
+  private _mouseDownRight = false;
+
+  override update(): void {
+    super.update();
+
+    const deltaTime = getFrameTime();
+    const mouse = getMousePosition();
+    this._mousePos = [mouse.x, mouse.y];
+    console.log(this._mousePos);
+
+    if (isMouseButtonDown(MouseButtonLeft)) {
+      this._mouseDownLeft = true;
+    }
+    if (isMouseButtonUp(MouseButtonLeft)) {
+      this._mouseDownLeft = false;
+    }
+
+    if (isMouseButtonDown(MouseButtonRight)) {
+      this._mouseDownRight = true;
+    }
+
+    if (isMouseButtonUp(MouseButtonRight)) {
+      this._mouseDownRight = false;
+    }
+
+    console.log(this._mouseDownLeft, this._mouseDownRight);
+  }
+
+  override draw(): void {
+    super.draw();
+
+    drawRectangleRec({
+      color: Red,
+      rectangle: {
+        x: 20,
+        y: 40,
+        height: 50,
+        width: 50,
+      },
+    });
+  }
+
+  override onKeyPress(key: number): void {
+    console.log(key);
+  }
+}
+
+const game = new Game({
+  title: "Physic",
+  height: 720,
+  width: 1280,
+  targetFps: 60,
+  scenes: {
+    "main-scene": new MainScene(),
+  },
+  background: RayWhite,
+});
+game.init();
+game.run();
+game.close();
