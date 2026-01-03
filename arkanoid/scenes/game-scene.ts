@@ -17,13 +17,8 @@ interface ParsedLevel {
 export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
-
-  private _bricks: Brick[] = this._parseLevelData(level).bricks;
+  private _levelBricks = this._parseLevelData(level).bricks;
   private _isActive = false;
-
-  get bricks(): readonly Brick[] {
-    return this._bricks;
-  }
 
   private get _hasNoBricksLeft(): boolean {
     return this.entities.filter((entity) =>
@@ -36,9 +31,6 @@ export class GameScene extends Scene {
 
     this.entities.add(this.paddle);
     this.entities.add(this.ball);
-    for (const brick of this._bricks) {
-      this.entities.add(brick);
-    }
 
     // Initialize event listeners
     this.events.on("brick_destroyed", (data) => {
@@ -57,10 +49,19 @@ export class GameScene extends Scene {
   override onActivate(): void {
     traceLog(LOG_INFO, "Game scene", "activated");
     this._isActive = false;
+    for (const brick of this._levelBricks) {
+      this.entities.add(brick);
+    }
   }
 
   override onDisable(): void {
     traceLog(LOG_INFO, "Game scene destroyed");
+    const remainingBricks = this.entities.filter((entity) =>
+      entity.name !== undefined && entity.name.includes("brick")
+    );
+    for (const brick of remainingBricks) {
+      this.entities.remove(brick.id);
+    }
   }
 
   override update(): void {
