@@ -64,7 +64,12 @@ export abstract class Scene {
   }
 
   readonly entities = new EntityCollection(this);
-  readonly events = new EventEmitter();
+  readonly events = new EventEmitter<
+    {
+      "activated": () => void;
+      "disabled": () => void;
+    }
+  >();
 
   /**
    * The {@linkcode onActivate} hook is called after the scene is switched to.
