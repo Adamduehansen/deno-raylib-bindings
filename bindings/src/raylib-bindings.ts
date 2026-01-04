@@ -152,6 +152,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["i16", "i16", "i16", "i16", ColorStruct],
     result: "void",
   },
+  DrawLineV: {
+    parameters: [Vector2Struct, Vector2Struct, ColorStruct],
+    result: "void",
+  },
   DrawRectangle: {
     parameters: ["i16", "i16", "i16", "i16", ColorStruct],
     result: "void",

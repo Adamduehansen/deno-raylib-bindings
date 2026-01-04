@@ -94,6 +94,21 @@ export function drawLine(args: {
 }
 
 /**
+ * Draw a line (using gl lines)
+ */
+export function drawLineV(args: {
+  startPos: RaylibVector;
+  endPos: RaylibVector;
+  color: Color;
+}): void {
+  raylib.symbols.DrawLineV(
+    toRaylibVector2(args.startPos),
+    toRaylibVector2(args.endPos),
+    toRaylibColor(args.color),
+  );
+}
+
+/**
  * Draw a color-filled rectangle.
  */
 export function drawRectangle(args: {
