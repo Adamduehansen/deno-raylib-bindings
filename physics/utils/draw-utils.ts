@@ -1,4 +1,4 @@
-import { Color, Green, Red } from "@adamduehansen/raylib-bindings/r-core";
+import { Color } from "@adamduehansen/raylib-bindings/r-core";
 import {
   drawTextEx,
   getFontDefault,
