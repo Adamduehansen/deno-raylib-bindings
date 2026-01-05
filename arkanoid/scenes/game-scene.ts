@@ -9,6 +9,7 @@ import level from "../level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
 import Brick from "../entities/brick.ts";
 import Ball from "../entities/ball.ts";
+import PressToStartLabel from "../entities/press-to-start-label.ts";
 
 interface ParsedLevel {
   bricks: Brick[];
@@ -17,6 +18,7 @@ interface ParsedLevel {
 export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
+  readonly pressToStartLabel = new PressToStartLabel();
   private _levelBricks = this._parseLevelData(level).bricks;
   private _isActive = false;
 
@@ -31,6 +33,7 @@ export class GameScene extends Scene {
 
     this.entities.add(this.paddle);
     this.entities.add(this.ball);
+    this.entities.add(this.pressToStartLabel);
 
     // Initialize event listeners
     this.events.on("brick_destroyed", (data) => {
