@@ -2,11 +2,11 @@ import {
   beginDrawing,
   clearBackground,
   closeWindow,
-  type Color,
   endDrawing,
   getScreenHeight,
   getScreenWidth,
   initWindow,
+  type RaylibColor,
   setTargetFPS,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
@@ -19,7 +19,7 @@ interface GameArgs {
   width: number;
   targetFps: number;
   scenes: Record<string, Scene>;
-  background: Color;
+  background: RaylibColor;
 }
 
 export class Game {
@@ -28,7 +28,7 @@ export class Game {
   private readonly _screenHeight: number;
   private readonly _targetFps: number;
   private readonly _scenes: Record<string, Scene>;
-  private readonly _background: Color;
+  private readonly _background: RaylibColor;
   private readonly _enableDebug: boolean;
 
   private _currentScene: Scene;

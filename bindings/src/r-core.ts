@@ -34,26 +34,26 @@ export interface RenderTexture {
   depth: RaylibTexture;
 }
 
-export type Color = [number, number, number, number];
+export type RaylibColor = [number, number, number, number];
 
 //-----------------------------------------------------------------------------
 // Consts
 // ----------------------------------------------------------------------------
-export const Black: Color = [0, 0, 0, 255];
-export const Blank: Color = [0, 0, 0, 0];
-export const Blue: Color = [0, 121, 241, 255];
-export const DarkBlue: Color = [0, 82, 172, 255];
-export const DarkGray: Color = [80, 80, 80, 255];
-export const DarkGreen: Color = [0, 117, 44, 255];
-export const Gray: Color = [130, 130, 130, 255];
-export const Green: Color = [0, 228, 48, 255];
-export const LightGray: Color = [200, 200, 200, 255];
-export const Maroon: Color = [190, 33, 55, 255];
-export const Purple: Color = [200, 122, 255, 255];
-export const RayWhite: Color = [245, 245, 245, 255];
-export const Red: Color = [230, 41, 55, 255];
-export const SkyBlue: Color = [102, 191, 255, 255];
-export const White: Color = [255, 255, 255, 255];
+export const Black: RaylibColor = [0, 0, 0, 255];
+export const Blank: RaylibColor = [0, 0, 0, 0];
+export const Blue: RaylibColor = [0, 121, 241, 255];
+export const DarkBlue: RaylibColor = [0, 82, 172, 255];
+export const DarkGray: RaylibColor = [80, 80, 80, 255];
+export const DarkGreen: RaylibColor = [0, 117, 44, 255];
+export const Gray: RaylibColor = [130, 130, 130, 255];
+export const Green: RaylibColor = [0, 228, 48, 255];
+export const LightGray: RaylibColor = [200, 200, 200, 255];
+export const Maroon: RaylibColor = [190, 33, 55, 255];
+export const Purple: RaylibColor = [200, 122, 255, 255];
+export const RayWhite: RaylibColor = [245, 245, 245, 255];
+export const Red: RaylibColor = [230, 41, 55, 255];
+export const SkyBlue: RaylibColor = [102, 191, 255, 255];
+export const White: RaylibColor = [255, 255, 255, 255];
 
 //-----------------------------------------------------------------------------
 // Converters
@@ -65,9 +65,9 @@ export function toCString(str: string): BufferSource {
 }
 
 /**
- * Converts a {@linkcode Color} to a Raylib color
+ * Converts a {@linkcode RaylibColor} to a Raylib color
  */
-export function toRaylibColor(arr: Color): BufferSource {
+export function toRaylibColor(arr: RaylibColor): BufferSource {
   return new Uint8Array(arr);
 }
 
@@ -362,7 +362,7 @@ export function beginTextureMode(renderTexture: RenderTexture): void {
 /**
  * Set background color (framebuffer clear color).
  */
-export function clearBackground(color: Color): void {
+export function clearBackground(color: RaylibColor): void {
   raylib.symbols.ClearBackground(toRaylibColor(color));
 }
 
@@ -506,7 +506,7 @@ export function isGestureDetected(gesture: number): boolean {
 /**
  * Get color with alpha applied, alpha goes from 0.0f to 1.0f.
  */
-export function fade(color: Color, alpha: number): Color {
+export function fade(color: RaylibColor, alpha: number): RaylibColor {
   const result = raylib.symbols.Fade(toRaylibColor(color), alpha);
   return [result[0], result[1], result[2], result[3]];
 }

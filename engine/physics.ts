@@ -1,4 +1,8 @@
-import { type Color, Green, Red } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  Green,
+  type RaylibColor,
+  Red,
+} from "@adamduehansen/raylib-bindings/r-core";
 import {
   drawCircleLinesV,
   drawCircleV,
@@ -8,7 +12,7 @@ import {
 import type { Entity } from "./entity.ts";
 
 export abstract class Body {
-  color: Color = Green;
+  color: RaylibColor = Green;
 
   constructor(protected readonly entity: Entity) {}
 

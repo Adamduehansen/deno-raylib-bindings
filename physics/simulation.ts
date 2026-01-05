@@ -10,8 +10,8 @@ export default class Simulation {
   testPolygon = new Polygon([
     new Vector2(500, 500),
     new Vector2(600, 600),
-    new Vector2(600, 700),
     new Vector2(400, 600),
+    new Vector2(600, 700),
   ]);
 
   constructor() {}

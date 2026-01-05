@@ -1,8 +1,8 @@
-import { Color } from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibColor } from "@adamduehansen/raylib-bindings/r-core";
 import { Game } from "@adamduehansen/engine";
 import GameScene from "./game-scene.ts";
 
-const SKY_BLUE: Color = [135, 206, 235, 255];
+const SKY_BLUE: RaylibColor = [135, 206, 235, 255];
 const SCREEN_HEIGHT = 200;
 const SCREEN_WIDTH = 800;
 

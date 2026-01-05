@@ -1,9 +1,9 @@
-import { Color } from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibColor } from "@adamduehansen/raylib-bindings/r-core";
 import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 import { Entity, vec } from "@adamduehansen/engine";
 import { Scene } from "../engine/scene.ts";
 
-const SANDY_BROWN: Color = [244, 164, 96, 255];
+const SANDY_BROWN: RaylibColor = [244, 164, 96, 255];
 
 export default class Ground extends Entity {
   override initialize(scene: Scene): void {

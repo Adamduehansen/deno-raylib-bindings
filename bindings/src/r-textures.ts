@@ -6,7 +6,7 @@
 
 import { raylib } from "./raylib-bindings.ts";
 import {
-  type Color,
+  type RaylibColor,
   type RaylibTexture,
   type RaylibVector,
   type RenderTexture,
@@ -111,7 +111,7 @@ export function drawTexturePro(args: {
   dest: RaylibRectangle;
   origin: RaylibVector;
   rotation: number;
-  tint: Color;
+  tint: RaylibColor;
 }): void {
   raylib.symbols.DrawTexturePro(
     toRaylibTexture(args.texture),
@@ -160,7 +160,7 @@ export function drawTexture(args: {
   texture: RaylibTexture;
   x: number;
   y: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   return raylib.symbols.DrawTexture(
     toRaylibTexture(args.texture),
@@ -177,7 +177,7 @@ export function drawTextureRec(args: {
   texture: RaylibTexture;
   rectangle: RaylibRectangle;
   vector: RaylibVector;
-  color: Color;
+  color: RaylibColor;
 }): void {
   return raylib.symbols.DrawTextureRec(
     toRaylibTexture(args.texture),

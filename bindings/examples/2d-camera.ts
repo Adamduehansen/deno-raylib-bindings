@@ -6,7 +6,6 @@ import {
   type Camera,
   clearBackground,
   closeWindow,
-  type Color,
   DarkGray,
   endDrawing,
   endMode2D,
@@ -22,6 +21,7 @@ import {
   KeyR,
   KeyRight,
   KeyS,
+  type RaylibColor,
   RayWhite,
   Red,
   setTargetFPS,
@@ -55,7 +55,7 @@ const player: RaylibRectangle = {
   height: 40,
 };
 const buildings: RaylibRectangle[] = [];
-const buildColors: Color[] = [];
+const buildColors: RaylibColor[] = [];
 
 let spacing = 0;
 

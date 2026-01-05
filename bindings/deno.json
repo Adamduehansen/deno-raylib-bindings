@@ -1,6 +1,6 @@
 {
   "name": "@adamduehansen/raylib-bindings",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "tasks": {},
   "license": "MIT",
   "exports": {

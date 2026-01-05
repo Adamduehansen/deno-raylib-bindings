@@ -1,4 +1,4 @@
-import { Color } from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibColor } from "@adamduehansen/raylib-bindings/r-core";
 import {
   drawTextEx,
   getFontDefault,
@@ -11,7 +11,7 @@ import {
 import { add, scale, sub, Vector2 } from "../vector2.ts";
 
 export default class DrawUtils {
-  static drawPoint(position: Vector2, radius: number, color: Color) {
+  static drawPoint(position: Vector2, radius: number, color: RaylibColor) {
     drawCircleV({
       color: color,
       center: {
@@ -22,7 +22,7 @@ export default class DrawUtils {
     });
   }
 
-  static strokePoint(position: Vector2, radius: number, color: Color) {
+  static strokePoint(position: Vector2, radius: number, color: RaylibColor) {
     drawCircleLinesV({
       color: color,
       center: {
@@ -33,7 +33,11 @@ export default class DrawUtils {
     });
   }
 
-  static drawLine(startPosition: Vector2, endPosition: Vector2, color: Color) {
+  static drawLine(
+    startPosition: Vector2,
+    endPosition: Vector2,
+    color: RaylibColor,
+  ) {
     drawLineV({
       color: color,
       startPos: {
@@ -47,7 +51,12 @@ export default class DrawUtils {
     });
   }
 
-  static drawText(position: Vector2, size: number, color: Color, text: string) {
+  static drawText(
+    position: Vector2,
+    size: number,
+    color: RaylibColor,
+    text: string,
+  ) {
     drawTextEx({
       font: getFontDefault(),
       fontSize: size,
@@ -61,7 +70,7 @@ export default class DrawUtils {
   static drawArrow(
     startPosition: Vector2,
     arrowHeadPosition: Vector2,
-    color: Color,
+    color: RaylibColor,
   ): void {
     this.drawLine(startPosition, arrowHeadPosition, color);
 

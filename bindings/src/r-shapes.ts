@@ -5,7 +5,7 @@
  */
 
 import {
-  type Color,
+  type RaylibColor,
   type RaylibVector,
   toRaylibColor,
   toRaylibVector2,
@@ -34,7 +34,7 @@ export function drawCircle(args: {
   centerX: number;
   centerY: number;
   radius: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawCircle(
     args.centerX,
@@ -50,7 +50,7 @@ export function drawCircle(args: {
 export function drawCircleLinesV(args: {
   center: RaylibVector;
   radius: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawCircleLinesV(
     toRaylibVector2(args.center),
@@ -65,7 +65,7 @@ export function drawCircleLinesV(args: {
 export function drawCircleV(args: {
   center: RaylibVector;
   radius: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawCircleV(
     toRaylibVector2(args.center),
@@ -82,7 +82,7 @@ export function drawLine(args: {
   startPosY: number;
   endPosX: number;
   endPosY: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawLine(
     args.startPosX,
@@ -99,7 +99,7 @@ export function drawLine(args: {
 export function drawLineV(args: {
   startPos: RaylibVector;
   endPos: RaylibVector;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawLineV(
     toRaylibVector2(args.startPos),
@@ -116,7 +116,7 @@ export function drawRectangle(args: {
   posY: number;
   width: number;
   height: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawRectangle(
     args.posX,
@@ -135,7 +135,7 @@ export function drawRectangleLines(args: {
   posY: number;
   width: number;
   height: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawRectangleLines(
     args.posX,
@@ -151,7 +151,7 @@ export function drawRectangleLines(args: {
  */
 export function drawRectangleRec(args: {
   rectangle: RaylibRectangle;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawRectangleRec(
     toRaylibRectangle(args.rectangle),
@@ -165,7 +165,7 @@ export function drawRectangleRec(args: {
 export function drawRectangleV(args: {
   position: RaylibVector;
   size: RaylibVector;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawRectangleV(
     toRaylibVector2(args.position),
@@ -180,7 +180,7 @@ export function drawRectangleV(args: {
 export function drawRectangleLinesEx(args: {
   rec: RaylibRectangle;
   lineThick: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   return raylib.symbols.DrawRectangleLinesEx(
     toRaylibRectangle(args.rec),

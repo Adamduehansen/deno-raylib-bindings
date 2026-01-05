@@ -5,7 +5,7 @@
  */
 
 import {
-  type Color,
+  type RaylibColor,
   type RaylibVector,
   toCString,
   toRaylibColor,
@@ -91,7 +91,7 @@ export function drawText(args: {
   posX: number;
   posY: number;
   fontSize: number;
-  color: Color;
+  color: RaylibColor;
 }): void {
   raylib.symbols.DrawText(
     toCString(args.text),
@@ -111,7 +111,7 @@ export function drawTextEx(args: {
   position: RaylibVector;
   fontSize: number;
   spacing: number;
-  tint: Color;
+  tint: RaylibColor;
 }): void {
   raylib.symbols.DrawTextEx(
     toFontStruct(args.font),
