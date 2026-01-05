@@ -22,18 +22,18 @@ export abstract class Entity {
   name?: string;
 
   // deno-lint-ignore no-unused-vars
-  initialize(scene: Scene): void {}
+  onInitialize(scene: Scene): void {}
 
   // deno-lint-ignore no-unused-vars
-  update(scene: Scene): void {
+  onUpdate(scene: Scene): void {
     this.pos.x += this.vel.x * getFrameTime();
     this.pos.y += this.vel.y * getFrameTime();
     this.body?.update();
   }
 
-  abstract draw(): void;
+  abstract onDraw(): void;
 
-  postDraw(): void {
+  onPostDraw(): void {
     this.body?.draw();
   }
 }

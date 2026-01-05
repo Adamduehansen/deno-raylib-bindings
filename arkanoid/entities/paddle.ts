@@ -21,8 +21,8 @@ export default class Paddle extends Entity {
     this.body = new RectangleBody(this, PADDLE_WIDTH, PADDLE_HEIGHT);
   }
 
-  override initialize(scene: Scene): void {
-    super.initialize(scene);
+  override onInitialize(scene: Scene): void {
+    super.onInitialize(scene);
 
     scene.events.on("activated", () => {
       this.pos = vec(
@@ -32,8 +32,8 @@ export default class Paddle extends Entity {
     });
   }
 
-  override update(scene: Scene): void {
-    super.update(scene);
+  override onUpdate(scene: Scene): void {
+    super.onUpdate(scene);
     if (isKeyDown(KeyA)) {
       this.vel.x = -PADDLE_SPEED;
     } else if (isKeyDown(KeyD)) {
@@ -51,7 +51,7 @@ export default class Paddle extends Entity {
     }
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawRectangleRec({
       color: Black,
       rectangle: {

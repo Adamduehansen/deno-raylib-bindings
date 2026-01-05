@@ -13,8 +13,8 @@ import { Scene } from "../engine/scene.ts";
 const text = "Game over";
 
 export default class GameOverLabel extends Entity {
-  override initialize(scene: Scene): void {
-    super.initialize(scene);
+  override onInitialize(scene: Scene): void {
+    super.onInitialize(scene);
 
     this.hide = true;
 
@@ -27,7 +27,7 @@ export default class GameOverLabel extends Entity {
     });
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawTextEx({
       text: text,
       fontSize: 32,

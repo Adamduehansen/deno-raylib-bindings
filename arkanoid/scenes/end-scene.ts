@@ -5,8 +5,8 @@ import GameOverLabel from "../entities/game-over-label.ts";
 export class EndScene extends Scene {
   private readonly _gameOverLabel = new GameOverLabel();
 
-  override initialize(game: Game): void {
-    super.initialize(game);
+  override onInitialize(game: Game): void {
+    super.onInitialize(game);
     this.entities.add(this._gameOverLabel);
   }
 

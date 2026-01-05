@@ -26,8 +26,8 @@ export class GameScene extends Scene {
     ).length === 0;
   }
 
-  override initialize(game: Game): void {
-    super.initialize(game);
+  override onInitialize(game: Game): void {
+    super.onInitialize(game);
 
     this.entities.add(this.paddle);
     this.entities.add(this.ball);
@@ -64,8 +64,8 @@ export class GameScene extends Scene {
     }
   }
 
-  override update(): void {
-    super.update();
+  override onUpdate(): void {
+    super.onUpdate();
 
     if (isKeyPressed(KeySpace) && this._isActive === false) {
       this._isActive = true;

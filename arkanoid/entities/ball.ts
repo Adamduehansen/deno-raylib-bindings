@@ -24,7 +24,7 @@ export default class Ball extends Entity {
     this.body = new CircleBody(this, BALL_RADIUS);
   }
 
-  override initialize(scene: Scene): void {
+  override onInitialize(scene: Scene): void {
     scene.events.on("activate", () => {
       this.vel = INITIAL_BALL_VECTOR;
       this._active = true;
@@ -35,8 +35,8 @@ export default class Ball extends Entity {
     });
   }
 
-  override update(scene: Scene): void {
-    super.update(scene);
+  override onUpdate(scene: Scene): void {
+    super.onUpdate(scene);
 
     // Get a reference to the paddle.
     const paddle = scene.entities.find("paddle");
@@ -117,7 +117,7 @@ export default class Ball extends Entity {
     }
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawCircleV({
       center: this.pos,
       color: Red,

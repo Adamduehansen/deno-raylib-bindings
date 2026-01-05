@@ -9,7 +9,7 @@ import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
 const TEXT = "Game over!";
 
 export default class GameOverLabel extends Entity {
-  override update(scene: Scene): void {
+  override onUpdate(scene: Scene): void {
     const textLength = measureText(TEXT, 32);
     this.pos = vec(
       scene.game!.width / 2 - textLength / 2,
@@ -17,7 +17,7 @@ export default class GameOverLabel extends Entity {
     );
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawTextEx({
       font: getFontDefault(),
       fontSize: 32,

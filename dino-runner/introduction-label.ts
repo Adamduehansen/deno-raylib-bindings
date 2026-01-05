@@ -13,8 +13,8 @@ import { Scene } from "../engine/scene.ts";
 const text = "Press space to start";
 
 export default class IntroductionLabel extends Entity {
-  override initialize(scene: Scene): void {
-    super.initialize(scene);
+  override onInitialize(scene: Scene): void {
+    super.onInitialize(scene);
 
     scene.events.on("game_started", () => {
       this.hide = true;
@@ -25,7 +25,7 @@ export default class IntroductionLabel extends Entity {
     });
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawTextEx({
       text: text,
       fontSize: 32,

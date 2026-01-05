@@ -75,7 +75,7 @@ export class Game {
   /**
    * Initializes the game in order of these steps:
    * 1. Initializes Raylib with `initWindow` and `setTargetFPS`.
-   * 2. Calls {@linkcode Scene.initialize} on all scenes.
+   * 2. Calls {@linkcode Scene.onInitialize} on all scenes.
    * 3. Calls {@linkcode Scene.onActivate} and emits the "activated" on the current
    * scene.
    */
@@ -89,7 +89,7 @@ export class Game {
     setTargetFPS(this._targetFps);
 
     for (const scene of Object.values(this._scenes)) {
-      scene.initialize(this);
+      scene.onInitialize(this);
     }
 
     this._currentScene.onActivate();
@@ -100,14 +100,14 @@ export class Game {
     while (windowShouldClose() === false) {
       // Update
       // --------------------------------------------------------------------------
-      this._currentScene.update();
+      this._currentScene.onUpdate();
 
       // Draw
       // --------------------------------------------------------------------------
       beginDrawing();
 
       clearBackground(this._background);
-      this._currentScene.draw();
+      this._currentScene.onDraw();
 
       this._enableDebug && drawFPS(0, 0);
       if (this._enableDebug) {

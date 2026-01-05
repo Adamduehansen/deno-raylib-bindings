@@ -33,8 +33,8 @@ export default class GameScene extends Scene {
   private _score = 0;
   private _highscore = 0;
 
-  override initialize(game: Game): void {
-    super.initialize(game);
+  override onInitialize(game: Game): void {
+    super.onInitialize(game);
 
     const highscoreFromData = this._getHighscore();
     this._highscore = highscoreFromData;
@@ -61,8 +61,8 @@ export default class GameScene extends Scene {
     });
   }
 
-  override update(): void {
-    super.update();
+  override onUpdate(): void {
+    super.onUpdate();
 
     // Main game looop
     if (this._gameState === "playing") {

@@ -13,8 +13,8 @@ export default class Obstacle extends Entity {
     this.name = "obstacle";
   }
 
-  override initialize(scene: Scene): void {
-    super.initialize(scene);
+  override onInitialize(scene: Scene): void {
+    super.onInitialize(scene);
 
     this.vel.x = -250;
     this.pos.x = scene.game?.width ?? 0;
@@ -25,7 +25,7 @@ export default class Obstacle extends Entity {
     });
   }
 
-  override draw(): void {
+  override onDraw(): void {
     const centerX = this.pos.x - this.width / 2;
     const centerY = this.pos.y - this.height / 2;
 

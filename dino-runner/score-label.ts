@@ -6,7 +6,7 @@ export default class ScoreLabel extends Entity {
   score = 0;
   highscore = 0;
 
-  override initialize(scene: Scene): void {
+  override onInitialize(scene: Scene): void {
     this.pos = vec(5, 2);
 
     scene.events.on("game_waiting", () => {
@@ -22,7 +22,7 @@ export default class ScoreLabel extends Entity {
     });
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawText({
       color: DarkGray,
       fontSize: 20,

@@ -18,7 +18,7 @@ class EntityCollection {
 
   add(entity: Entity): void {
     this._entities.push(entity);
-    entity.initialize(this._scene);
+    entity.onInitialize(this._scene);
   }
 
   find(name: string): Entity | undefined {
@@ -81,11 +81,11 @@ export abstract class Scene {
    */
   onDisable(): void {}
 
-  initialize(game: Game): void {
+  onInitialize(game: Game): void {
     this._game = game;
   }
 
-  update(): void {
+  onUpdate(): void {
     // Handle keyboard events
     const keyPressed = getKeyPressed();
     if (keyPressed !== 0) {
@@ -94,17 +94,17 @@ export abstract class Scene {
 
     // Update entities
     for (const entity of this.entities) {
-      entity.update(this);
+      entity.onUpdate(this);
     }
   }
 
-  draw(): void {
+  onDraw(): void {
     for (const entity of this.entities) {
       if (entity.hide) {
         continue;
       }
 
-      entity.draw();
+      entity.onDraw();
     }
   }
 

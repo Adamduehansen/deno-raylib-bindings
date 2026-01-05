@@ -6,13 +6,13 @@ import { Scene } from "../engine/scene.ts";
 const SANDY_BROWN: RaylibColor = [244, 164, 96, 255];
 
 export default class Ground extends Entity {
-  override initialize(scene: Scene): void {
+  override onInitialize(scene: Scene): void {
     this.pos = vec(0, 158);
     this.width = scene.game?.width ?? 0;
     this.height = scene.game?.height ?? 0;
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawRectangleRec({
       color: SANDY_BROWN,
       rectangle: {

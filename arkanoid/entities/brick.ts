@@ -17,7 +17,7 @@ export default class Brick extends Entity {
     this.body = new RectangleBody(this, BRICK_WIDTH, BRICK_HEIGHT);
   }
 
-  override draw(): void {
+  override onDraw(): void {
     drawRectangleRec({
       color: DarkGray,
       rectangle: {
@@ -29,8 +29,8 @@ export default class Brick extends Entity {
     });
   }
 
-  override update(scene: Scene): void {
-    super.update(scene);
+  override onUpdate(scene: Scene): void {
+    super.onUpdate(scene);
 
     // Check for collision with ball
     const ball = scene.entities.find("ball");

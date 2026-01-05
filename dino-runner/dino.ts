@@ -34,8 +34,8 @@ export default class Dino extends Entity {
     this._isJumping = true;
   }
 
-  override initialize(scene: Scene): void {
-    super.initialize(scene);
+  override onInitialize(scene: Scene): void {
+    super.onInitialize(scene);
 
     this.pos = vec(50, 150);
     scene.events.on("game_started", () => {
@@ -47,8 +47,8 @@ export default class Dino extends Entity {
     });
   }
 
-  override update(scene: Scene): void {
-    super.update(scene);
+  override onUpdate(scene: Scene): void {
+    super.onUpdate(scene);
 
     if (this._isRunning) {
       this.vel.y += GRAVITY;
@@ -64,7 +64,7 @@ export default class Dino extends Entity {
     }
   }
 
-  override draw(): void {
+  override onDraw(): void {
     const centerX = this.pos.x - this.width / 2;
     const centerY = this.pos.y - this.height / 2;
     drawRectangleRec({
