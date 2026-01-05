@@ -160,10 +160,16 @@ while (windowShouldClose() === false) {
 
     for (let i = 0; i < buildings.length; i++) {
       const building = buildings[i];
-      drawRectangleRec(building, buildColors[i]);
+      drawRectangleRec({
+        color: buildColors[i],
+        rectangle: building,
+      });
     }
 
-    drawRectangleRec(player, Red);
+    drawRectangleRec({
+      rectangle: player,
+      color: Red,
+    });
 
     drawLine({
       startPosX: camera.target.x,
