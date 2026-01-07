@@ -21,6 +21,7 @@ export class GameScene extends Scene {
   readonly pressToStartLabel = new PressToStartLabel();
   private _levelBricks = this._parseLevelData(level).bricks;
   private _isActive = false;
+  private _lifes = 3;
 
   private get _hasNoBricksLeft(): boolean {
     return this.entities.filter((entity) =>
@@ -44,6 +45,17 @@ export class GameScene extends Scene {
       this.entities.remove(data);
 
       if (this._hasNoBricksLeft) {
+        game.goToScene("end-scene");
+      }
+    });
+
+    this.events.on("life_lost", () => {
+      this._lifes -= 1;
+
+      if (this._lifes > 0) {
+        this._isActive = false;
+        this.pressToStartLabel.hide = false;
+      } else {
         game.goToScene("end-scene");
       }
     });

@@ -33,6 +33,10 @@ export default class Ball extends Entity {
     scene.events.on("disabled", () => {
       this._active = false;
     });
+
+    scene.events.on("life_lost", () => {
+      this._active = false;
+    });
   }
 
   override onUpdate(scene: Scene): void {
@@ -46,7 +50,7 @@ export default class Ball extends Entity {
 
     // Keep ball fixed to the paddle when game is not active.
     if (this._active === false) {
-      this.pos = vec(paddle.pos.x, paddle.pos.y - 25);
+      this.pos = vec(paddle.pos.x, paddle.pos.y - 100);
     }
 
     // Check collision with borders.
@@ -56,6 +60,12 @@ export default class Ball extends Entity {
       this.pos.x < BALL_RADIUS || this.pos.x > getScreenWidth() - BALL_RADIUS
     ) {
       this.vel.x *= -1;
+    }
+
+    // Check if ball fell below the paddle.
+    if (this.pos.y > scene.game.height) {
+      scene.events.emit("life_lost");
+      this.vel = vec(0, 0);
     }
 
     // Check collision with paddle
