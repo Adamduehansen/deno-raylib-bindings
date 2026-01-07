@@ -11,6 +11,7 @@ export default class Circle extends Shape {
     ]);
     this.position = position;
     this.radius = radius;
+    this.setCentroid(this.position);
   }
 
   override draw(): void {

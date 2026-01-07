@@ -9,9 +9,9 @@ export default class Simulation {
   testRect = new Rectangle(new Vector2(400, 400), 500, 250);
   testPolygon = new Polygon([
     new Vector2(500, 500),
-    new Vector2(600, 600),
-    new Vector2(400, 600),
+    new Vector2(800, 600),
     new Vector2(600, 700),
+    new Vector2(400, 600),
   ]);
 
   constructor() {}
