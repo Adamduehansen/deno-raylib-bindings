@@ -12,7 +12,6 @@ import {
 } from "@adamduehansen/raylib-bindings/r-shapes";
 
 const BALL_RADIUS = 8;
-const INITIAL_BALL_VECTOR = vec(0, -250);
 
 export default class Ball extends Entity {
   private _active = false;
@@ -26,7 +25,7 @@ export default class Ball extends Entity {
 
   override onInitialize(scene: Scene): void {
     scene.events.on("activate", () => {
-      this.vel = INITIAL_BALL_VECTOR;
+      this.vel = vec(0, -250);
       this._active = true;
     });
 
@@ -50,7 +49,7 @@ export default class Ball extends Entity {
 
     // Keep ball fixed to the paddle when game is not active.
     if (this._active === false) {
-      this.pos = vec(paddle.pos.x, paddle.pos.y - 100);
+      this.pos = vec(paddle.pos.x, paddle.pos.y - 50);
     }
 
     // Check collision with borders.
