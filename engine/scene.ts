@@ -5,15 +5,13 @@ import { getKeyPressed } from "@adamduehansen/raylib-bindings/r-core";
 class EntityCollection {
   private _entities: Entity[] = [];
   private _scene: Scene;
-  private _game?: Game;
 
   get length(): number {
     return this._entities.length;
   }
 
-  constructor(scene: Scene, game?: Game) {
+  constructor(scene: Scene) {
     this._scene = scene;
-    this._game = game;
   }
 
   add(entity: Entity): void {
@@ -57,9 +55,9 @@ class EntityCollection {
 }
 
 export abstract class Scene {
-  private _game?: Game;
+  private _game!: Game;
 
-  get game(): Game | undefined {
+  get game(): Game {
     return this._game;
   }
 
