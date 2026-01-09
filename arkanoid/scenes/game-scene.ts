@@ -1,24 +1,45 @@
 import {
+  DarkGray,
   isKeyPressed,
   KeySpace,
   LOG_INFO,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
+import { Entity, Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "../level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
 import Brick from "../entities/brick.ts";
 import Ball from "../entities/ball.ts";
 import PressToStartLabel from "../entities/press-to-start-label.ts";
+import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 
 interface ParsedLevel {
   bricks: Brick[];
+}
+
+class LifeBlock extends Entity {
+  constructor() {
+    super();
+    this.name = "LifeBlock";
+  }
+
+  override onDraw(): void {
+    drawRectangleRec({
+      color: DarkGray,
+      rectangle: {
+        ...this.pos,
+        height: 20,
+        width: 30,
+      },
+    });
+  }
 }
 
 export class GameScene extends Scene {
   readonly paddle = new Paddle();
   readonly ball = new Ball();
   readonly pressToStartLabel = new PressToStartLabel();
+
   private _levelBricks = this._parseLevelData(level).bricks;
   private _isActive = false;
   private _lifes = 3;
@@ -51,6 +72,10 @@ export class GameScene extends Scene {
 
     this.events.on("life_lost", () => {
       this._lifes -= 1;
+      const lifeBlock = this.entities.filter((entity) =>
+        entity.name !== undefined && entity.name === "LifeBlock"
+      );
+      this.entities.remove(lifeBlock.at(-1)!.id);
 
       if (this._lifes > 0) {
         this._isActive = false;
@@ -66,6 +91,12 @@ export class GameScene extends Scene {
     this._isActive = false;
     for (const brick of this._levelBricks) {
       this.entities.add(brick);
+    }
+    this._lifes = 3;
+    for (let i = 0; i < this._lifes; i++) {
+      const life = new LifeBlock();
+      life.pos = vec(100 + 50 * i, 100);
+      this.entities.add(life);
     }
   }
 
