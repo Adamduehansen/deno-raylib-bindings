@@ -84,7 +84,7 @@ export default class GameScene extends Scene {
 
       // Check collision
       const obstacles = this.entities.filter((entity) =>
-        entity.name !== undefined && entity.name?.includes("obstacle")
+        entity.name.includes("obstacle")
       );
       for (const obstacle of obstacles) {
         if (

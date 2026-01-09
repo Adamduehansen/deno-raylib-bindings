@@ -45,9 +45,8 @@ export class GameScene extends Scene {
   private _lifes = 3;
 
   private get _hasNoBricksLeft(): boolean {
-    return this.entities.filter((entity) =>
-      entity.name !== undefined && entity.name?.includes("brick")
-    ).length === 0;
+    return this.entities.filter((entity) => entity.name.includes("brick"))
+      .length === 0;
   }
 
   override onInitialize(game: Game): void {
@@ -73,7 +72,7 @@ export class GameScene extends Scene {
     this.events.on("life_lost", () => {
       this._lifes -= 1;
       const lifeBlock = this.entities.filter((entity) =>
-        entity.name !== undefined && entity.name === "LifeBlock"
+        entity.name === "LifeBlock"
       );
       this.entities.remove(lifeBlock.at(-1)!.id);
 
@@ -103,7 +102,7 @@ export class GameScene extends Scene {
   override onDisable(): void {
     traceLog(LOG_INFO, "Game scene destroyed");
     const remainingBricks = this.entities.filter((entity) =>
-      entity.name !== undefined && entity.name.includes("brick")
+      entity.name.includes("brick")
     );
     for (const brick of remainingBricks) {
       this.entities.remove(brick.id);

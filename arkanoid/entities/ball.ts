@@ -81,7 +81,7 @@ export default class Ball extends Entity {
 
     // Check collision with brick
     const bricks = scene.entities.filter((entity) =>
-      entity.name !== undefined && entity.name?.includes("brick")
+      entity.name.includes("brick")
     );
     for (const brick of bricks) {
       const brickBody = brick.body instanceof RectangleBody

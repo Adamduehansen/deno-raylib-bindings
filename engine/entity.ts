@@ -11,6 +11,7 @@ let entityId = 0;
 export abstract class Entity {
   pos: RaylibVector = vec(0, 0);
   vel: RaylibVector = vec(0, 0);
+  name = "";
 
   readonly id = entityId++;
 
@@ -19,7 +20,6 @@ export abstract class Entity {
   hide = false;
 
   body?: Body;
-  name?: string;
 
   // deno-lint-ignore no-unused-vars
   onInitialize(scene: Scene): void {}
