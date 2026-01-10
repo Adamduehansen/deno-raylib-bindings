@@ -72,7 +72,8 @@ export abstract class Scene {
   /**
    * The {@linkcode onActivate} hook is called after the scene is switched to.
    */
-  onActivate(): void {}
+  // deno-lint-ignore no-unused-vars
+  onActivate(scene: Scene): void {}
 
   /**
    * The {@linkcode onDisable} hook is called before the scene is switched from.

@@ -1,38 +1,19 @@
 import {
-  DarkGray,
   isKeyPressed,
   KeySpace,
   LOG_INFO,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity, Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
+import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "../level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
 import Brick from "../entities/brick.ts";
 import Ball from "../entities/ball.ts";
 import PressToStartLabel from "../entities/press-to-start-label.ts";
-import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
+import Life from "../entities/life.ts";
 
 interface ParsedLevel {
   bricks: Brick[];
-}
-
-class LifeBlock extends Entity {
-  constructor() {
-    super();
-    this.name = "LifeBlock";
-  }
-
-  override onDraw(): void {
-    drawRectangleRec({
-      color: DarkGray,
-      rectangle: {
-        ...this.pos,
-        height: 20,
-        width: 30,
-      },
-    });
-  }
 }
 
 export class GameScene extends Scene {
@@ -85,7 +66,7 @@ export class GameScene extends Scene {
     });
   }
 
-  override onActivate(): void {
+  override onActivate(scene: Scene): void {
     traceLog(LOG_INFO, "Game scene", "activated");
     this._isActive = false;
     for (const brick of this._levelBricks) {
@@ -93,8 +74,11 @@ export class GameScene extends Scene {
     }
     this._lifes = 3;
     for (let i = 0; i < this._lifes; i++) {
-      const life = new LifeBlock();
-      life.pos = vec(100 + 50 * i, 100);
+      const life = new Life();
+      life.pos = vec(
+        10 + 50 * i,
+        scene.game.height - life.height - 10,
+      );
       this.entities.add(life);
     }
   }

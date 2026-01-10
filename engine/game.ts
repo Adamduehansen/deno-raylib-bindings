@@ -92,7 +92,7 @@ export class Game {
       scene.onInitialize(this);
     }
 
-    this._currentScene.onActivate();
+    this._currentScene.onActivate(this._currentScene);
     this._currentScene.events.emit("activated");
   }
 
@@ -125,7 +125,7 @@ export class Game {
         this._currentScene.onDisable();
         this._currentScene.events.emit("disabled");
         this._currentScene = this._scenes[this._queredNextScene];
-        this._currentScene.onActivate();
+        this._currentScene.onActivate(this._currentScene);
         this._currentScene.events.emit("activated");
         this._queredNextScene = undefined;
       }
