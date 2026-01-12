@@ -1,4 +1,4 @@
-import { Vector2 } from "../vector2.ts";
+import { sub, Vector2 } from "../vector2.ts";
 
 export default class MathHelper {
   static calculateCentroid(vertices: Vector2[]): Vector2 {
@@ -43,5 +43,22 @@ export default class MathHelper {
 
   static index(idx: number, arraySize: number): number {
     return (idx + arraySize) % arraySize;
+  }
+
+  static rotateAroundPoint(
+    toRotateVertice: Vector2,
+    point: Vector2,
+    radians: number,
+  ) {
+    const rotated = new Vector2(0, 0);
+    const direction = sub(toRotateVertice, point);
+
+    rotated.x = direction.x * Math.cos(radians) -
+      direction.y * Math.sin(radians);
+    rotated.y = direction.x * Math.sin(radians) +
+      direction.y * Math.cos(radians);
+
+    rotated.add(point);
+    return rotated;
   }
 }

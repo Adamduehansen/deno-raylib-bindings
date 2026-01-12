@@ -1,6 +1,7 @@
 import { Black } from "@adamduehansen/raylib-bindings/r-core";
 import DrawUtils from "../utils/draw-utils.ts";
 import { Vector2 } from "../vector2.ts";
+import MathHelper from "../utils/math-helper.ts";
 
 export default abstract class Shape {
   centroid: Vector2 = new Vector2(0, 0);
@@ -29,5 +30,23 @@ export default abstract class Shape {
     );
 
     DrawUtils.drawPoint(this.centroid, 5, Black);
+  }
+
+  move(delta: Vector2): void {
+    for (let i = 0; i < this.vertices.length; i++) {
+      this.vertices[i].add(delta);
+    }
+    this.centroid.add(delta);
+  }
+
+  rotate(radiansDelta: number): void {
+    for (let i = 0; i < this.vertices.length; i++) {
+      const rotatedVertices = MathHelper.rotateAroundPoint(
+        this.vertices[i],
+        this.centroid,
+        radiansDelta,
+      );
+      this.vertices[i] = rotatedVertices;
+    }
   }
 }
