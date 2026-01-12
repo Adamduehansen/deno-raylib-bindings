@@ -234,11 +234,15 @@ export function windowShouldClose(): boolean {
 
 // Key constants
 export const KeySpace = 32;
+export const KeyComma = 44;
+export const KeyPeriod = 46;
 export const KeyOne = 49;
 export const KeyTwo = 50;
 export const KeyA = 65;
+export const KeyE = 69;
 export const KeyD = 68;
 export const KeyP = 80;
+export const KeyQ = 81;
 export const KeyR = 82;
 export const KeyS = 83;
 export const KeyW = 87;
