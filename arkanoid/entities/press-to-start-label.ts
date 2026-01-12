@@ -26,7 +26,7 @@ export default class PressToStartLabel extends Entity {
 
     this.pos = vec(
       getScreenWidth() / 2 - textLength / 2,
-      getScreenHeight() / 2,
+      getScreenHeight() / 2 + 50,
     );
 
     scene.events.on("activate", () => {
