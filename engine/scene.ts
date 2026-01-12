@@ -33,7 +33,7 @@ class EntityCollection {
 
   [Symbol.iterator]() {
     let index = 0;
-    const entities = this._entities;
+    const entities = this._entities.toSorted((a, b) => a.z - b.z);
 
     return {
       index: 0,

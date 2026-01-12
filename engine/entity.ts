@@ -11,6 +11,7 @@ let entityId = 0;
 export abstract class Entity {
   pos: RaylibVector = vec(0, 0);
   vel: RaylibVector = vec(0, 0);
+  z: number = 0;
   name = "";
 
   readonly id = entityId++;

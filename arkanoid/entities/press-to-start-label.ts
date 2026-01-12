@@ -15,6 +15,12 @@ const TEXT = "Press space to start";
 const SIZE = 32;
 
 export default class PressToStartLabel extends Entity {
+  constructor() {
+    super();
+    this.z = 10;
+    this.name = "press-to-start-label";
+  }
+
   override onInitialize(scene: Scene): void {
     const textLength = measureText(TEXT, SIZE);
 
