@@ -30,11 +30,15 @@ export default class PressToStartLabel extends Entity {
     );
 
     scene.events.on("activate", () => {
-      this.hide = true;
+      this.opacity = 0;
     });
 
     scene.events.on("activated", () => {
-      this.hide = false;
+      this.opacity = 1;
+    });
+
+    scene.events.on("life_lost", () => {
+      this.opacity = 1;
     });
   }
 
@@ -45,7 +49,7 @@ export default class PressToStartLabel extends Entity {
       position: this.pos,
       spacing: 6,
       text: TEXT,
-      tint: DarkGray,
+      tint: [DarkGray[0], DarkGray[1], DarkGray[2], 255 * this.opacity],
     });
   }
 }

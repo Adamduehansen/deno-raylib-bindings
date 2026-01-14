@@ -5,7 +5,7 @@ import {
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
-import level from "../level1.txt" with { type: "text" };
+import level from "../test-level.txt" with { type: "text" };
 import Paddle from "../entities/paddle.ts";
 import Brick from "../entities/brick.ts";
 import Ball from "../entities/ball.ts";
@@ -59,7 +59,6 @@ export class GameScene extends Scene {
 
       if (this._lifes > 0) {
         this._isActive = false;
-        this.pressToStartLabel.hide = false;
       } else {
         game.goToScene("end-scene");
       }

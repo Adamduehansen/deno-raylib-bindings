@@ -99,10 +99,6 @@ export abstract class Scene {
 
   onDraw(): void {
     for (const entity of this.entities) {
-      if (entity.hide) {
-        continue;
-      }
-
       entity.onDraw();
     }
   }
