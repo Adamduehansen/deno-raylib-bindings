@@ -16,15 +16,17 @@ import {
   KeyW,
   Red,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Vector2 } from "./vector2.ts";
+import { scale, Vector2 } from "./vector2.ts";
 import Circle from "./shapes/circle.ts";
 import Rectangle from "./shapes/rectangle.ts";
 import Polygon from "./shapes/polygon.ts";
 import { CollisionDetection } from "./collision-detection.ts";
+import CollisionManifold from "./collision-manifold.ts";
 
 export default class Simulation {
-  testCircleA = new Circle(new Vector2(100, 300), 100);
+  testCircleA = new Circle(new Vector2(100, 100), 100);
   testCircleB = new Circle(new Vector2(300, 300), 50);
+  collistionManifold: CollisionManifold | null = null;
   // testRect = new Rectangle(new Vector2(400, 400), 500, 250);
   // testPolygon = new Polygon([
   //   new Vector2(500, 500),
@@ -70,14 +72,21 @@ export default class Simulation {
       this.testCircleA.rotate(-rotateRadians);
     }
 
+    // Check collision
+
     const result = CollisionDetection.circleVsCircle(
       this.testCircleA,
       this.testCircleB,
     );
 
+    this.collistionManifold = null;
     if (result) {
       this.testCircleA.setColor(Red);
       this.testCircleB.setColor(Red);
+      this.collistionManifold = result;
+
+      const push = scale(result.normal, result.depth);
+      this.testCircleB.move(push);
     } else {
       this.testCircleA.setColor(Black);
       this.testCircleB.setColor(Black);
@@ -86,6 +95,10 @@ export default class Simulation {
 
   draw(): void {
     const mousePosition = getMousePosition();
+
+    if (this.collistionManifold !== null) {
+      this.collistionManifold.draw();
+    }
 
     // DrawUtils.drawPoint(new Vector2(400, 400), 20, Black);
     // DrawUtils.strokePoint(new Vector2(600, 600), 20, Blue);
