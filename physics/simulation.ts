@@ -1,4 +1,5 @@
 import {
+  Black,
   getMousePosition,
   isKeyDown,
   KeyA,
@@ -13,21 +14,24 @@ import {
   KeyS,
   KeyUp,
   KeyW,
+  Red,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { Vector2 } from "./vector2.ts";
 import Circle from "./shapes/circle.ts";
 import Rectangle from "./shapes/rectangle.ts";
 import Polygon from "./shapes/polygon.ts";
+import { CollisionDetection } from "./collision-detection.ts";
 
 export default class Simulation {
-  testCircle = new Circle(new Vector2(100, 100), 50);
-  testRect = new Rectangle(new Vector2(400, 400), 500, 250);
-  testPolygon = new Polygon([
-    new Vector2(500, 500),
-    new Vector2(800, 600),
-    new Vector2(600, 700),
-    new Vector2(400, 600),
-  ]);
+  testCircleA = new Circle(new Vector2(100, 300), 100);
+  testCircleB = new Circle(new Vector2(300, 300), 50);
+  // testRect = new Rectangle(new Vector2(400, 400), 500, 250);
+  // testPolygon = new Polygon([
+  //   new Vector2(500, 500),
+  //   new Vector2(800, 600),
+  //   new Vector2(600, 700),
+  //   new Vector2(400, 600),
+  // ]);
 
   constructor() {}
 
@@ -35,35 +39,48 @@ export default class Simulation {
     const moveSpeed = 5;
     const rotateRadians = 0.05;
     if (isKeyDown(KeyD)) {
-      this.testRect.move(new Vector2(moveSpeed, 0));
+      this.testCircleB.move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyA)) {
-      this.testRect.move(new Vector2(-moveSpeed, 0));
+      this.testCircleB.move(new Vector2(-moveSpeed, 0));
     } else if (isKeyDown(KeyS)) {
-      this.testRect.move(new Vector2(0, moveSpeed));
+      this.testCircleB.move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyW)) {
-      this.testRect.move(new Vector2(0, -moveSpeed));
+      this.testCircleB.move(new Vector2(0, -moveSpeed));
     }
 
     if (isKeyDown(KeyE)) {
-      this.testRect.rotate(rotateRadians);
+      this.testCircleB.rotate(rotateRadians);
     } else if (isKeyDown(KeyQ)) {
-      this.testRect.rotate(-rotateRadians);
+      this.testCircleB.rotate(-rotateRadians);
     }
 
     if (isKeyDown(KeyRight)) {
-      this.testCircle.move(new Vector2(moveSpeed, 0));
+      this.testCircleA.move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyLeft)) {
-      this.testCircle.move(new Vector2(-moveSpeed, 0));
+      this.testCircleA.move(new Vector2(-moveSpeed, 0));
     } else if (isKeyDown(KeyDown)) {
-      this.testCircle.move(new Vector2(0, moveSpeed));
+      this.testCircleA.move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyUp)) {
-      this.testCircle.move(new Vector2(0, -moveSpeed));
+      this.testCircleA.move(new Vector2(0, -moveSpeed));
     }
 
     if (isKeyDown(KeyPeriod)) {
-      this.testCircle.rotate(rotateRadians);
+      this.testCircleA.rotate(rotateRadians);
     } else if (isKeyDown(KeyComma)) {
-      this.testCircle.rotate(-rotateRadians);
+      this.testCircleA.rotate(-rotateRadians);
+    }
+
+    const result = CollisionDetection.circleVsCircle(
+      this.testCircleA,
+      this.testCircleB,
+    );
+
+    if (result) {
+      this.testCircleA.setColor(Red);
+      this.testCircleB.setColor(Red);
+    } else {
+      this.testCircleA.setColor(Black);
+      this.testCircleB.setColor(Black);
     }
   }
 
@@ -81,8 +98,9 @@ export default class Simulation {
     //   Black,
     // );
 
-    this.testCircle.draw();
-    this.testRect.draw();
-    this.testPolygon.draw();
+    this.testCircleA.draw();
+    this.testCircleB.draw();
+    // this.testRect.draw();
+    // this.testPolygon.draw();
   }
 }

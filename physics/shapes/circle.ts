@@ -1,4 +1,3 @@
-import { Black } from "@adamduehansen/raylib-bindings/r-core";
 import DrawUtils from "../utils/draw-utils.ts";
 import { Vector2 } from "../vector2.ts";
 import Shape from "./shape.ts";
@@ -14,8 +13,12 @@ export default class Circle extends Shape {
     this.setCentroid(this.position);
   }
 
+  getRadius(): number {
+    return this.radius;
+  }
+
   override draw(): void {
     super.draw();
-    DrawUtils.strokePoint(this.position, this.radius, Black);
+    DrawUtils.strokePoint(this.position, this.radius, this.color);
   }
 }
