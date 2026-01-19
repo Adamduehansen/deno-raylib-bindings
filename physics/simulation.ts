@@ -24,16 +24,11 @@ import { CollisionDetection } from "./collision-detection.ts";
 import CollisionManifold from "./collision-manifold.ts";
 
 export default class Simulation {
+  collistionManifold: CollisionManifold | null = null;
+
   testCircleA = new Circle(new Vector2(100, 100), 100);
   testCircleB = new Circle(new Vector2(300, 300), 50);
-  collistionManifold: CollisionManifold | null = null;
-  // testRect = new Rectangle(new Vector2(400, 400), 500, 250);
-  // testPolygon = new Polygon([
-  //   new Vector2(500, 500),
-  //   new Vector2(800, 600),
-  //   new Vector2(600, 700),
-  //   new Vector2(400, 600),
-  // ]);
+  testRect = new Rectangle(new Vector2(400, 400), 500, 250);
 
   constructor() {}
 
@@ -41,19 +36,19 @@ export default class Simulation {
     const moveSpeed = 5;
     const rotateRadians = 0.05;
     if (isKeyDown(KeyD)) {
-      this.testCircleB.move(new Vector2(moveSpeed, 0));
+      this.testRect.move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyA)) {
-      this.testCircleB.move(new Vector2(-moveSpeed, 0));
+      this.testRect.move(new Vector2(-moveSpeed, 0));
     } else if (isKeyDown(KeyS)) {
-      this.testCircleB.move(new Vector2(0, moveSpeed));
+      this.testRect.move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyW)) {
-      this.testCircleB.move(new Vector2(0, -moveSpeed));
+      this.testRect.move(new Vector2(0, -moveSpeed));
     }
 
     if (isKeyDown(KeyE)) {
-      this.testCircleB.rotate(rotateRadians);
+      this.testRect.rotate(rotateRadians);
     } else if (isKeyDown(KeyQ)) {
-      this.testCircleB.rotate(-rotateRadians);
+      this.testRect.rotate(-rotateRadians);
     }
 
     if (isKeyDown(KeyRight)) {
@@ -74,27 +69,30 @@ export default class Simulation {
 
     // Check collision
 
-    const result = CollisionDetection.circleVsCircle(
-      this.testCircleA,
-      this.testCircleB,
-    );
+    // const result = CollisionDetection.circleVsCircle(
+    //   this.testCircleA,
+    //   this.testCircleB,
+    // );
 
-    this.collistionManifold = null;
-    if (result) {
-      this.testCircleA.setColor(Red);
-      this.testCircleB.setColor(Red);
-      this.collistionManifold = result;
+    // this.collistionManifold = null;
+    // if (result) {
+    //   this.testCircleA.setColor(Red);
+    //   this.testCircleB.setColor(Red);
+    //   this.collistionManifold = result;
 
-      const push = scale(result.normal, result.depth);
-      this.testCircleB.move(push);
-    } else {
-      this.testCircleA.setColor(Black);
-      this.testCircleB.setColor(Black);
-    }
+    //   const push = scale(result.normal, result.depth);
+    //   this.testCircleB.move(push);
+    // } else {
+    //   this.testCircleA.setColor(Black);
+    //   this.testCircleB.setColor(Black);
+    // }
   }
 
   draw(): void {
     const mousePosition = getMousePosition();
+
+    this.testRect.draw();
+    this.testCircleB.draw();
 
     if (this.collistionManifold !== null) {
       this.collistionManifold.draw();
@@ -111,8 +109,6 @@ export default class Simulation {
     //   Black,
     // );
 
-    this.testCircleA.draw();
-    this.testCircleB.draw();
     // this.testRect.draw();
     // this.testPolygon.draw();
   }

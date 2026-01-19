@@ -61,4 +61,19 @@ export default class MathHelper {
     rotated.add(point);
     return rotated;
   }
+
+  static calculateNormals(vertices: Vector2[]): Vector2[] {
+    const normals: Vector2[] = [];
+    for (let i = 0; i < vertices.length; i++) {
+      const direction = sub(
+        vertices[this.index(i + 1, vertices.length)],
+        vertices[i],
+      );
+      direction.normalize();
+      const normal = direction.getNormal();
+      normals.push(normal);
+    }
+
+    return normals;
+  }
 }
