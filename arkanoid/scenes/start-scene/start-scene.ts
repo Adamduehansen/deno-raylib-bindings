@@ -2,7 +2,7 @@ import { KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 import { Game, Scene } from "@adamduehansen/engine";
 import InstructionsMessage from "./instructions-message.ts";
 
-export class StartScreen extends Scene {
+export default class StartScene extends Scene {
   override onInitialize(game: Game): void {
     super.onInitialize(game);
 
@@ -14,6 +14,6 @@ export class StartScreen extends Scene {
       return;
     }
 
-    scene.game.goToScene("game-scene");
+    scene.game.goToScene("level-1");
   }
 }
