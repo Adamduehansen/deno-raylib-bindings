@@ -65,7 +65,7 @@ export abstract class Scene {
   readonly events = new EventEmitter<
     {
       "activated": () => void;
-      "disabled": () => void;
+      "deactivated": () => void;
     }
   >();
 
@@ -76,9 +76,9 @@ export abstract class Scene {
   onActivate(scene: Scene): void {}
 
   /**
-   * The {@linkcode onDisable} hook is called before the scene is switched from.
+   * The {@linkcode onDeactivated} hook is called before the scene is switched from.
    */
-  onDisable(): void {}
+  onDeactivated(): void {}
 
   onInitialize(game: Game): void {
     this._game = game;

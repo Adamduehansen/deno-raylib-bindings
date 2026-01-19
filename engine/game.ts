@@ -129,7 +129,7 @@ export class Game {
       // ----------------------------------------------------------------------
       if (this._queredNextScene !== undefined) {
         traceLog(LOG_DEBUG, `Going to scene "${this._queredNextScene}"`);
-        this._currentScene.onDisable();
+        this._currentScene.onDeactivated();
         this._currentScene.events.emit("disabled");
         this._currentScene = this._scenes[this._queredNextScene];
         this._currentScene.onActivate(this._currentScene);
