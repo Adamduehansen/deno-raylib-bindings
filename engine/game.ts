@@ -6,8 +6,11 @@ import {
   getScreenHeight,
   getScreenWidth,
   initWindow,
+  LOG_DEBUG,
   type RaylibColor,
   setTargetFPS,
+  setTraceLogLevel,
+  traceLog,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
@@ -53,6 +56,9 @@ export class Game {
 
     // Set members from CLI.
     this._enableDebug = Deno.args.some((args) => args === "--debug");
+    if (this._enableDebug) {
+      setTraceLogLevel(LOG_DEBUG);
+    }
 
     // Set default scene.
     const defaultScene = Object.entries(this._scenes).at(0);
@@ -122,6 +128,7 @@ export class Game {
       // This is to prevent a bug where entities will be drawn on the
       // ----------------------------------------------------------------------
       if (this._queredNextScene !== undefined) {
+        traceLog(LOG_DEBUG, `Going to scene "${this._queredNextScene}"`);
         this._currentScene.onDisable();
         this._currentScene.events.emit("disabled");
         this._currentScene = this._scenes[this._queredNextScene];
