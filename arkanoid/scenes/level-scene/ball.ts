@@ -24,7 +24,7 @@ export default class Ball extends Entity {
   }
 
   override onInitialize(scene: Scene): void {
-    scene.events.on("activate", () => {
+    scene.events.on("start_game", () => {
       this.vel = vec(0, -250);
       this._active = true;
     });
@@ -49,7 +49,7 @@ export default class Ball extends Entity {
 
     // Keep ball fixed to the paddle when game is not active.
     if (this._active === false) {
-      this.pos = vec(paddle.pos.x, paddle.pos.y - 50);
+      this.pos = vec(paddle.pos.x, paddle.pos.y - 25);
     }
 
     // Check collision with borders.

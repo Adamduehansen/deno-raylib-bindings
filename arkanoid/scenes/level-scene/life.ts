@@ -5,7 +5,7 @@ import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
 export default class Life extends Entity {
   constructor() {
     super();
-    this.name = "LifeBlock";
+    this.name = "life";
     this.height = 20;
     this.width = 30;
   }

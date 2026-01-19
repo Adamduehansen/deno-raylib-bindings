@@ -13,7 +13,9 @@ export default class Brick extends Entity {
   constructor() {
     super();
 
-    this.name = `brick-${this.id}`;
+    this.name = `brick`;
+    this.height = BRICK_HEIGHT;
+    this.width = BRICK_WIDTH;
     this.body = new RectangleBody(this, BRICK_WIDTH, BRICK_HEIGHT);
   }
 
@@ -41,7 +43,7 @@ export default class Brick extends Entity {
       ball !== undefined && ballBody !== undefined && thisBody !== undefined &&
       checkCollisionCircleRec(ball.pos, ballBody.radius, thisBody.getBounds())
     ) {
-      scene.events.emit("brick_destroyed", this.id);
+      scene.events.emit("brick_hit", this.id);
     }
   }
 }

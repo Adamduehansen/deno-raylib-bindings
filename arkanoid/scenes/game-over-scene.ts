@@ -2,7 +2,7 @@ import { KeySpace } from "@adamduehansen/raylib-bindings/r-core";
 import { Game, Scene } from "@adamduehansen/engine";
 import GameOverLabel from "../entities/game-over-label.ts";
 
-export class EndScene extends Scene {
+export class GameOverScene extends Scene {
   private readonly _gameOverLabel = new GameOverLabel();
 
   override onInitialize(game: Game): void {
@@ -15,6 +15,6 @@ export class EndScene extends Scene {
       return;
     }
 
-    scene.game?.goToScene("game-scene");
+    scene.game?.goToScene("level-1");
   }
 }

@@ -9,7 +9,7 @@ import {
   getScreenHeight,
   getScreenWidth,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Scene } from "../../engine/scene.ts";
+import { Scene } from "../../../engine/scene.ts";
 
 const TEXT = "Press space to start";
 const SIZE = 32;
@@ -29,7 +29,7 @@ export default class PressToStartLabel extends Entity {
       getScreenHeight() / 2 + 50,
     );
 
-    scene.events.on("activate", () => {
+    scene.events.on("start_game", () => {
       this.opacity = 0;
     });
 

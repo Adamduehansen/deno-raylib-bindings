@@ -9,7 +9,7 @@ import level from "../test-level.txt" with { type: "text" };
 import Paddle from "./level-scene/paddle.ts";
 import Brick from "./level-scene/brick.ts";
 import Ball from "./level-scene/ball.ts";
-import PressToStartLabel from "../entities/press-to-start-label.ts";
+import PressToStartLabel from "./level-scene/press-to-start-label.ts";
 import Life from "./level-scene/life.ts";
 
 interface ParsedLevel {
@@ -82,7 +82,7 @@ export class GameScene extends Scene {
     }
   }
 
-  override onDisable(): void {
+  override onDeactivated(): void {
     traceLog(LOG_INFO, "Game scene destroyed");
     const remainingBricks = this.entities.filter((entity) =>
       entity.name.includes("brick")
