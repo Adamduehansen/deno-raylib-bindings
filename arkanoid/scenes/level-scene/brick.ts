@@ -4,7 +4,7 @@ import {
 } from "@adamduehansen/raylib-bindings/r-shapes";
 import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
 import { CircleBody, Entity, RectangleBody } from "@adamduehansen/engine";
-import { Scene } from "../../engine/scene.ts";
+import { Scene } from "../../../engine/scene.ts";
 
 const BRICK_WIDTH = 50;
 const BRICK_HEIGHT = 20;

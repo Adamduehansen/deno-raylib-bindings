@@ -6,11 +6,11 @@ import {
 } from "@adamduehansen/raylib-bindings/r-core";
 import { Game, RectangleBody, Scene, vec } from "@adamduehansen/engine";
 import level from "../test-level.txt" with { type: "text" };
-import Paddle from "../entities/paddle.ts";
-import Brick from "../entities/brick.ts";
-import Ball from "../entities/ball.ts";
+import Paddle from "./level-scene/paddle.ts";
+import Brick from "./level-scene/brick.ts";
+import Ball from "./level-scene/ball.ts";
 import PressToStartLabel from "../entities/press-to-start-label.ts";
-import Life from "../entities/life.ts";
+import Life from "./level-scene/life.ts";
 
 interface ParsedLevel {
   bricks: Brick[];

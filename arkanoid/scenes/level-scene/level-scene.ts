@@ -1,5 +1,5 @@
 import { Scene } from "@adamduehansen/engine";
-import Paddle from "../../entities/paddle.ts";
+import Paddle from "./paddle.ts";
 import { Game } from "../../../engine/game.ts";
 
 export default abstract class LevelScene extends Scene {
