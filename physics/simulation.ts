@@ -22,52 +22,84 @@ import Rectangle from "./shapes/rectangle.ts";
 import Polygon from "./shapes/polygon.ts";
 import { CollisionDetection } from "./collision-detection.ts";
 import CollisionManifold from "./collision-manifold.ts";
+import Shape from "./shapes/shape.ts";
 
 export default class Simulation {
   collistionManifold: CollisionManifold | null = null;
+  shapes: Shape[] = [];
 
-  testCircleA = new Circle(new Vector2(100, 100), 100);
-  testCircleB = new Circle(new Vector2(300, 300), 50);
-  testRect = new Rectangle(new Vector2(400, 400), 500, 250);
+  // testCircleA = new Circle(new Vector2(100, 100), 100);
+  // testCircleB = new Circle(new Vector2(300, 300), 50);
 
-  constructor() {}
+  constructor() {
+    this.shapes.push(new Rectangle(new Vector2(400, 400), 500, 250));
+    this.shapes.push(
+      new Polygon([
+        new Vector2(0, 0),
+        new Vector2(100, 0),
+        new Vector2(50, 100),
+      ]),
+    );
+    this.shapes.push(new Rectangle(new Vector2(950, 300), 500, 250));
+  }
 
   update(deltaTime: number): void {
     const moveSpeed = 5;
     const rotateRadians = 0.05;
     if (isKeyDown(KeyD)) {
-      this.testRect.move(new Vector2(moveSpeed, 0));
+      this.shapes[0].move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyA)) {
-      this.testRect.move(new Vector2(-moveSpeed, 0));
+      this.shapes[0].move(new Vector2(-moveSpeed, 0));
     } else if (isKeyDown(KeyS)) {
-      this.testRect.move(new Vector2(0, moveSpeed));
+      this.shapes[0].move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyW)) {
-      this.testRect.move(new Vector2(0, -moveSpeed));
+      this.shapes[0].move(new Vector2(0, -moveSpeed));
     }
 
     if (isKeyDown(KeyE)) {
-      this.testRect.rotate(rotateRadians);
+      this.shapes[0].rotate(rotateRadians);
     } else if (isKeyDown(KeyQ)) {
-      this.testRect.rotate(-rotateRadians);
+      this.shapes[0].rotate(-rotateRadians);
     }
 
     if (isKeyDown(KeyRight)) {
-      this.testCircleA.move(new Vector2(moveSpeed, 0));
+      this.shapes[1].move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyLeft)) {
-      this.testCircleA.move(new Vector2(-moveSpeed, 0));
+      this.shapes[1].move(new Vector2(-moveSpeed, 0));
     } else if (isKeyDown(KeyDown)) {
-      this.testCircleA.move(new Vector2(0, moveSpeed));
+      this.shapes[1].move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyUp)) {
-      this.testCircleA.move(new Vector2(0, -moveSpeed));
+      this.shapes[1].move(new Vector2(0, -moveSpeed));
     }
 
     if (isKeyDown(KeyPeriod)) {
-      this.testCircleA.rotate(rotateRadians);
+      this.shapes[1].rotate(rotateRadians);
     } else if (isKeyDown(KeyComma)) {
-      this.testCircleA.rotate(-rotateRadians);
+      this.shapes[1].rotate(-rotateRadians);
     }
 
     // Check collision
+
+    for (let i = 0; i < this.shapes.length; i++) {
+      for (let j = 0; j < this.shapes.length; j++) {
+        if (i === j) {
+          continue;
+        }
+
+        const objectA = this.shapes[i];
+        const objectB = this.shapes[j];
+
+        const result = CollisionDetection.polygonVsPolygon(objectA, objectB);
+        console.log(result);
+        if (result === null) {
+          continue;
+        }
+
+        const push = scale(result?.normal, result?.depth * 0.5);
+        objectB.move(push);
+        objectA.move(scale(push, -1));
+      }
+    }
 
     // const result = CollisionDetection.circleVsCircle(
     //   this.testCircleA,
@@ -91,8 +123,12 @@ export default class Simulation {
   draw(): void {
     const mousePosition = getMousePosition();
 
-    this.testRect.draw();
-    this.testCircleB.draw();
+    // this.testRectA.draw();
+    // this.testRectB.draw();
+    for (let i = 0; i < this.shapes.length; i++) {
+      const element = this.shapes[i];
+      element.draw();
+    }
 
     if (this.collistionManifold !== null) {
       this.collistionManifold.draw();
