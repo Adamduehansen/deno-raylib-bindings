@@ -8,6 +8,7 @@ import {
   initWindow,
   LOG_DEBUG,
   type RaylibColor,
+  RayWhite,
   setTargetFPS,
   setTraceLogLevel,
   traceLog,
@@ -16,13 +17,22 @@ import {
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import type { Scene } from "./scene.ts";
 
+const DEFAULT_TARGET_FPS = 60;
+const DEFAULT_BACKGROUND = RayWhite;
+
 interface GameArgs {
   title: string;
   height: number;
   width: number;
-  targetFps: number;
   scenes: Record<string, Scene>;
-  background: RaylibColor;
+
+  /**
+   * The target FPS.
+   *
+   * @default
+   */
+  targetFps?: number;
+  background?: RaylibColor;
 }
 
 export class Game {
@@ -50,9 +60,10 @@ export class Game {
     this._title = args.title;
     this._screenWidth = args.width;
     this._screenHeight = args.height;
-    this._targetFps = args.targetFps;
     this._scenes = args.scenes;
-    this._background = args.background;
+
+    this._targetFps = args.targetFps ?? DEFAULT_TARGET_FPS;
+    this._background = args.background ?? DEFAULT_BACKGROUND;
 
     // Set members from CLI.
     this._enableDebug = Deno.args.some((args) => args === "--debug");

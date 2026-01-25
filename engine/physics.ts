@@ -1,86 +1,60 @@
-import {
-  Green,
-  type RaylibColor,
-  Red,
-} from "@adamduehansen/raylib-bindings/r-core";
+import { Green, Red } from "@adamduehansen/raylib-bindings/r-core";
 import {
   drawCircleLinesV,
   drawCircleV,
-  drawRectangleLinesEx,
-  type RaylibRectangle,
+  drawLineV,
 } from "@adamduehansen/raylib-bindings/r-shapes";
-import type { Entity } from "./entity.ts";
+import type Vector2 from "./vector.ts";
+import { vec } from "./vector.ts";
 
 export abstract class Body {
-  color: RaylibColor = Green;
+  centroid = vec(0, 0);
+  color = Green;
 
-  constructor(protected readonly entity: Entity) {}
+  constructor(public readonly vertices: Vector2[]) {}
 
-  update(): void {}
-
-  abstract draw(): void;
-}
-
-/**
- * A physics body for a circle shape.
- */
-export class CircleBody extends Body {
-  readonly radius: number;
-
-  constructor(entity: Entity, radius: number) {
-    super(entity);
-    this.radius = radius;
+  update(delta: Vector2): void {
+    for (let i = 0; i < this.vertices.length; i++) {
+      this.vertices[i] = this.vertices[i].add(delta);
+    }
+    this.centroid = this.centroid.add(delta);
   }
 
-  override draw(): void {
-    drawCircleLinesV({
-      center: this.entity.pos,
+  draw(): void {
+    for (let i = 1; i < this.vertices.length; i++) {
+      drawLineV({
+        color: this.color,
+        startPos: this.vertices[i - 1],
+        endPos: this.vertices[i],
+      });
+    }
+
+    drawLineV({
       color: this.color,
-      radius: this.radius,
-    });
-  }
-}
-
-/**
- * A physics body for a rectangle shape.
- */
-export class RectangleBody extends Body {
-  private readonly _width: number;
-  private readonly _height: number;
-
-  constructor(entity: Entity, width: number, height: number) {
-    super(entity);
-    this._height = height;
-    this._width = width;
-  }
-
-  getBounds(): RaylibRectangle {
-    return {
-      x: this.entity.pos.x - this._width / 2,
-      y: this.entity.pos.y - this._height / 2,
-      width: this._width,
-      height: this._height,
-    };
-  }
-
-  override draw(): void {
-    // Draw outline
-    drawRectangleLinesEx({
-      color: this.color,
-      lineThick: 1,
-      rec: {
-        height: this._height,
-        width: this._width,
-        x: this.entity.pos.x - this._width / 2,
-        y: this.entity.pos.y - this._height / 2,
-      },
+      startPos: this.vertices[this.vertices.length - 1],
+      endPos: this.vertices[0],
     });
 
-    // Draw center
     drawCircleV({
-      center: this.entity.pos,
+      center: this.centroid,
       color: Red,
-      radius: 2,
+      radius: 3,
+    });
+  }
+}
+
+export class CircleBody extends Body {
+  constructor(public pos: Vector2, public radius: number) {
+    super([pos, vec(pos.x + radius, pos.y)]);
+    this.centroid = this.pos;
+  }
+
+  override draw(): void {
+    super.draw();
+    drawCircleLinesV({
+      center: this.centroid,
+      color: Green,
+      radius: this.radius,
     });
   }
 }

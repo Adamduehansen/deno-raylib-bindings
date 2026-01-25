@@ -91,6 +91,9 @@ export abstract class Scene {
       this.onKeyPress(keyPressed, this);
     }
 
+    // Check collision
+    this._handleCollision();
+
     // Update entities
     for (const entity of this.entities) {
       entity.onUpdate(this);
@@ -108,4 +111,25 @@ export abstract class Scene {
 
   // deno-lint-ignore no-unused-vars
   onKeyDown(key: number): void {}
+
+  private _handleCollision(): void {
+    for (const currentEntity of this.entities) {
+      const currentEntityBody = currentEntity.body;
+      if (currentEntityBody === undefined) {
+        continue;
+      }
+
+      for (const otherEntity of this.entities) {
+        if (currentEntity.id === otherEntity.id) {
+          // Dont check for the same entity.
+          continue;
+        }
+
+        const otherEntityBody = otherEntity.body;
+        if (otherEntityBody === undefined) {
+          continue;
+        }
+      }
+    }
+  }
 }
