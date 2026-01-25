@@ -1,9 +1,27 @@
 import CollisionManifold from "./collision-manifold.ts";
 import Circle from "./shapes/circle.ts";
 import Polygon from "./shapes/polygon.ts";
+import Shape from "./shapes/shape.ts";
+import MathHelper from "./utils/math-helper.ts";
 import { add, scale, sub, Vector2 } from "./vector2.ts";
 
 export class CollisionDetection {
+  static checkCollisions(
+    shapeA: Shape,
+    shapeB: Shape,
+  ): CollisionManifold | null {
+    let collisionManifold = null;
+    if (shapeA instanceof Circle && shapeB instanceof Circle) {
+      collisionManifold = this.circleVsCircle(shapeA, shapeB);
+    } else if (shapeA instanceof Polygon && shapeB instanceof Polygon) {
+      collisionManifold = this.polygonVsPolygon(shapeA, shapeB);
+    } else if (shapeA instanceof Circle && shapeB instanceof Polygon) {
+      collisionManifold = this.circleVsPolygon(shapeA, shapeB);
+    }
+
+    return collisionManifold;
+  }
+
   static circleVsCircle(
     circleA: Circle,
     circleB: Circle,
@@ -127,6 +145,97 @@ export class CollisionDetection {
     }
 
     return supportPoint;
+  }
+
+  static circleVsPolygon(
+    shapeCircle: Circle,
+    shapePolygon: Polygon,
+  ): CollisionManifold | null {
+    const contact = this.cirleVsPolygonEdges(shapeCircle, shapePolygon);
+    if (contact !== null) {
+      return contact;
+    } else {
+      return this.circleVsPolygonCornes(shapeCircle, shapePolygon);
+    }
+  }
+
+  static cirleVsPolygonEdges(
+    shapeCircle: Circle,
+    shapePolygon: Polygon,
+  ): CollisionManifold | null {
+    const verticesLength = shapePolygon.vertices.length;
+    const circleCentroid = shapeCircle.centroid;
+    let nearestEdgeVertix = null;
+    let nearestEdgeNormal = null;
+
+    for (let i = 0; i < verticesLength; i++) {
+      const currVertix = shapePolygon.vertices[i];
+      const currNormal = shapePolygon.normals[i];
+      const nextVertix =
+        shapePolygon.vertices[MathHelper.index(i + 1, verticesLength)];
+
+      const vertToCirlce = sub(circleCentroid, currVertix);
+      const dirToNext = sub(nextVertix, currVertix);
+      const dirToNextLength = dirToNext.length();
+      dirToNext.normalize();
+
+      const circleDirToNextProjection = vertToCirlce.dot(dirToNext);
+      const circleDirToNormalProjection = vertToCirlce.dot(currNormal);
+      if (
+        circleDirToNextProjection > 0 &&
+        circleDirToNextProjection < dirToNextLength &&
+        circleDirToNormalProjection >= 0
+      ) {
+        nearestEdgeNormal = currNormal;
+        nearestEdgeVertix = currVertix;
+      }
+    }
+
+    if (nearestEdgeNormal === null || nearestEdgeVertix === null) {
+      return null;
+    }
+
+    const vertixToCircle = sub(circleCentroid, nearestEdgeVertix);
+    const projectionToEdgeNormal = nearestEdgeNormal.dot(vertixToCircle);
+    if (projectionToEdgeNormal - shapeCircle.radius < 0) {
+      const penetrationDepth = projectionToEdgeNormal - shapeCircle.radius;
+      const penetrationPoint = add(
+        circleCentroid,
+        scale(nearestEdgeNormal, shapeCircle.radius * -1),
+      );
+      return new CollisionManifold(
+        penetrationDepth * -1,
+        scale(nearestEdgeNormal, -1),
+        penetrationPoint,
+      );
+    }
+
+    return null;
+  }
+
+  static circleVsPolygonCornes(
+    shapeCircle: Circle,
+    shapePolygon: Polygon,
+  ): CollisionManifold | null {
+    const verticesLength = shapePolygon.vertices.length;
+    for (let i = 0; i < verticesLength; i++) {
+      const currVertex = shapePolygon.vertices[i];
+      const dirToCentroidCircle = sub(currVertex, shapeCircle.centroid);
+      if (
+        dirToCentroidCircle.length2() < shapeCircle.radius * shapeCircle.radius
+      ) {
+        const penetrationDepth = shapeCircle.radius -
+          dirToCentroidCircle.length();
+        dirToCentroidCircle.normalize();
+        return new CollisionManifold(
+          penetrationDepth,
+          dirToCentroidCircle,
+          currVertex,
+        );
+      }
+    }
+
+    return null;
   }
 }
 

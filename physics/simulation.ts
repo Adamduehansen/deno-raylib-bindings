@@ -32,7 +32,7 @@ export default class Simulation {
   // testCircleB = new Circle(new Vector2(300, 300), 50);
 
   constructor() {
-    this.shapes.push(new Rectangle(new Vector2(400, 400), 500, 250));
+    this.shapes.push(new Circle(new Vector2(600, 300), 100));
     this.shapes.push(
       new Polygon([
         new Vector2(0, 0),
@@ -40,7 +40,7 @@ export default class Simulation {
         new Vector2(50, 100),
       ]),
     );
-    this.shapes.push(new Rectangle(new Vector2(950, 300), 500, 250));
+    this.shapes.push(new Rectangle(new Vector2(600, 400), 150, 150));
   }
 
   update(deltaTime: number): void {
@@ -50,12 +50,12 @@ export default class Simulation {
       this.shapes[0].move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyA)) {
       this.shapes[0].move(new Vector2(-moveSpeed, 0));
-    } else if (isKeyDown(KeyS)) {
+    }
+    if (isKeyDown(KeyS)) {
       this.shapes[0].move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyW)) {
       this.shapes[0].move(new Vector2(0, -moveSpeed));
     }
-
     if (isKeyDown(KeyE)) {
       this.shapes[0].rotate(rotateRadians);
     } else if (isKeyDown(KeyQ)) {
@@ -66,7 +66,8 @@ export default class Simulation {
       this.shapes[1].move(new Vector2(moveSpeed, 0));
     } else if (isKeyDown(KeyLeft)) {
       this.shapes[1].move(new Vector2(-moveSpeed, 0));
-    } else if (isKeyDown(KeyDown)) {
+    }
+    if (isKeyDown(KeyDown)) {
       this.shapes[1].move(new Vector2(0, moveSpeed));
     } else if (isKeyDown(KeyUp)) {
       this.shapes[1].move(new Vector2(0, -moveSpeed));
@@ -89,7 +90,7 @@ export default class Simulation {
         const objectA = this.shapes[i];
         const objectB = this.shapes[j];
 
-        const result = CollisionDetection.polygonVsPolygon(objectA, objectB);
+        const result = CollisionDetection.checkCollisions(objectA, objectB);
         console.log(result);
         if (result === null) {
           continue;
