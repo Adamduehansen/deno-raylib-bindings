@@ -72,3 +72,16 @@ export function vector2Add(
     toRaylibVector2(vector2B),
   ));
 }
+
+/**
+ * Subtract two vectors (v1 - v2)
+ */
+export function vector2Subtract(
+  vector2A: RaylibVector,
+  vector2B: RaylibVector,
+): RaylibVector {
+  return toVector(raylib.symbols.Vector2Subtract(
+    toRaylibVector2(vector2A),
+    toRaylibVector2(vector2B),
+  ));
+}

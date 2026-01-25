@@ -422,6 +422,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [Vector2Struct, Vector2Struct],
     result: Vector2Struct,
   },
+  Vector2Subtract: {
+    parameters: [Vector2Struct, Vector2Struct],
+    result: Vector2Struct,
+  },
   WindowShouldClose: {
     parameters: [],
     result: "bool",
