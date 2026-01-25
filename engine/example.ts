@@ -7,6 +7,9 @@ import {
   isKeyDown,
   KeyA,
   KeyD,
+  KeyE,
+  KeyQ,
+  KeyR,
   KeyS,
   KeyW,
 } from "@adamduehansen/raylib-bindings/r-core";
@@ -39,10 +42,10 @@ class MainScene extends Scene {
 
   override onInitialize(_game: Game): void {
     this._circle1.pos = vec(100, 300);
-    // this._rectangle2.pos = vec(300, 300);
+    this._rectangle2.pos = vec(300, 300);
 
     this.entities.add(this._circle1);
-    // this.entities.add(this._rectangle2);
+    this.entities.add(this._rectangle2);
   }
 
   override onUpdate(): void {
@@ -62,6 +65,12 @@ class MainScene extends Scene {
       this._circle1.vel.y = 200;
     } else {
       this._circle1.vel.y = 0;
+    }
+
+    if (isKeyDown(KeyE)) {
+      this._circle1.rotate(0.05);
+    } else if (isKeyDown(KeyQ)) {
+      this._circle1.rotate(-0.05);
     }
   }
 }

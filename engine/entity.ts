@@ -13,6 +13,7 @@ export abstract class Entity {
   height = 0;
   opacity = 1;
   name = "";
+  rotation = 0;
 
   readonly id = entityId++;
 
@@ -25,7 +26,7 @@ export abstract class Entity {
   onUpdate(scene: Scene): void {
     // Add the velocity vector to the position to move the entity.
     // If ECS is implemented this could be done in a PositionComponent.
-    this.pos = this.pos.add(
+    this.pos.add(
       vec(this.vel.x * getFrameTime(), this.vel.y * getFrameTime()),
     );
 
@@ -34,6 +35,12 @@ export abstract class Entity {
     this.body?.update(
       vec(this.vel.x * getFrameTime(), this.vel.y * getFrameTime()),
     );
+  }
+
+  rotate(radians: number): void {
+    // Rotate the body. Could propably be set in the PositionComponent
+    // based on the roration radians of the entity.
+    this.body?.rotate(radians);
   }
 
   abstract onDraw(): void;
