@@ -1,4 +1,5 @@
 import CollisionManifold from "./collision-manifold.ts";
+import RigidBody from "./rigidbody.ts";
 import Circle from "./shapes/circle.ts";
 import Polygon from "./shapes/polygon.ts";
 import Shape from "./shapes/shape.ts";
@@ -7,16 +8,24 @@ import { add, scale, sub, Vector2 } from "./vector2.ts";
 
 export class CollisionDetection {
   static checkCollisions(
-    shapeA: Shape,
-    shapeB: Shape,
+    rigiA: RigidBody,
+    rigiB: RigidBody,
   ): CollisionManifold | null {
     let collisionManifold = null;
+    const shapeA = rigiA.shape;
+    const shapeB = rigiB.shape;
+
     if (shapeA instanceof Circle && shapeB instanceof Circle) {
       collisionManifold = this.circleVsCircle(shapeA, shapeB);
     } else if (shapeA instanceof Polygon && shapeB instanceof Polygon) {
       collisionManifold = this.polygonVsPolygon(shapeA, shapeB);
     } else if (shapeA instanceof Circle && shapeB instanceof Polygon) {
       collisionManifold = this.circleVsPolygon(shapeA, shapeB);
+    }
+
+    if (collisionManifold !== null) {
+      collisionManifold.rigiA = rigiA;
+      collisionManifold.rigiB = rigiB;
     }
 
     return collisionManifold;

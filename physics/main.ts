@@ -10,6 +10,7 @@ import {
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import Simulation from "./simulation.ts";
+import { Vector2 } from "./vector2.ts";
 
 initWindow({
   title: "Physic",
@@ -19,7 +20,7 @@ initWindow({
 
 setTargetFPS(60);
 
-const simulation = new Simulation();
+const simulation = new Simulation(new Vector2(1200, 720));
 
 while (windowShouldClose() === false) {
   const deltaTime = getFrameTime();
