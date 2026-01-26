@@ -1,6 +1,9 @@
 import { EventEmitter, type Game } from "@adamduehansen/engine";
 import type { Entity } from "./entity.ts";
 import { getKeyPressed } from "@adamduehansen/raylib-bindings/r-core";
+import { checkCollisionCircles } from "@adamduehansen/raylib-bindings/r-shapes";
+import { CircleBody } from "./physics.ts";
+import Vector2, { vec } from "./vector.ts";
 
 class EntityCollection {
   private _entities: Entity[] = [];
@@ -127,7 +130,51 @@ export abstract class Scene {
 
         const otherEntityBody = otherEntity.body;
         if (otherEntityBody === undefined) {
+          // Dont run for entity that has no body.
           continue;
+        }
+
+        if (
+          currentEntityBody instanceof CircleBody &&
+          otherEntityBody instanceof CircleBody &&
+          checkCollisionCircles(
+            currentEntityBody.centroid,
+            currentEntityBody.radius,
+            otherEntityBody.centroid,
+            otherEntityBody.radius,
+          )
+        ) {
+          const centroidA = currentEntityBody.centroid;
+          const centroidB = otherEntityBody.centroid;
+
+          const direction = Vector2.sub(centroidB, centroidA);
+          const circleARadius = currentEntityBody.radius;
+          const circleBRadius = otherEntityBody.radius;
+
+          const sumRadius = circleARadius + circleBRadius;
+
+          if (direction.length2() < sumRadius * sumRadius) {
+            const directionLength = direction.length();
+            const penetrationNormal = Vector2.scale(
+              direction,
+              1 / directionLength,
+            );
+            const penetrationDepth = directionLength - sumRadius;
+            const penetrationPoint = Vector2.add(
+              centroidA,
+              Vector2.scale(penetrationNormal, circleARadius),
+            );
+
+            const depth = penetrationDepth * -1;
+            const normal = penetrationNormal.clone();
+            console.log(depth, normal);
+
+            const push = Vector2.scale(normal, depth * 0.5);
+            console.log(otherEntity.id, push);
+
+            otherEntity.vel = push;
+            // currentEntity.vel = Vector2.scale(push, -1);
+          }
         }
       }
     }

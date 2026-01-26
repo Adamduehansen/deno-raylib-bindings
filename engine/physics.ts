@@ -20,7 +20,7 @@ export abstract class Body {
   }
 
   draw(): void {
-    for (let i = 1; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       drawLineV({
         color: this.color,
         startPos: this.vertices[i - 1],
@@ -57,7 +57,7 @@ export abstract class Body {
     radians: number,
   ): Vector2 {
     const rotated = new Vector2(0, 0);
-    const direction = toRotateVertice.copy();
+    const direction = toRotateVertice.clone();
     direction.sub(point);
 
     rotated.x = direction.x * Math.cos(radians) -
@@ -72,8 +72,8 @@ export abstract class Body {
 
 export class CircleBody extends Body {
   constructor(public pos: Vector2, public radius: number) {
-    super([pos.copy(), vec(pos.x + radius, pos.y)]);
-    this.centroid = this.pos.copy();
+    super([pos.clone(), vec(pos.x + radius, pos.y)]);
+    this.centroid = this.pos.clone();
   }
 
   override draw(): void {
