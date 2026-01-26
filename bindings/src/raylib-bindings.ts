@@ -104,6 +104,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [RenderTexture2DStruct],
     result: "void",
   },
+  CheckCollisionCircles: {
+    parameters: [Vector2Struct, "f32", Vector2Struct, "f32"],
+    result: "bool",
+  },
   CheckCollisionRecs: {
     parameters: [RectangleStruct, RectangleStruct],
     result: "bool",

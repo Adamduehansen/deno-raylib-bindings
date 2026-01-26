@@ -193,6 +193,20 @@ export function drawRectangleLinesEx(args: {
 // Basic shapes collision detection functions.
 // ----------------------------------------------------------------------------
 
+export function checkCollisionCircles(
+  center1: RaylibVector,
+  radius1: number,
+  center2: RaylibVector,
+  radius2: number,
+): boolean {
+  return raylib.symbols.CheckCollisionCircles(
+    toRaylibVector2(center1),
+    radius1,
+    toRaylibVector2(center2),
+    radius2,
+  );
+}
+
 /**
  * Check collision between two rectangles.
  */
