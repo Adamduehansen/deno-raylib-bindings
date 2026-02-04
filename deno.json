@@ -4,6 +4,7 @@
     "./arkanoid",
     "./dino-runner",
     "./engine",
-    "./physics"
+    "./physics",
+    "./ecs"
   ]
 }
