@@ -5,6 +5,7 @@
     "./dino-runner",
     "./engine",
     "./physics",
-    "./ecs"
+    "./ecs",
+    "./dice-catcher"
   ]
 }
