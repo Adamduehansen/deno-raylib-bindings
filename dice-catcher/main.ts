@@ -42,7 +42,7 @@ initWindow({
 const backgroundTexture = loadTexture("./assets/GemBg.png");
 const diceTexture = loadTexture("./assets/Dice.png");
 
-const entities: Entity[] = [];
+let entities: Entity[] = [];
 
 const background = new Entity(entityId++);
 componentManager.addComponent(background, new PositionComponent(-100, -300));
@@ -51,6 +51,10 @@ componentManager.addComponent(
   new GraphicComponent(backgroundTexture),
 );
 entities.push(background);
+
+componentManager.removeComponent(background, GraphicComponent);
+componentManager.removeComponent(background, PositionComponent);
+entities = entities.filter((entity) => entity.id === background.id);
 
 const diceSpawner = new Entity(entityId++);
 componentManager.addComponent(
