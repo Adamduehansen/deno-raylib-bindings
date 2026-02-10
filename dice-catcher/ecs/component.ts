@@ -1,4 +1,4 @@
-import { drawTextureRec } from "@adamduehansen/raylib-bindings/r-textures";
+import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import {
   getFrameTime,
   RaylibTexture,
@@ -7,31 +7,46 @@ import {
 
 export abstract class Component {}
 
-export class PositionComponent implements Component {
-  constructor(public x: number = 0, public y: number = 0) {}
+export class TransformComponent implements Component {
+  constructor(
+    public x: number = 0,
+    public y: number = 0,
+    public rotation = 0,
+  ) {}
 }
 
 export class VelocityComponent implements Component {
   constructor(public dx: number = 0, public dy: number = 0) {}
 }
 
+export class RotationComponent implements Component {
+  constructor(public rotation: number) {}
+}
+
 export class GraphicComponent implements Component {
   constructor(readonly texture: RaylibTexture) {}
 
-  draw(pos: { x: number; y: number }): void {
-    drawTextureRec({
-      color: White,
+  draw(pos: { x: number; y: number }, rotation: number): void {
+    drawTexturePro({
       texture: this.texture,
-      vector: {
-        x: pos.x,
-        y: pos.y,
-      },
-      rectangle: {
+      source: {
         x: 0,
         y: 0,
         width: this.texture.width,
         height: this.texture.height,
       },
+      dest: {
+        x: pos.x,
+        y: pos.y,
+        width: this.texture.width,
+        height: this.texture.height,
+      },
+      origin: {
+        x: this.texture.width / 2,
+        y: this.texture.height / 2,
+      },
+      rotation: rotation ?? 0,
+      tint: White,
     });
   }
 }

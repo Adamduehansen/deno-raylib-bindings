@@ -1,5 +1,5 @@
 import ComponentManager from "./component-manager.ts";
-import { GraphicComponent, PositionComponent } from "./component.ts";
+import { GraphicComponent, TransformComponent } from "./component.ts";
 import Entity from "./entity.ts";
 
 export default class GraphicSystem {
@@ -20,16 +20,16 @@ export default class GraphicSystem {
         GraphicComponent,
       )!;
 
-      const positionComponent = this._componentManager.getComponent(
+      const transformComponent = this._componentManager.getComponent(
         entity,
-        PositionComponent,
+        TransformComponent,
       );
 
-      if (positionComponent === null) {
+      if (transformComponent === null) {
         throw new Error("Graphic component requires the position component!");
       }
 
-      graphicComponent.draw(positionComponent);
+      graphicComponent.draw(transformComponent, transformComponent.rotation);
     }
   }
 }

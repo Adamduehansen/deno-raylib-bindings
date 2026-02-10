@@ -14,7 +14,7 @@ import { TimerComponent } from "./ecs/component.ts";
 import GraphicSystem from "./ecs/graphic-system.ts";
 import Entity from "./ecs/entity.ts";
 import TimerSystem from "./ecs/timer-system.ts";
-import FallSystem from "./ecs/fall-system.ts";
+import TransformSystem from "./ecs/transform-system.ts";
 import Background from "./entities/background.ts";
 import Dice from "./entities/dice.ts";
 import Resources from "./resources.ts";
@@ -24,7 +24,7 @@ let entityId = 0;
 const componentManager = new ComponentManager();
 const graphicSystem = new GraphicSystem(componentManager);
 const timerSystem = new TimerSystem(componentManager);
-const fallSystem = new FallSystem(componentManager);
+const fallSystem = new TransformSystem(componentManager);
 
 initWindow({
   title: "Dice Catcher",
@@ -35,22 +35,23 @@ initWindow({
 Resources.diceTexure.load();
 Resources.backgroundTexture.load();
 
-let entities: Entity[] = [];
+const entities: Entity[] = [];
 
 const background = new Background(entityId++, componentManager);
 entities.push(background);
 
-const diceSpawner = new Entity(entityId++);
+const diceSpawner = new Entity(entityId++, componentManager);
 componentManager.addComponent(
   diceSpawner,
   new TimerComponent({
-    ms: 1000,
+    ms: 2000,
     callback: () => {
       const dice = new Dice(entityId++, componentManager);
       entities.push(dice);
     },
   }),
 );
+
 entities.push(diceSpawner);
 
 setTargetFPS(60);
