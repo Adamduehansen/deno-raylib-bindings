@@ -9,14 +9,14 @@ import {
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import ComponentManager from "./component-manager.ts";
-import { TimerComponent } from "./component.ts";
-import GraphicSystem from "./graphic-system.ts";
-import Entity from "./entity.ts";
-import TimerSystem from "./timer-system.ts";
-import FallSystem from "./fall-system.ts";
-import Background from "./background.ts";
-import Dice from "./dice.ts";
+import ComponentManager from "./ecs/component-manager.ts";
+import { TimerComponent } from "./ecs/component.ts";
+import GraphicSystem from "./ecs/graphic-system.ts";
+import Entity from "./ecs/entity.ts";
+import TimerSystem from "./ecs/timer-system.ts";
+import FallSystem from "./ecs/fall-system.ts";
+import Background from "./entities/background.ts";
+import Dice from "./entities/dice.ts";
 import Resources from "./resources.ts";
 
 let entityId = 0;
