@@ -2,6 +2,7 @@ import { getScreenWidth } from "@adamduehansen/raylib-bindings/r-core";
 import ComponentManager from "../ecs/component-manager.ts";
 import {
   GraphicComponent,
+  OffscreenComponent,
   RotationComponent,
   TransformComponent,
   VelocityComponent,
@@ -24,5 +25,6 @@ export default class Dice extends Entity {
       ),
     );
     this.addComponent(new GraphicComponent(Resources.diceTexure.texture));
+    this.addComponent(new OffscreenComponent());
   }
 }

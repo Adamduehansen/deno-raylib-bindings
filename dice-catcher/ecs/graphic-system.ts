@@ -1,26 +1,25 @@
 import ComponentManager from "./component-manager.ts";
 import { GraphicComponent, TransformComponent } from "./component.ts";
-import Entity from "./entity.ts";
+import EntityCollection from "./entity-manager.ts";
 
 export default class GraphicSystem {
-  private _componentManager: ComponentManager;
+  constructor(
+    readonly componentManager: ComponentManager,
+    readonly entityCollection: EntityCollection,
+  ) {}
 
-  constructor(componentManager: ComponentManager) {
-    this._componentManager = componentManager;
-  }
-
-  draw(entities: Entity[]): void {
-    for (const entity of entities) {
-      if (!this._componentManager.hasComponent(entity, GraphicComponent)) {
+  draw(): void {
+    for (const entity of this.entityCollection) {
+      if (!this.componentManager.hasComponent(entity, GraphicComponent)) {
         continue;
       }
 
-      const graphicComponent = this._componentManager.getComponent(
+      const graphicComponent = this.componentManager.getComponent(
         entity,
         GraphicComponent,
       )!;
 
-      const transformComponent = this._componentManager.getComponent(
+      const transformComponent = this.componentManager.getComponent(
         entity,
         TransformComponent,
       );

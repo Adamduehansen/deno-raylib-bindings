@@ -75,3 +75,5 @@ export class TimerComponent implements Component {
     }
   }
 }
+
+export class OffscreenComponent implements Component {}

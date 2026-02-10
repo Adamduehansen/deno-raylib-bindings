@@ -1,45 +1,56 @@
-import { getFrameTime } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  getFrameTime,
+  getScreenHeight,
+} from "@adamduehansen/raylib-bindings/r-core";
 import ComponentManager from "./component-manager.ts";
 import {
+  OffscreenComponent,
   RotationComponent,
   TransformComponent,
   VelocityComponent,
 } from "./component.ts";
-import Entity from "./entity.ts";
+import EntityCollection from "./entity-manager.ts";
 
 export default class TransformSystem {
-  private _componentManager: ComponentManager;
+  constructor(
+    readonly componentManager: ComponentManager,
+    readonly entityCollection: EntityCollection,
+  ) {}
 
-  constructor(componentManager: ComponentManager) {
-    this._componentManager = componentManager;
-  }
-
-  update(entities: Entity[]): void {
-    for (const entity of entities) {
-      if (!this._componentManager.hasComponent(entity, VelocityComponent)) {
+  update(): void {
+    for (const entity of this.entityCollection) {
+      if (!this.componentManager.hasComponent(entity, VelocityComponent)) {
         continue;
       }
 
-      const velocityComponent = this._componentManager.getComponent(
+      const velocityComponent = this.componentManager.getComponent(
         entity,
         VelocityComponent,
       )!;
 
-      const tranformComponent = this._componentManager.getComponent(
+      const transformComponent = this.componentManager.getComponent(
         entity,
         TransformComponent,
       )!;
 
-      tranformComponent.x += velocityComponent.dx * getFrameTime();
-      tranformComponent.y += velocityComponent.dy * getFrameTime();
+      transformComponent.x += velocityComponent.dx * getFrameTime();
+      transformComponent.y += velocityComponent.dy * getFrameTime();
 
-      if (this._componentManager.hasComponent(entity, RotationComponent)) {
-        const rotationComponent = this._componentManager.getComponent(
+      // Rotate the component if it has the RotationComponent.
+      if (this.componentManager.hasComponent(entity, RotationComponent)) {
+        const rotationComponent = this.componentManager.getComponent(
           entity,
           RotationComponent,
         )!;
 
-        tranformComponent.rotation += rotationComponent.rotation;
+        transformComponent.rotation += rotationComponent.rotation;
+      }
+
+      // Queue the entity to be removed if it has the OffscreenComponent.
+      if (this.componentManager.hasComponent(entity, OffscreenComponent)) {
+        if (transformComponent.y > getScreenHeight()) {
+          console.log("Remove this entity!", entity.id);
+        }
       }
     }
   }

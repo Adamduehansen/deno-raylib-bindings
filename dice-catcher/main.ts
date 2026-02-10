@@ -18,13 +18,17 @@ import TransformSystem from "./ecs/transform-system.ts";
 import Background from "./entities/background.ts";
 import Dice from "./entities/dice.ts";
 import Resources from "./resources.ts";
+import EntityCollection from "./ecs/entity-manager.ts";
 
 let entityId = 0;
 
 const componentManager = new ComponentManager();
-const graphicSystem = new GraphicSystem(componentManager);
-const timerSystem = new TimerSystem(componentManager);
-const fallSystem = new TransformSystem(componentManager);
+
+const entityCollection = new EntityCollection();
+
+const graphicSystem = new GraphicSystem(componentManager, entityCollection);
+const timerSystem = new TimerSystem(componentManager, entityCollection);
+const transformSystem = new TransformSystem(componentManager, entityCollection);
 
 initWindow({
   title: "Dice Catcher",
@@ -35,10 +39,8 @@ initWindow({
 Resources.diceTexure.load();
 Resources.backgroundTexture.load();
 
-const entities: Entity[] = [];
-
 const background = new Background(entityId++, componentManager);
-entities.push(background);
+entityCollection.add(background);
 
 const diceSpawner = new Entity(entityId++, componentManager);
 componentManager.addComponent(
@@ -47,24 +49,27 @@ componentManager.addComponent(
     ms: 2000,
     callback: () => {
       const dice = new Dice(entityId++, componentManager);
-      entities.push(dice);
+      entityCollection.add(dice);
     },
   }),
 );
 
-entities.push(diceSpawner);
+entityCollection.add(diceSpawner);
+
+const dice = new Dice(entityId++, componentManager);
+entityCollection.add(dice);
 
 setTargetFPS(60);
 
 while (windowShouldClose() === false) {
-  timerSystem.update(entities);
-  fallSystem.update(entities);
+  timerSystem.update();
+  transformSystem.update();
 
   // Draw
   // --------------------------------------------------------------------------
   beginDrawing();
   clearBackground(RayWhite);
-  graphicSystem.draw(entities);
+  graphicSystem.draw();
   drawFPS(0, 0);
   endDrawing();
 }
