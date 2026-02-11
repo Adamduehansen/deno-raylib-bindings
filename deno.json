@@ -6,6 +6,7 @@
     "./engine",
     "./physics",
     "./ecs",
-    "./dice-catcher"
+    "./dice-catcher",
+    "./dungeon-heroes"
   ]
 }
