@@ -10,12 +10,24 @@ import {
 import GameContext from "./game-context.ts";
 
 export default class Game {
-  constructor(readonly gameContext: GameContext) {}
+  constructor(protected readonly gameContext: GameContext) {
+    this._init();
+  }
+
+  /**
+   * Starts the Raylib main loop and runs the game.
+   */
+  start(): void {
+    while (windowShouldClose() === false) {
+      this._update();
+      this._draw();
+    }
+  }
 
   /**
    * Initializes the Raylib context.
    */
-  init(): void {
+  private _init(): void {
     initWindow({
       title: "Dungeon Heroes",
       width: 1280,
@@ -26,19 +38,9 @@ export default class Game {
   }
 
   /**
-   * Starts the Raylib main loop and runs the game.
-   */
-  run(): void {
-    while (windowShouldClose() === false) {
-      this._update();
-      this._draw();
-    }
-  }
-
-  /**
    * Closes the game down, releases resources.
    */
-  close(): void {
+  private _close(): void {
     closeWindow();
   }
 
@@ -50,5 +52,9 @@ export default class Game {
     beginDrawing();
     clearBackground(RayWhite);
     endDrawing();
+  }
+
+  [Symbol.dispose](): void {
+    this._close();
   }
 }

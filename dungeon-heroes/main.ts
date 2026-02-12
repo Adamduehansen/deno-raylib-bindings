@@ -22,7 +22,5 @@ class DungeonHeroes extends GameContext {
   }
 }
 
-const game = new Game(new DungeonHeroes());
-game.init();
-game.run();
-game.close();
+using game = new Game(new DungeonHeroes());
+game.start();
