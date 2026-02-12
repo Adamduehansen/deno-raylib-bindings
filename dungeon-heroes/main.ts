@@ -5,20 +5,28 @@ import { Entity } from "./saga/entity.ts";
 
 class Hero extends Entity {
   override update(): void {
-    traceLog(LOG_INFO, "Hero updated");
+    // traceLog(LOG_INFO, "Hero updated");
   }
 }
 
 class DungeonHeroes extends GameContext {
+  constructor() {
+    super({
+      title: "Dungeon Heroes",
+      width: 1280,
+      height: 720,
+    });
+  }
+
   override onInitialize(): void {
-    traceLog(LOG_INFO, "Game initialized!");
+    // traceLog(LOG_INFO, "Game initialized!");
 
     const hero = new Hero();
     this.entityCollection.add(hero);
   }
 
   override onUpdate(): void {
-    traceLog(LOG_INFO, "Game update");
+    // traceLog(LOG_INFO, "Game update");
   }
 }
 

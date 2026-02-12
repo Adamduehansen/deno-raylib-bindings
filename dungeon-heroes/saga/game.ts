@@ -24,22 +24,16 @@ export default class Game {
     }
   }
 
-  /**
-   * Initializes the Raylib context.
-   */
   private _init(): void {
     initWindow({
-      title: "Dungeon Heroes",
-      width: 1280,
-      height: 720,
+      title: this.gameContext.title,
+      width: this.gameContext.width,
+      height: this.gameContext.height,
     });
 
     this.gameContext.onInitialize();
   }
 
-  /**
-   * Closes the game down, releases resources.
-   */
   private _close(): void {
     closeWindow();
   }
