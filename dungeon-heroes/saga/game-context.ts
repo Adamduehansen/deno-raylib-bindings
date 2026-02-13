@@ -7,6 +7,7 @@ interface GameContextArgs {
   width: number;
   height: number;
   targetFps?: number;
+  debug?: boolean;
 }
 
 export default abstract class GameContext {
@@ -14,6 +15,7 @@ export default abstract class GameContext {
   height: number;
   title: string;
 
+  readonly debug: boolean;
   readonly targetFps: number;
 
   readonly entityCollection = new EntityCollection();
@@ -26,7 +28,9 @@ export default abstract class GameContext {
     this.title = args.title;
     this.width = args.width;
     this.height = args.height;
+
     this.targetFps = args.targetFps ?? 60;
+    this.debug = args.debug ?? false;
 
     this.systems = this.getSystems();
   }
@@ -37,9 +41,8 @@ export default abstract class GameContext {
   onInitialize(): void {}
 
   /**
-   * This method will be called once each frame.
+   * Tells the game what systems is used. The systems are executed in the order
+   * of the array.
    */
-  onUpdate(): void {}
-
   abstract getSystems(): System[];
 }

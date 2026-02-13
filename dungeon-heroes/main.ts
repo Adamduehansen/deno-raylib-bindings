@@ -9,12 +9,15 @@ class Hero extends Entity {
   }
 }
 
+const args = Deno.args;
+
 class DungeonHeroes extends GameContext {
   constructor() {
     super({
       title: "Dungeon Heroes",
       width: 1280,
       height: 720,
+      debug: args.includes("--debug"),
     });
   }
 
@@ -23,9 +26,6 @@ class DungeonHeroes extends GameContext {
 
     const hero = new Hero();
     this.entityCollection.add(hero);
-  }
-
-  override onUpdate(): void {
   }
 
   override getSystems(): System[] {

@@ -4,6 +4,7 @@ import {
   endDrawing,
   RayWhite,
 } from "@adamduehansen/raylib-bindings/r-core";
+import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import System from "./system.ts";
 import GameContext from "./game-context.ts";
 
@@ -13,6 +14,11 @@ export default class GraphicSystem implements System {
   update(): void {
     beginDrawing();
     clearBackground(RayWhite);
+
+    if (this.gameContext.debug) {
+      drawFPS(0, 0);
+    }
+
     endDrawing();
   }
 }
