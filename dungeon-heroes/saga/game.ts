@@ -10,14 +10,14 @@ import {
 import GameContext from "./game-context.ts";
 
 export default class Game {
-  constructor(protected readonly gameContext: GameContext) {
-    this._init();
-  }
+  constructor(protected readonly gameContext: GameContext) {}
 
   /**
    * Starts the Raylib main loop and runs the game.
    */
   start(): void {
+    this._init();
+
     while (windowShouldClose() === false) {
       this._update();
       this._draw();
@@ -34,10 +34,6 @@ export default class Game {
     this.gameContext.onInitialize();
   }
 
-  private _close(): void {
-    closeWindow();
-  }
-
   private _update(): void {
     this.gameContext.onUpdate();
   }
@@ -46,6 +42,10 @@ export default class Game {
     beginDrawing();
     clearBackground(RayWhite);
     endDrawing();
+  }
+
+  private _close(): void {
+    closeWindow();
   }
 
   [Symbol.dispose](): void {
