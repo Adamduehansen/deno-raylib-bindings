@@ -1,6 +1,7 @@
 import {
   closeWindow,
   initWindow,
+  setTargetFPS,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import GameContext from "./game-context.ts";
@@ -31,6 +32,8 @@ export default class Game {
       width: this.gameContext.width,
       height: this.gameContext.height,
     });
+
+    setTargetFPS(this.gameContext.targetFps);
 
     this.gameContext.onInitialize();
   }

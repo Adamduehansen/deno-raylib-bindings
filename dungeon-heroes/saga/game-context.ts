@@ -6,12 +6,15 @@ interface GameContextArgs {
   title: string;
   width: number;
   height: number;
+  targetFps?: number;
 }
 
 export default abstract class GameContext {
-  width = 0;
-  height = 0;
-  title = "";
+  width: number;
+  height: number;
+  title: string;
+
+  readonly targetFps: number;
 
   readonly entityCollection = new EntityCollection();
 
@@ -23,6 +26,7 @@ export default abstract class GameContext {
     this.title = args.title;
     this.width = args.width;
     this.height = args.height;
+    this.targetFps = args.targetFps ?? 60;
 
     this.systems = this.getSystems();
   }
