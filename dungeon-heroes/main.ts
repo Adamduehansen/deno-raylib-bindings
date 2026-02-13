@@ -1,6 +1,8 @@
 import GameContext from "./saga/game-context.ts";
 import Game from "./saga/game.ts";
 import { Entity } from "./saga/entity.ts";
+import GraphicSystem from "./saga/graphic-system.ts";
+import System from "./saga/system.ts";
 
 class Hero extends Entity {
   override update(): void {
@@ -24,6 +26,10 @@ class DungeonHeroes extends GameContext {
   }
 
   override onUpdate(): void {
+  }
+
+  override getSystems(): System[] {
+    return [new GraphicSystem(this)];
   }
 }
 

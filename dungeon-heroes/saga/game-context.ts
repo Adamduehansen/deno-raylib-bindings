@@ -1,5 +1,6 @@
 import { EntityCollection } from "./entity-collection.ts";
 import Logger, { DefaultLogger } from "./logger.ts";
+import System from "./system.ts";
 
 interface GameContextArgs {
   title: string;
@@ -12,13 +13,18 @@ export default abstract class GameContext {
   height = 0;
   title = "";
 
+  readonly entityCollection = new EntityCollection();
+
   protected logger: Logger = new DefaultLogger();
-  protected entityCollection = new EntityCollection();
+
+  readonly systems: readonly System[] = [];
 
   constructor(args: GameContextArgs) {
     this.title = args.title;
     this.width = args.width;
     this.height = args.height;
+
+    this.systems = this.getSystems();
   }
 
   /**
@@ -30,4 +36,6 @@ export default abstract class GameContext {
    * This method will be called once each frame.
    */
   onUpdate(): void {}
+
+  abstract getSystems(): System[];
 }

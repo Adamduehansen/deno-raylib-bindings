@@ -1,10 +1,6 @@
 import {
-  beginDrawing,
-  clearBackground,
   closeWindow,
-  endDrawing,
   initWindow,
-  RayWhite,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import GameContext from "./game-context.ts";
@@ -19,8 +15,13 @@ export default class Game {
     this._init();
 
     while (windowShouldClose() === false) {
-      this._update();
-      this._draw();
+      for (const system of this.gameContext.systems) {
+        system.update();
+      }
+
+      for (const entity of this.gameContext.entityCollection) {
+        entity.update();
+      }
     }
   }
 
@@ -32,16 +33,6 @@ export default class Game {
     });
 
     this.gameContext.onInitialize();
-  }
-
-  private _update(): void {
-    this.gameContext.onUpdate();
-  }
-
-  private _draw(): void {
-    beginDrawing();
-    clearBackground(RayWhite);
-    endDrawing();
   }
 
   private _close(): void {
