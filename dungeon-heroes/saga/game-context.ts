@@ -1,4 +1,5 @@
 import { EntityCollection } from "./entity-collection.ts";
+import Logger, { DefaultLogger } from "./logger.ts";
 
 interface GameContextArgs {
   title: string;
@@ -11,6 +12,7 @@ export default abstract class GameContext {
   height = 0;
   title = "";
 
+  protected logger: Logger = new DefaultLogger();
   protected entityCollection = new EntityCollection();
 
   constructor(args: GameContextArgs) {
