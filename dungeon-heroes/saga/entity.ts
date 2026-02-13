@@ -1,7 +1,7 @@
-let entityIdentifier = 1;
-
 export class Entity {
-  id = entityIdentifier++;
+  static CURRENT_MAX_ID = 1;
+
+  id = Entity.CURRENT_MAX_ID++;
 
   constructor() {}
 
