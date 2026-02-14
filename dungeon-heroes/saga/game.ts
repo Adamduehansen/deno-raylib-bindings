@@ -35,11 +35,18 @@ export default class Game {
 
     setTargetFPS(this.gameContext.targetFps);
 
+    for (const resource of Object.values(this.gameContext.resouces)) {
+      resource.load();
+    }
+
     this.gameContext.onInitialize();
   }
 
   private _close(): void {
     closeWindow();
+    for (const resource of Object.values(this.gameContext.resouces)) {
+      resource.unload();
+    }
   }
 
   [Symbol.dispose](): void {
