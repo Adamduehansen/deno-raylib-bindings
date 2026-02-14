@@ -7,7 +7,6 @@ interface GameContextArgs {
   width: number;
   height: number;
   targetFps?: number;
-  debug?: boolean;
 }
 
 export default abstract class GameContext {
@@ -28,9 +27,10 @@ export default abstract class GameContext {
     this.title = args.title;
     this.width = args.width;
     this.height = args.height;
-
     this.targetFps = args.targetFps ?? 60;
-    this.debug = args.debug ?? false;
+
+    const cliArgs = Deno.args;
+    this.debug = cliArgs.includes("--debug");
 
     this.systems = this.getSystems();
   }
@@ -41,7 +41,7 @@ export default abstract class GameContext {
   onInitialize(): void {}
 
   /**
-   * Tells the game what systems is used. The systems are executed in the order
+   * Tells the game what systems are used. The systems are executed in the order
    * of the array.
    */
   abstract getSystems(): System[];
