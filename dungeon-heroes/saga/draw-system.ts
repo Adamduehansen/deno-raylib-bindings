@@ -10,7 +10,7 @@ import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import System from "./system.ts";
 import GameContext from "./game-context.ts";
 
-export default class GraphicSystem implements System {
+export default class DrawSystem implements System {
   constructor(readonly gameContext: GameContext) {}
 
   update(): void {

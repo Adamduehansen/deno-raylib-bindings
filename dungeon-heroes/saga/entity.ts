@@ -22,9 +22,4 @@ export class Entity {
 
     this.transform = new TransformComponent(position);
   }
-
-  /**
-   * This method will be called once each frame.
-   */
-  update(): void {}
 }

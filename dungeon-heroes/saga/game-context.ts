@@ -1,3 +1,4 @@
+import DrawSystem from "./draw-system.ts";
 import { EntityCollection } from "./entity-collection.ts";
 import Logger, { DefaultLogger } from "./logger.ts";
 import { ResourceMap } from "./resource.ts";
@@ -36,7 +37,7 @@ export default abstract class GameContext {
     const cliArgs = Deno.args;
     this.debug = cliArgs.includes("--debug");
 
-    this.systems = this.getSystems();
+    this.systems = [...this.getSystems(), new DrawSystem(this)];
   }
 
   /**
@@ -45,8 +46,10 @@ export default abstract class GameContext {
   onInitialize(): void {}
 
   /**
-   * Tells the game what systems are used. The systems are executed in the order
-   * of the array.
+   * Override this method to tell the game what systems are used. The systems
+   * are executed in the order of the array.
    */
-  abstract getSystems(): System[];
+  getSystems(): System[] {
+    return [];
+  }
 }

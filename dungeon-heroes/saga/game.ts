@@ -16,13 +16,13 @@ export default class Game {
     this._init();
 
     while (windowShouldClose() === false) {
-      for (const system of this.gameContext.systems) {
-        system.update();
-      }
+      this._updateSystem();
+    }
+  }
 
-      for (const entity of this.gameContext.entityCollection) {
-        entity.update();
-      }
+  private _updateSystem(): void {
+    for (const system of this.gameContext.systems) {
+      system.update();
     }
   }
 

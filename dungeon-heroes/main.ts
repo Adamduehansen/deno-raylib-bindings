@@ -1,8 +1,6 @@
 import GameContext from "./saga/game-context.ts";
 import Game from "./saga/game.ts";
 import { Entity } from "./saga/entity.ts";
-import GraphicSystem from "./saga/graphic-system.ts";
-import System from "./saga/system.ts";
 import { TextureResource } from "./saga/resource.ts";
 
 const Resources = {
@@ -46,10 +44,6 @@ class DungeonHeroes extends GameContext {
 
     const knight = new Knight();
     this.entityCollection.add(knight);
-  }
-
-  override getSystems(): System[] {
-    return [new GraphicSystem(this)];
   }
 }
 
