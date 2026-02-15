@@ -1,6 +1,5 @@
-import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import { TextureResource } from "./resource.ts";
-import { White } from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 
 export interface Component {
 }
@@ -15,33 +14,12 @@ export class GraphicsComponent implements Component {
   constructor({ textureResource }: GraphicsComponentArgs) {
     this.textureResource = textureResource;
   }
+}
 
-  draw(): void {
-    const { texture } = this.textureResource;
-    if (texture === undefined) {
-      return;
-    }
+export class TransformComponent implements Component {
+  position: RaylibVector;
 
-    drawTexturePro({
-      texture: texture,
-      source: {
-        x: 0,
-        y: 0,
-        width: texture.width,
-        height: texture.height,
-      },
-      dest: {
-        x: 100,
-        y: 100,
-        width: texture.width,
-        height: texture.height,
-      },
-      origin: {
-        x: texture.width / 2,
-        y: texture.height / 2,
-      },
-      rotation: 0,
-      tint: White,
-    });
+  constructor(position: RaylibVector) {
+    this.position = position;
   }
 }

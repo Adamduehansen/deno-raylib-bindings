@@ -14,6 +14,7 @@ class Wizard extends Entity {
   constructor() {
     super({
       textureResource: Resources.wizard,
+      position: { x: 100, y: 100 },
     });
   }
 }
@@ -22,6 +23,7 @@ class Knight extends Entity {
   constructor() {
     super({
       textureResource: Resources.knight,
+      position: { x: 200, y: 200 },
     });
   }
 }
