@@ -43,10 +43,10 @@ export default class Game {
   }
 
   private _close(): void {
-    closeWindow();
     for (const resource of Object.values(this.gameContext.resouces)) {
       resource.unload();
     }
+    closeWindow();
   }
 
   [Symbol.dispose](): void {
