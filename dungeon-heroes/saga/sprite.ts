@@ -1,10 +1,12 @@
+import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "./entity.ts";
 import { Graphics } from "./graphic.ts";
+import { TextureResource } from "./resource.ts";
 import { Transform } from "./transform.ts";
 
 interface Args {
-  graphic: Graphics;
-  transform: Transform;
+  textureResource: TextureResource;
+  position: RaylibVector;
 }
 
 /**
@@ -15,10 +17,12 @@ export default abstract class Sprite extends Entity {
   readonly graphics: Graphics;
   readonly transform: Transform;
 
-  constructor({ graphic, transform }: Args) {
+  constructor({ textureResource, position }: Args) {
     super();
 
-    this.graphics = graphic;
-    this.transform = transform;
+    this.graphics = new Graphics({
+      textureResource: textureResource,
+    });
+    this.transform = new Transform(position);
   }
 }

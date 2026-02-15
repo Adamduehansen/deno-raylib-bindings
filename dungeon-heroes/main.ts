@@ -1,9 +1,7 @@
 import GameContext from "./saga/game-context.ts";
 import Game from "./saga/game.ts";
-import { Graphics } from "./saga/graphic.ts";
 import { TextureResource } from "./saga/resource.ts";
 import Sprite from "./saga/sprite.ts";
-import { Transform } from "./saga/transform.ts";
 
 const Resources = {
   wizard: new TextureResource("./assets/Tiles/tile_0084.png"),
@@ -13,13 +11,11 @@ const Resources = {
 class Wizard extends Sprite {
   constructor() {
     super({
-      graphic: new Graphics({
-        textureResource: Resources.wizard,
-      }),
-      transform: new Transform({
+      textureResource: Resources.wizard,
+      position: {
         x: 100,
         y: 100,
-      }),
+      },
     });
   }
 }
@@ -27,13 +23,11 @@ class Wizard extends Sprite {
 class Knight extends Sprite {
   constructor() {
     super({
-      graphic: new Graphics({
-        textureResource: Resources.knight,
-      }),
-      transform: new Transform({
+      textureResource: Resources.knight,
+      position: {
         x: 200,
         y: 200,
-      }),
+      },
     });
   }
 }

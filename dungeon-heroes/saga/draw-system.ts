@@ -3,10 +3,8 @@ import {
   clearBackground,
   endDrawing,
   RayWhite,
-  White,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import System from "./system.ts";
 import GameContext from "./game-context.ts";
 import Sprite from "./sprite.ts";
@@ -23,32 +21,7 @@ export default class DrawSystem implements System {
         continue;
       }
 
-      const { texture } = entity.graphics.textureResource;
-      if (texture === undefined) {
-        continue;
-      }
-
-      drawTexturePro({
-        texture: texture,
-        dest: {
-          x: entity.transform.position.x,
-          y: entity.transform.position.y,
-          width: texture.width,
-          height: texture.height,
-        },
-        source: {
-          x: 0,
-          y: 0,
-          width: texture.width,
-          height: texture.height,
-        },
-        origin: {
-          x: texture.width / 2,
-          y: texture.height / 2,
-        },
-        rotation: 0,
-        tint: White,
-      });
+      entity.graphics.draw(entity.transform.position);
     }
 
     if (this.gameContext.debug) {
