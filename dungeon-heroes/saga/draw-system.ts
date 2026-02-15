@@ -9,7 +9,7 @@ import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import System from "./system.ts";
 import GameContext from "./game-context.ts";
-import { GraphicsComponent, TransformComponent } from "./component.ts";
+import Sprite from "./sprite.ts";
 
 export default class DrawSystem implements System {
   constructor(readonly gameContext: GameContext) {}
@@ -19,24 +19,20 @@ export default class DrawSystem implements System {
     clearBackground(RayWhite);
 
     for (const entity of this.gameContext.entityCollection) {
-      const graphics = entity.getComponent(GraphicsComponent);
-      const transform = entity.getComponent(TransformComponent);
-
-      if (graphics === undefined || transform === undefined) {
+      if ((entity instanceof Sprite) === false) {
         continue;
       }
 
-      const { texture } = graphics.textureResource;
-
+      const { texture } = entity.graphics.textureResource;
       if (texture === undefined) {
-        return;
+        continue;
       }
 
       drawTexturePro({
         texture: texture,
         dest: {
-          x: transform.position.x,
-          y: transform.position.y,
+          x: entity.transform.position.x,
+          y: entity.transform.position.y,
           width: texture.width,
           height: texture.height,
         },
