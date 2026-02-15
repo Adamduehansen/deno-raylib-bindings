@@ -1,25 +1,19 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { GraphicsComponent, TransformComponent } from "./component.ts";
-import { TextureResource } from "./resource.ts";
-
-interface EntityArgs {
-  textureResource: TextureResource;
-  position: RaylibVector;
-}
+import { Component, ComponentCtor } from "./component.ts";
 
 export class Entity {
   static CURRENT_MAX_ID = 1;
 
-  id = Entity.CURRENT_MAX_ID++;
+  readonly id = Entity.CURRENT_MAX_ID++;
 
-  readonly graphics: GraphicsComponent;
-  readonly transform: TransformComponent;
+  private _components = new Map<Function, Component>();
 
-  constructor({ textureResource, position }: EntityArgs) {
-    this.graphics = new GraphicsComponent({
-      textureResource: textureResource,
-    });
+  addComponent<TComponent extends Component>(component: TComponent): void {
+    this._components.set(component.constructor, component);
+  }
 
-    this.transform = new TransformComponent(position);
+  getComponent<TComponent extends Component>(
+    component: ComponentCtor<TComponent>,
+  ): TComponent | undefined {
+    return this._components.get(component) as TComponent | undefined;
   }
 }

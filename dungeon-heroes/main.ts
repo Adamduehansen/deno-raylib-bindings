@@ -2,25 +2,48 @@ import GameContext from "./saga/game-context.ts";
 import Game from "./saga/game.ts";
 import { Entity } from "./saga/entity.ts";
 import { TextureResource } from "./saga/resource.ts";
+import { GraphicsComponent, TransformComponent } from "./saga/component.ts";
 
 const Resources = {
   wizard: new TextureResource("./assets/Tiles/tile_0084.png"),
   knight: new TextureResource("./assets/Tiles/tile_0097.png"),
 } as const;
 
-class Wizard extends Entity {
+interface PieceArgs {
+  textureResouce: TextureResource;
+  position: ConstructorParameters<typeof TransformComponent>[0];
+}
+
+abstract class Piece extends Entity {
+  readonly graphics: GraphicsComponent;
+  readonly transform: TransformComponent;
+
+  constructor({ textureResouce, position }: PieceArgs) {
+    super();
+
+    this.graphics = new GraphicsComponent({
+      textureResource: textureResouce,
+    });
+    this.addComponent(this.graphics);
+
+    this.transform = new TransformComponent(position);
+    this.addComponent(this.transform);
+  }
+}
+
+class Wizard extends Piece {
   constructor() {
     super({
-      textureResource: Resources.wizard,
+      textureResouce: Resources.wizard,
       position: { x: 100, y: 100 },
     });
   }
 }
 
-class Knight extends Entity {
+class Knight extends Piece {
   constructor() {
     super({
-      textureResource: Resources.knight,
+      textureResouce: Resources.knight,
       position: { x: 200, y: 200 },
     });
   }
