@@ -4,45 +4,24 @@ import { Entity } from "./saga/entity.ts";
 import GraphicSystem from "./saga/graphic-system.ts";
 import System from "./saga/system.ts";
 import { TextureResource } from "./saga/resource.ts";
-import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
-import { White } from "@adamduehansen/raylib-bindings/r-core";
 
 const Resources = {
   wizard: new TextureResource("./assets/Tiles/tile_0084.png"),
+  knight: new TextureResource("./assets/Tiles/tile_0097.png"),
 } as const;
 
 class Wizard extends Entity {
   constructor() {
-    super();
+    super({
+      textureResource: Resources.wizard,
+    });
   }
+}
 
-  override update(): void {
-    if (Resources.wizard.texture === undefined) {
-      return;
-    }
-
-    const { texture } = Resources.wizard;
-
-    drawTexturePro({
-      texture: texture,
-      source: {
-        x: 0,
-        y: 0,
-        width: texture.width,
-        height: texture.height,
-      },
-      dest: {
-        x: 100,
-        y: 100,
-        width: texture.width,
-        height: texture.height,
-      },
-      origin: {
-        x: texture.width / 2,
-        y: texture.height / 2,
-      },
-      rotation: 0,
-      tint: White,
+class Knight extends Entity {
+  constructor() {
+    super({
+      textureResource: Resources.knight,
     });
   }
 }
@@ -62,6 +41,9 @@ class DungeonHeroes extends GameContext {
 
     const hero = new Wizard();
     this.entityCollection.add(hero);
+
+    const knight = new Knight();
+    this.entityCollection.add(knight);
   }
 
   override getSystems(): System[] {

@@ -15,6 +15,10 @@ export default class GraphicSystem implements System {
     beginDrawing();
     clearBackground(RayWhite);
 
+    for (const entity of this.gameContext.entityCollection) {
+      entity.graphics.draw();
+    }
+
     if (this.gameContext.debug) {
       drawFPS(0, 0);
     }
