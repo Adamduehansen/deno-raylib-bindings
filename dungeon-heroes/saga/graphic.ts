@@ -5,18 +5,26 @@ import {
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import { TextureResource } from "./resource.ts";
+import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 
-interface GraphicsComponentArgs {
+export interface Graphics {
+  draw(position: RaylibVector): void;
+}
+
+interface TextureGraphicsArgs {
   textureResource: TextureResource;
   color?: RaylibColor;
 }
 
-export class Graphics {
+/**
+ * Graphics for rendering textures.
+ */
+export class TextureGraphics implements Graphics {
   readonly textureResource: TextureResource;
 
   color: RaylibColor;
 
-  constructor({ textureResource, color }: GraphicsComponentArgs) {
+  constructor({ textureResource, color }: TextureGraphicsArgs) {
     this.textureResource = textureResource;
     this.color = color ?? White;
   }
@@ -48,6 +56,39 @@ export class Graphics {
       },
       rotation: 0,
       tint: this.color,
+    });
+  }
+}
+
+interface RectangleGraphicsArgs {
+  width: number;
+  height: number;
+  color: RaylibColor;
+}
+
+/**
+ * Graphics for rendering rectangles.
+ */
+export class RectangleGraphics implements Graphics {
+  public width: number;
+  public height: number;
+  public color: RaylibColor;
+
+  constructor({ color, height, width }: RectangleGraphicsArgs) {
+    this.width = width;
+    this.height = height;
+    this.color = color;
+  }
+
+  draw(position: RaylibVector): void {
+    drawRectangleRec({
+      color: this.color,
+      rectangle: {
+        x: position.x,
+        y: position.y,
+        width: this.width,
+        height: this.height,
+      },
     });
   }
 }
