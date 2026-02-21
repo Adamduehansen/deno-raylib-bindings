@@ -4,7 +4,7 @@ import {
   White,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
-import { TextureResource } from "./resource.ts";
+import { TextureResource } from "../resource.ts";
 import { drawRectangleRec } from "@adamduehansen/raylib-bindings/r-shapes";
 
 export interface Graphics {

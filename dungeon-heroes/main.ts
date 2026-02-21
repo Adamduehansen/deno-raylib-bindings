@@ -1,82 +1,52 @@
-import { Red } from "@adamduehansen/raylib-bindings/r-core";
-import GameContext from "./saga/game-context.ts";
-import Game from "./saga/game.ts";
-import { RectangleGraphics, TextureGraphics } from "./saga/graphic.ts";
-import { TextureResource } from "./saga/resource.ts";
-import Sprite from "./saga/sprite.ts";
+import {
+  closeWindow,
+  initWindow,
+  setTargetFPS,
+  windowShouldClose,
+} from "@adamduehansen/raylib-bindings/r-core";
+import System from "./system.ts";
+import DrawSystem from "./draw-system.ts";
+import { EntityCollection } from "./entity-collection.ts";
+import EntityFactory from "./entity-factory.ts";
+import ComponentManager from "./component-manager.ts";
+import { Resources } from "./resources.ts";
 
-const Resources = {
-  wizard: new TextureResource("./assets/Tiles/tile_0084.png"),
-  knight: new TextureResource("./assets/Tiles/tile_0097.png"),
-} as const;
+initWindow({
+  title: "Dungeon heroes",
+  width: 1280,
+  height: 720,
+});
 
-class Wizard extends Sprite {
-  constructor() {
-    super({
-      graphics: new TextureGraphics({
-        textureResource: Resources.wizard,
-      }),
-      position: {
-        x: 100,
-        y: 100,
-      },
-    });
+setTargetFPS(60);
+
+for (const resource of Object.values(Resources)) {
+  resource.load();
+}
+
+const componentManager = new ComponentManager();
+const entityCollection = new EntityCollection();
+
+const entityFactory = new EntityFactory(componentManager);
+
+const systems: System[] = [new DrawSystem()];
+
+entityCollection.add(entityFactory.createWizard({ x: 100, y: 100 }));
+entityCollection.add(entityFactory.createKnight({ x: 200, y: 200 }));
+
+// for (let i = 0; i < 4500; i++) {
+//   const x = Math.floor(Math.random() * getScreenWidth());
+//   const y = Math.floor(Math.random() * getScreenHeight());
+//   entityCollection.add(entityFactory.createWizard({ x: x, y: y }));
+// }
+
+while (windowShouldClose() === false) {
+  for (const system of systems) {
+    system.process(entityCollection, componentManager);
   }
 }
 
-class Knight extends Sprite {
-  constructor() {
-    super({
-      graphics: new TextureGraphics({
-        textureResource: Resources.knight,
-      }),
-      position: {
-        x: 200,
-        y: 200,
-      },
-    });
-  }
+for (const resource of Object.values(Resources)) {
+  resource.unload();
 }
 
-class Tile extends Sprite {
-  constructor() {
-    super({
-      graphics: new RectangleGraphics({
-        width: 16,
-        height: 16,
-        color: Red,
-      }),
-      position: {
-        x: 142,
-        y: 142,
-      },
-    });
-  }
-}
-
-class DungeonHeroes extends GameContext {
-  constructor() {
-    super({
-      title: "Dungeon Heroes",
-      width: 1280,
-      height: 720,
-      resources: Resources,
-    });
-  }
-
-  override onInitialize(): void {
-    this.logger.info("Game initialized!");
-
-    const hero = new Wizard();
-    this.entityCollection.add(hero);
-
-    const knight = new Knight();
-    this.entityCollection.add(knight);
-
-    const tile = new Tile();
-    this.entityCollection.add(tile);
-  }
-}
-
-using game = new Game(new DungeonHeroes());
-game.start();
+closeWindow();

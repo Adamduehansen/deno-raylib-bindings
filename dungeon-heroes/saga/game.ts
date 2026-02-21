@@ -22,7 +22,7 @@ export default class Game {
 
   private _updateSystem(): void {
     for (const system of this.gameContext.systems) {
-      system.update();
+      system.process();
     }
   }
 

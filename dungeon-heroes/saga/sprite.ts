@@ -1,5 +1,5 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "./entity.ts";
+import { Entity } from "../entity.ts";
 import { Graphics } from "./graphic.ts";
 import { Transform } from "./transform.ts";
 

@@ -1,8 +1,8 @@
-import DrawSystem from "./draw-system.ts";
-import { EntityCollection } from "./entity-collection.ts";
+import DrawSystem from "../draw-system.ts";
+import { EntityCollection } from "../entity-collection.ts";
 import Logger, { DefaultLogger } from "./logger.ts";
-import { ResourceMap } from "./resource.ts";
-import System from "./system.ts";
+import { ResourceMap } from "../resource.ts";
+import System from "../system.ts";
 
 interface GameContextArgs {
   title: string;
