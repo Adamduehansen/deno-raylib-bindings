@@ -2,7 +2,6 @@ import {
   beginDrawing,
   beginMode2D,
   Black,
-  type Camera,
   clearBackground,
   closeWindow,
   DarkGray,
@@ -23,6 +22,7 @@ import {
   KeyOne,
   KeyTwo,
   MouseButtonLeft,
+  type RaylibCamera,
   RayWhite,
   setTargetFPS,
   windowShouldClose,
@@ -55,7 +55,7 @@ initWindow({
   height: screenHeight,
 });
 
-const camera: Camera = {
+const camera: RaylibCamera = {
   zoom: 1,
   rotation: 0,
   target: {

@@ -3,7 +3,6 @@ import {
   beginMode2D,
   Black,
   Blue,
-  type Camera,
   clearBackground,
   closeWindow,
   DarkGray,
@@ -21,6 +20,7 @@ import {
   KeyR,
   KeyRight,
   KeyS,
+  type RaylibCamera,
   type RaylibColor,
   RayWhite,
   Red,
@@ -80,7 +80,7 @@ for (let i = 0; i < maxBuildings; i++) {
   ]);
 }
 
-const camera: Camera = {
+const camera: RaylibCamera = {
   target: {
     x: player.x + 20,
     y: player.y + 20,

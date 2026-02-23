@@ -8,7 +8,7 @@ import { raylib } from "./raylib-bindings.ts";
 
 // Types
 // ----------------------------------------------------------------------------
-export interface Camera {
+export interface RaylibCamera {
   target: RaylibVector;
   offset: RaylibVector;
   rotation: number;
@@ -126,7 +126,7 @@ export function toRaylibRenderTexture(
   return new Uint8Array(buffer);
 }
 
-function toRaylibCamera2D(camera: Camera): BufferSource {
+function toRaylibCamera2D(camera: RaylibCamera): BufferSource {
   return new Float32Array([
     camera.offset.x,
     camera.offset.y,
@@ -352,7 +352,7 @@ export function beginDrawing(): void {
 }
 
 /** */
-export function beginMode2D(camera: Camera): void {
+export function beginMode2D(camera: RaylibCamera): void {
   return raylib.symbols.BeginMode2D(toRaylibCamera2D(camera));
 }
 
@@ -394,7 +394,7 @@ export function endTextureMode(): void {
 // Screen-space-related functions
 export function getScreenToWorld2D(
   position: RaylibVector,
-  camera: Camera,
+  camera: RaylibCamera,
 ): RaylibVector {
   return toVector(raylib.symbols.GetScreenToWorld2D(
     toRaylibVector2(position),
