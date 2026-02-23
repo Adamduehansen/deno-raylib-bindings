@@ -1,7 +1,12 @@
 import {
   beginDrawing,
+  beginMode2D,
   clearBackground,
   endDrawing,
+  endMode2D,
+  getScreenHeight,
+  getScreenWidth,
+  RaylibCamera,
   RayWhite,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
@@ -11,17 +16,32 @@ import ComponentManager from "./component-manager.ts";
 import { TextureComponent, TransformComponent } from "./components.ts";
 
 export default class DrawSystem implements System {
+  private _camera: RaylibCamera;
+
+  constructor() {
+    this._camera = {
+      target: {
+        x: 100,
+        y: 100,
+      },
+      offset: {
+        x: getScreenWidth() / 2,
+        y: getScreenHeight() / 2,
+      },
+      rotation: 0,
+      zoom: 2,
+    };
+  }
+
   process(
     entityCollection: EntityCollection,
     componentManager: ComponentManager,
   ): void {
     beginDrawing();
+
     clearBackground(RayWhite);
 
-    // TODO:
-    // 1. Query all entities with Graphic and Transform components.
-    // 2. Render the components on a position
-
+    beginMode2D(this._camera);
     for (const entity of entityCollection) {
       const hasGraphic = componentManager.has(entity, TextureComponent);
       const hasTransform = componentManager.has(entity, TransformComponent);
@@ -34,18 +54,9 @@ export default class DrawSystem implements System {
       const transform = componentManager.get(entity, TransformComponent)!;
       graphic.draw(transform.position);
     }
+    endMode2D();
 
-    // for (const entity of this.gameContext.entityCollection) {
-    //   if ((entity instanceof Sprite) === false) {
-    //     continue;
-    //   }
-
-    //   entity.graphics.draw(entity.transform.position);
-    // }
-
-    // if (this.gameContext.debug) {
     drawFPS(0, 0);
-    // }
 
     endDrawing();
   }
