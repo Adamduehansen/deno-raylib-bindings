@@ -1,6 +1,0 @@
-{
-  "version": "1.0.0",
-  "tasks": {
-    "compile": "deno compile --allow-ffi --allow-write --allow-read --output ./dino-runner ./main.ts"
-  }
-}

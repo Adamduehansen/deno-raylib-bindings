@@ -1,12 +1,3 @@
 {
-  "workspace": [
-    "./bindings",
-    "./arkanoid",
-    "./dino-runner",
-    "./engine",
-    "./physics",
-    "./ecs",
-    "./dice-catcher",
-    "./dungeon-heroes"
-  ]
+  "workspace": ["./bindings", "./physics", "./dungeon-heroes"]
 }
