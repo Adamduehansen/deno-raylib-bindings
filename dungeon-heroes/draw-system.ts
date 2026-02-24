@@ -4,15 +4,6 @@ import {
   clearBackground,
   endDrawing,
   endMode2D,
-  getScreenHeight,
-  getScreenWidth,
-  isKeyDown,
-  KeyDown,
-  KeyLeft,
-  KeyRight,
-  KeyUp,
-  RaylibCamera,
-  RaylibVector,
   RayWhite,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
@@ -20,40 +11,7 @@ import System from "./system.ts";
 import { EntityCollection } from "./entity-collection.ts";
 import ComponentManager from "./component-manager.ts";
 import { TextureComponent, TransformComponent } from "./components.ts";
-
-class Camera {
-  readonly raylibCamera: RaylibCamera;
-  private _cameraTarget: RaylibVector = {
-    x: 100,
-    y: 100,
-  };
-
-  constructor() {
-    this.raylibCamera = {
-      target: this._cameraTarget,
-      offset: {
-        x: getScreenWidth() / 2,
-        y: getScreenHeight() / 2,
-      },
-      rotation: 0,
-      zoom: 2,
-    };
-  }
-
-  update(): void {
-    if (isKeyDown(KeyLeft)) {
-      this._cameraTarget.x -= 5;
-    } else if (isKeyDown(KeyRight)) {
-      this._cameraTarget.x += 5;
-    }
-
-    if (isKeyDown(KeyUp)) {
-      this._cameraTarget.y -= 5;
-    } else if (isKeyDown(KeyDown)) {
-      this._cameraTarget.y += 5;
-    }
-  }
-}
+import Camera from "./camera.ts";
 
 export default class DrawSystem implements System {
   private _camera = new Camera();
