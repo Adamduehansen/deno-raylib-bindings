@@ -1,3 +1,6 @@
 {
-  "workspace": ["./bindings", "./physics", "./dungeon-heroes"]
+  "workspace": ["./bindings", "./physics", "./dungeon-heroes"],
+  "tasks": {
+    "dev": "deno task --cwd=dungeon-heroes dev"
+  }
 }
