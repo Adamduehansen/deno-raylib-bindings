@@ -6,6 +6,7 @@ import {
 } from "@adamduehansen/raylib-bindings/r-textures";
 import {
   LOG_ERROR,
+  LOG_INFO,
   RaylibTexture,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
@@ -39,6 +40,14 @@ export class TextureResource implements Resource {
   }
 }
 
+interface TiledMapLayer {
+  id: number;
+  name: string;
+  width: number;
+  height: number;
+  data: number[][];
+}
+
 interface TiledMapImage {
   source: string;
 }
@@ -49,21 +58,121 @@ interface TiledMapTileset {
   image: TiledMapImage;
 }
 
+class TiledMapTilesetParser {
+  constructor(readonly dirOfTiledMap: string) {}
+
+  parse(tileset: XmlElement): TiledMapTileset {
+    const tilesetSourceAttribute = tileset.attributes.source;
+    const pathToTileset = path.resolve(
+      this.dirOfTiledMap,
+      tilesetSourceAttribute,
+    );
+    const tilesetXml = parse(Deno.readTextFileSync(pathToTileset));
+    const imageElement = tilesetXml.root.children.find((child) =>
+      child.type === "element" && child.name.raw === "image"
+    );
+    if (imageElement === undefined) {
+      traceLog(LOG_ERROR, "Tileset had no image element:", pathToTileset);
+      throw new Error();
+    }
+
+    const sourceAttribute = imageElement.type === "element"
+      ? imageElement.attributes.source
+      : undefined;
+    if (sourceAttribute === undefined) {
+      traceLog(
+        LOG_ERROR,
+        "Tileset image has no source attribute:",
+        pathToTileset,
+      );
+      throw new Error();
+    }
+    const pathToTilesetSource = path.resolve(
+      this.dirOfTiledMap,
+      sourceAttribute,
+    );
+    return {
+      firstGid: tileset.attributes.firstgid,
+      source: tilesetSourceAttribute,
+      image: {
+        source: pathToTilesetSource,
+      },
+    };
+  }
+}
+
+class TiledMapLayerParser {
+  parse(layer: XmlElement): TiledMapLayer {
+    const id = layer.attributes.id;
+    const name = layer.attributes.name;
+    const width = layer.attributes.width;
+    const height = layer.attributes.height;
+
+    const dataElement = layer.children.find((child) =>
+      child.type === "element" && child.name.raw === "data"
+    );
+
+    if (dataElement?.type !== "element") {
+      throw new Error();
+    }
+
+    const data = dataElement.children.at(0);
+    if (data?.type !== "text") {
+      throw new Error();
+    }
+
+    return {
+      id: Number(id),
+      name: name,
+      width: Number(width),
+      height: Number(height),
+      data: data.text.split("\n").filter((row) => row !== "").map((row) =>
+        row.split(",").map((id) => Number(id))
+      ),
+    };
+  }
+}
+
 export class TiledMapResource implements Resource {
   private readonly _sourceTextures: RaylibTexture[] = [];
-  /**
-   * The path to the directory that contains the tiled map.
-   */
-  private readonly _dirOfTiledMap: string;
 
-  readonly tilesets: readonly TiledMapTileset[] = [];
+  private readonly _tiledMapTilesetParser;
+  private readonly _tiledMapLayerParser;
+
+  readonly tilesets: TiledMapTileset[] = [];
+  readonly layers: unknown[] = [];
 
   constructor(readonly pathToTiledMap: string) {
     const tiledMapXml = Deno.readTextFileSync(pathToTiledMap);
-    this._dirOfTiledMap = path.dirname(pathToTiledMap);
+    const dirOfTiledMap = path.dirname(pathToTiledMap);
+    this._tiledMapTilesetParser = new TiledMapTilesetParser(dirOfTiledMap);
+    this._tiledMapLayerParser = new TiledMapLayerParser();
 
     const doc = parse(tiledMapXml, { ignoreWhitespace: true });
-    this.tilesets = this._parseTilesets(doc.root);
+    for (const child of doc.root.children) {
+      if (child.type !== "element") {
+        continue;
+      }
+
+      switch (child.name.raw) {
+        case "tileset": {
+          this.tilesets.push(this._tiledMapTilesetParser.parse(child));
+          break;
+        }
+        case "layer": {
+          this.layers.push(this._tiledMapLayerParser.parse(child));
+          break;
+        }
+        default:
+          traceLog(
+            LOG_INFO,
+            "[TiledMapResource]",
+            "Unhandled element",
+            child.name.raw,
+          );
+          break;
+      }
+    }
   }
 
   load(): void {
@@ -76,52 +185,5 @@ export class TiledMapResource implements Resource {
     for (const texture of this._sourceTextures) {
       unloadTexture(texture);
     }
-  }
-
-  private _parseTilesets(map: XmlElement): TiledMapTileset[] {
-    return map.children.reduce((tilesets, child): TiledMapTileset[] => {
-      if (child.type !== "element" || child.name.raw !== "tileset") {
-        return tilesets;
-      }
-
-      const tilesetSource = child.attributes.source;
-      const pathToTileset = path.resolve(this._dirOfTiledMap, tilesetSource);
-      const tilesetXml = Deno.readTextFileSync(pathToTileset);
-      const doc = parse(tilesetXml);
-      const image = doc.root.children.find((child) =>
-        child.type === "element" && child.name.raw === "image"
-      );
-
-      if (image === undefined) {
-        traceLog(LOG_ERROR, "Tileset had no image element:", pathToTileset);
-        return tilesets;
-      }
-
-      const sourceAttribute = image.type === "element"
-        ? image.attributes.source
-        : undefined;
-
-      if (sourceAttribute === undefined) {
-        traceLog(
-          LOG_ERROR,
-          "Tileset image has no source attribute:",
-          pathToTileset,
-        );
-        return tilesets;
-      }
-
-      const pathToTilemapSource = path.resolve(
-        this._dirOfTiledMap,
-        sourceAttribute,
-      );
-
-      return [...tilesets, {
-        firstGid: child.attributes.firstgid,
-        source: tilesetSource,
-        image: {
-          source: pathToTilemapSource,
-        },
-      }];
-    }, []);
   }
 }
