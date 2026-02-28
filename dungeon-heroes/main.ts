@@ -33,12 +33,6 @@ const systems: System[] = [new DrawSystem()];
 entityCollection.add(entityFactory.createWizard({ x: 100, y: 100 }));
 entityCollection.add(entityFactory.createKnight({ x: 200, y: 200 }));
 
-// for (let i = 0; i < 4500; i++) {
-//   const x = Math.floor(Math.random() * getScreenWidth());
-//   const y = Math.floor(Math.random() * getScreenHeight());
-//   entityCollection.add(entityFactory.createWizard({ x: x, y: y }));
-// }
-
 while (windowShouldClose() === false) {
   for (const system of systems) {
     system.process(entityCollection, componentManager);
