@@ -1,5 +1,6 @@
 import {
   getMousePosition,
+  getMouseWheelMove,
   getScreenHeight,
   getScreenWidth,
   isKeyDown,
@@ -15,57 +16,74 @@ const MOUSE_MARGIN_SCROLL_OFFSET = 50;
 const KEYBOARD_SPEED = 5;
 const MOUSE_SPEED = 2;
 
+const ZOOM_MIN = 1;
+const ZOOM_MAX = 5;
+
+const clamp = (val: number, min: number, max: number) =>
+  Math.min(Math.max(val, min), max);
+
 interface CameraControlStrategy {
-  update(cameraTarget: RaylibVector): void;
+  update(cameraTarget: RaylibVector, zoom: number): [RaylibVector, number];
 }
 
 class MouseCameraControl implements CameraControlStrategy {
-  update(cameraTarget: RaylibVector): void {
+  update(cameraTarget: RaylibVector, zoom: number): [RaylibVector, number] {
+    const newCameraTarget: RaylibVector = { ...cameraTarget };
+
     const mousePosition = getMousePosition();
     if (mousePosition.x < MOUSE_MARGIN_SCROLL_OFFSET) {
-      cameraTarget.x -= MOUSE_SPEED;
+      newCameraTarget.x -= MOUSE_SPEED;
     } else if (
       mousePosition.x > getScreenWidth() - MOUSE_MARGIN_SCROLL_OFFSET
     ) {
-      cameraTarget.x += MOUSE_SPEED;
+      newCameraTarget.x += MOUSE_SPEED;
     }
     if (mousePosition.y < MOUSE_MARGIN_SCROLL_OFFSET) {
-      cameraTarget.y -= MOUSE_SPEED;
+      newCameraTarget.y -= MOUSE_SPEED;
     } else if (
       mousePosition.y > getScreenHeight() - MOUSE_MARGIN_SCROLL_OFFSET
     ) {
-      cameraTarget.y += MOUSE_SPEED;
+      newCameraTarget.y += MOUSE_SPEED;
     }
+
+    const mouseWheelDelta = getMouseWheelMove();
+
+    const newZoom = clamp(zoom + mouseWheelDelta, ZOOM_MIN, ZOOM_MAX);
+
+    return [newCameraTarget, newZoom];
   }
 }
 
 class KeyboardCameraControl implements CameraControlStrategy {
-  update(cameraTarget: RaylibVector): void {
+  update(cameraTarget: RaylibVector, zoom: number): [RaylibVector, number] {
+    const newCameraTarget: RaylibVector = { ...cameraTarget };
+
     if (isKeyDown(KeyLeft)) {
-      cameraTarget.x -= KEYBOARD_SPEED;
+      newCameraTarget.x -= KEYBOARD_SPEED;
     } else if (isKeyDown(KeyRight)) {
-      cameraTarget.x += KEYBOARD_SPEED;
+      newCameraTarget.x += KEYBOARD_SPEED;
     }
 
     if (isKeyDown(KeyUp)) {
-      cameraTarget.y -= KEYBOARD_SPEED;
+      newCameraTarget.y -= KEYBOARD_SPEED;
     } else if (isKeyDown(KeyDown)) {
-      cameraTarget.y += KEYBOARD_SPEED;
+      newCameraTarget.y += KEYBOARD_SPEED;
     }
+
+    return [newCameraTarget, zoom];
   }
 }
 
 export default class Camera {
   readonly raylibCamera: RaylibCamera;
-  private _cameraTarget: RaylibVector = {
-    x: 100,
-    y: 100,
-  };
   private _controls: CameraControlStrategy[];
 
   constructor() {
     this.raylibCamera = {
-      target: this._cameraTarget,
+      target: {
+        x: 100,
+        y: 100,
+      },
       offset: {
         x: getScreenWidth() / 2,
         y: getScreenHeight() / 2,
@@ -81,7 +99,12 @@ export default class Camera {
 
   update(): void {
     for (const control of this._controls) {
-      control.update(this._cameraTarget);
+      const [newCameraTarget, zoom] = control.update(
+        this.raylibCamera.target,
+        this.raylibCamera.zoom,
+      );
+      this.raylibCamera.target = newCameraTarget;
+      this.raylibCamera.zoom = zoom;
     }
   }
 }
