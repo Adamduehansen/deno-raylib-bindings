@@ -2,9 +2,9 @@ import {
   beginDrawing,
   beginMode2D,
   clearBackground,
+  DarkGray,
   endDrawing,
   endMode2D,
-  RayWhite,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import System from "./system.ts";
@@ -28,7 +28,7 @@ export default class DrawSystem implements System {
     // ------------------------------------------------------------------------
     beginDrawing();
 
-    clearBackground(RayWhite);
+    clearBackground(DarkGray);
 
     beginMode2D(this._camera.raylibCamera);
     for (const entity of entityCollection) {
