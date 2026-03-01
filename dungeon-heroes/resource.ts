@@ -58,13 +58,63 @@ interface TiledMapTileset {
   image: TiledMapImage;
 }
 
-class TiledMapTilesetParser {
-  constructor(readonly dirOfTiledMap: string) {}
+export class TiledMapResource implements Resource {
+  private readonly _dirOfTiledMap: string;
 
-  parse(tileset: XmlElement): TiledMapTileset {
+  readonly sourceTextures = new Map<string, RaylibTexture>();
+  readonly tilesets: TiledMapTileset[] = [];
+  readonly layers: TiledMapLayer[] = [];
+
+  constructor(readonly pathToTiledMap: string) {
+    const tiledMapXml = Deno.readTextFileSync(pathToTiledMap);
+    this._dirOfTiledMap = path.dirname(pathToTiledMap);
+
+    const doc = parse(tiledMapXml, { ignoreWhitespace: true });
+    for (const child of doc.root.children) {
+      if (child.type !== "element") {
+        continue;
+      }
+
+      switch (child.name.raw) {
+        case "tileset": {
+          this.tilesets.push(this._parseTileset(child));
+          break;
+        }
+        case "layer": {
+          this.layers.push(this._parseLayer(child));
+          break;
+        }
+        default:
+          traceLog(
+            LOG_INFO,
+            "[TiledMapResource]",
+            "Unhandled element",
+            child.name.raw,
+          );
+          break;
+      }
+    }
+  }
+
+  load(): void {
+    for (const tileset of this.tilesets) {
+      this.sourceTextures.set(
+        tileset.source,
+        loadTexture(tileset.image.source),
+      );
+    }
+  }
+
+  unload(): void {
+    for (const texture of this.sourceTextures.values()) {
+      unloadTexture(texture);
+    }
+  }
+
+  private _parseTileset(tileset: XmlElement): TiledMapTileset {
     const tilesetSourceAttribute = tileset.attributes.source;
     const pathToTileset = path.resolve(
-      this.dirOfTiledMap,
+      this._dirOfTiledMap,
       tilesetSourceAttribute,
     );
     const tilesetXml = parse(Deno.readTextFileSync(pathToTileset));
@@ -88,7 +138,7 @@ class TiledMapTilesetParser {
       throw new Error();
     }
     const pathToTilesetSource = path.resolve(
-      this.dirOfTiledMap,
+      this._dirOfTiledMap,
       sourceAttribute,
     );
     return {
@@ -99,10 +149,8 @@ class TiledMapTilesetParser {
       },
     };
   }
-}
 
-class TiledMapLayerParser {
-  parse(layer: XmlElement): TiledMapLayer {
+  private _parseLayer(layer: XmlElement): TiledMapLayer {
     const id = layer.attributes.id;
     const name = layer.attributes.name;
     const width = layer.attributes.width;
@@ -130,60 +178,5 @@ class TiledMapLayerParser {
         row.split(",").map((id) => Number(id))
       ),
     };
-  }
-}
-
-export class TiledMapResource implements Resource {
-  private readonly _sourceTextures: RaylibTexture[] = [];
-
-  private readonly _tiledMapTilesetParser;
-  private readonly _tiledMapLayerParser;
-
-  readonly tilesets: TiledMapTileset[] = [];
-  readonly layers: unknown[] = [];
-
-  constructor(readonly pathToTiledMap: string) {
-    const tiledMapXml = Deno.readTextFileSync(pathToTiledMap);
-    const dirOfTiledMap = path.dirname(pathToTiledMap);
-    this._tiledMapTilesetParser = new TiledMapTilesetParser(dirOfTiledMap);
-    this._tiledMapLayerParser = new TiledMapLayerParser();
-
-    const doc = parse(tiledMapXml, { ignoreWhitespace: true });
-    for (const child of doc.root.children) {
-      if (child.type !== "element") {
-        continue;
-      }
-
-      switch (child.name.raw) {
-        case "tileset": {
-          this.tilesets.push(this._tiledMapTilesetParser.parse(child));
-          break;
-        }
-        case "layer": {
-          this.layers.push(this._tiledMapLayerParser.parse(child));
-          break;
-        }
-        default:
-          traceLog(
-            LOG_INFO,
-            "[TiledMapResource]",
-            "Unhandled element",
-            child.name.raw,
-          );
-          break;
-      }
-    }
-  }
-
-  load(): void {
-    for (const tileset of this.tilesets) {
-      this._sourceTextures.push(loadTexture(tileset.image.source));
-    }
-  }
-
-  unload(): void {
-    for (const texture of this._sourceTextures) {
-      unloadTexture(texture);
-    }
   }
 }

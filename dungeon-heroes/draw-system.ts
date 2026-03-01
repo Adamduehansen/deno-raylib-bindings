@@ -32,16 +32,16 @@ export default class DrawSystem implements System {
 
     beginMode2D(this._camera.raylibCamera);
     for (const entity of entityCollection) {
-      const hasGraphic = componentManager.has(entity, TextureComponent);
+      const hasTexture = componentManager.has(entity, TextureComponent);
       const hasTransform = componentManager.has(entity, TransformComponent);
 
-      if (hasGraphic === false || hasTransform === false) {
+      if (hasTexture === false || hasTransform === false) {
         continue;
       }
 
-      const graphic = componentManager.get(entity, TextureComponent)!;
+      const texture = componentManager.get(entity, TextureComponent)!;
       const transform = componentManager.get(entity, TransformComponent)!;
-      graphic.draw(transform.position);
+      texture.draw(transform.position);
     }
     endMode2D();
 

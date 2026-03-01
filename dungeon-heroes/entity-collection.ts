@@ -3,6 +3,10 @@ import { Entity } from "./entity.ts";
 export class EntityCollection {
   private _entities: Entity[] = [];
 
+  get length(): number {
+    return this._entities.length;
+  }
+
   add(entity: Entity): void {
     this._entities.push(entity);
   }
