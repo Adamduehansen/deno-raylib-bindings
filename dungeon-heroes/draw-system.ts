@@ -5,6 +5,8 @@ import {
   DarkGray,
   endDrawing,
   endMode2D,
+  getScreenHeight,
+  getScreenWidth,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import System from "./system.ts";
@@ -14,7 +16,17 @@ import { GraphicComponent, TransformComponent } from "./components.ts";
 import Camera from "./camera.ts";
 
 export default class DrawSystem implements System {
-  private _camera = new Camera();
+  private _camera = new Camera({
+    target: {
+      x: 100,
+      y: 100,
+    },
+    offset: {
+      x: getScreenWidth() / 2,
+      y: getScreenHeight() / 2,
+    },
+    zoom: 2,
+  });
 
   process(
     entityCollection: EntityCollection,

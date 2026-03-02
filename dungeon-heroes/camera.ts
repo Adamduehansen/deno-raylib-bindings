@@ -74,22 +74,23 @@ class KeyboardCameraControl implements CameraControlStrategy {
   }
 }
 
+interface Args {
+  target?: RaylibVector;
+  offset?: RaylibVector;
+  rotation?: number;
+  zoom?: number;
+}
+
 export default class Camera {
   readonly raylibCamera: RaylibCamera;
   private _controls: CameraControlStrategy[];
 
-  constructor() {
+  constructor(args: Args) {
     this.raylibCamera = {
-      target: {
-        x: 100,
-        y: 100,
-      },
-      offset: {
-        x: getScreenWidth() / 2,
-        y: getScreenHeight() / 2,
-      },
-      rotation: 0,
-      zoom: 2,
+      target: args.target ?? { x: 0, y: 0 },
+      offset: args.offset ?? { x: 0, y: 0 },
+      rotation: args.rotation ?? 0,
+      zoom: args.zoom ?? 0,
     };
     this._controls = [
       new MouseCameraControl(),

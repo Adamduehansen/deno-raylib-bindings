@@ -30,7 +30,7 @@ const entityFactory = new EntityFactory(componentManager);
 
 const systems: System[] = [new DrawSystem()];
 
-entityCollection.add(entityFactory.createWizard({ x: 100, y: 100 }));
+entityCollection.add(entityFactory.createWizard({ x: 0, y: 0 }));
 entityCollection.add(entityFactory.createKnight({ x: 200, y: 200 }));
 
 while (windowShouldClose() === false) {
