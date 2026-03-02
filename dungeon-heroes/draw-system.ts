@@ -10,7 +10,7 @@ import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import System from "./system.ts";
 import { EntityCollection } from "./entity-collection.ts";
 import ComponentManager from "./component-manager.ts";
-import { TextureComponent, TransformComponent } from "./components.ts";
+import { GraphicComponent, TransformComponent } from "./components.ts";
 import Camera from "./camera.ts";
 
 export default class DrawSystem implements System {
@@ -32,16 +32,25 @@ export default class DrawSystem implements System {
 
     beginMode2D(this._camera.raylibCamera);
     for (const entity of entityCollection) {
-      const hasTexture = componentManager.has(entity, TextureComponent);
-      const hasTransform = componentManager.has(entity, TransformComponent);
+      const hasGraphicComponent = componentManager.has(
+        entity,
+        GraphicComponent,
+      );
+      const hasTransformComponent = componentManager.has(
+        entity,
+        TransformComponent,
+      );
 
-      if (hasTexture === false || hasTransform === false) {
+      if (hasGraphicComponent === false || hasTransformComponent === false) {
         continue;
       }
 
-      const texture = componentManager.get(entity, TextureComponent)!;
-      const transform = componentManager.get(entity, TransformComponent)!;
-      texture.draw(transform.position);
+      const graphicComponent = componentManager.get(entity, GraphicComponent)!;
+      const transformComponent = componentManager.get(
+        entity,
+        TransformComponent,
+      )!;
+      graphicComponent.draw(transformComponent.position);
     }
     endMode2D();
 

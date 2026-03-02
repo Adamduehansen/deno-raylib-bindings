@@ -18,7 +18,7 @@ export interface Resource {
   unload(): void;
 }
 
-export class TextureResource implements Resource {
+export class ImageResource implements Resource {
   texture?: RaylibTexture;
 
   constructor(readonly path: string) {}
@@ -30,7 +30,7 @@ export class TextureResource implements Resource {
   unload(): void {
     if (this.texture === undefined) {
       console.error(
-        "Cannot unload texture that is not loaded. Path",
+        "Cannot unload texture that is not loaded. Path:",
         this.path,
       );
       return;

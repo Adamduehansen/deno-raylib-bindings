@@ -1,12 +1,13 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import ComponentManager from "./component-manager.ts";
-import { TextureComponent, TransformComponent } from "./components.ts";
+import { GraphicComponent, TransformComponent } from "./components.ts";
 import { Entity } from "./entity.ts";
 import { Resources } from "./resources.ts";
-import { TextureResource } from "./resource.ts";
+import { ImageResource } from "./resource.ts";
+import { Sprite } from "./graphic.ts";
 
 interface ActorArgs {
-  textureResource: TextureResource;
+  imageResource: ImageResource;
   position: RaylibVector;
 }
 
@@ -15,10 +16,11 @@ export default class EntityFactory {
 
   createActor(args: ActorArgs): Entity {
     const entity = new Entity();
-    this.componentManager.add(
-      entity,
-      new TextureComponent(args.textureResource),
-    );
+    const sprite = new Sprite({
+      image: args.imageResource,
+    });
+    const graphicComponent = new GraphicComponent(sprite);
+    this.componentManager.add(entity, graphicComponent);
     this.componentManager.add(entity, new TransformComponent(args.position));
     return entity;
   }
@@ -26,7 +28,7 @@ export default class EntityFactory {
   createWizard(pos: RaylibVector): Entity {
     const piece = this.createActor({
       position: pos,
-      textureResource: Resources.wizard,
+      imageResource: Resources.wizard,
     });
     return piece;
   }
@@ -34,7 +36,7 @@ export default class EntityFactory {
   createKnight(pos: RaylibVector): Entity {
     const piece = this.createActor({
       position: pos,
-      textureResource: Resources.knight,
+      imageResource: Resources.knight,
     });
     return piece;
   }
