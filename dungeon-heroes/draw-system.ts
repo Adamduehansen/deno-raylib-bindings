@@ -66,8 +66,7 @@ export default class DrawSystem implements System {
         TransformComponent,
       )!;
 
-      const draw = this._getDrawer(graphicComponent.graphic.type);
-      draw(graphicComponent.graphic, transformComponent.position);
+      this._draw(graphicComponent.graphic, transformComponent.position);
     }
     endMode2D();
 
@@ -76,31 +75,24 @@ export default class DrawSystem implements System {
     endDrawing();
   }
 
-  private _getDrawer(
-    type: Graphic["type"],
-  ): (graphic: Graphic, position: RaylibVector) => void | never {
-    switch (type) {
-      case "sprite":
-        return this._drawSprite;
+  private _draw(graphic: Graphic, position: RaylibVector): void {
+    if (graphic instanceof Sprite) {
+      drawTexturePro({
+        texture: graphic.texture,
+        source: graphic.source,
+        dest: {
+          x: position.x,
+          y: position.y,
+          width: graphic.source.width,
+          height: graphic.source.height,
+        },
+        origin: {
+          x: graphic.source.width / 2,
+          y: graphic.source.height / 2,
+        },
+        rotation: 0,
+        tint: graphic.color,
+      });
     }
-  }
-
-  private _drawSprite(graphic: Sprite, position: RaylibVector): void {
-    drawTexturePro({
-      texture: graphic.texture,
-      source: graphic.source,
-      dest: {
-        x: position.x,
-        y: position.y,
-        width: graphic.dest.width,
-        height: graphic.dest.height,
-      },
-      origin: {
-        x: graphic.dest.width / 2,
-        y: graphic.dest.height / 2,
-      },
-      rotation: 0,
-      tint: graphic.color,
-    });
   }
 }

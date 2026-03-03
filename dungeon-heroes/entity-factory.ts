@@ -4,21 +4,20 @@ import { GraphicComponent, TransformComponent } from "./components.ts";
 import { Entity } from "./entity.ts";
 import { Resources } from "./resources.ts";
 import { ImageResource } from "./resource.ts";
-import { GraphicFactory } from "./graphic.ts";
+import { Sprite } from "./graphic.ts";
 
 interface ActorArgs {
   imageResource: ImageResource;
   position: RaylibVector;
 }
 
-const graphicFactory = new GraphicFactory();
-
 export default class EntityFactory {
   constructor(readonly componentManager: ComponentManager) {}
 
   createActor(args: ActorArgs): Entity {
     const entity = new Entity();
-    const sprite = graphicFactory.createSprite({
+    // TODO: Create a Sprite.fromImage(args.imageResource)
+    const sprite = new Sprite({
       image: args.imageResource,
       source: {
         width: 16,
