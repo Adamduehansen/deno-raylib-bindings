@@ -15,7 +15,7 @@ import { EntityCollection } from "./entity-collection.ts";
 import ComponentManager from "./component-manager.ts";
 import { GraphicComponent, TransformComponent } from "./components.ts";
 import Camera from "./camera.ts";
-import { Graphic } from "./graphic.ts";
+import { Graphic, Sprite } from "./graphic.ts";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 
 export default class DrawSystem implements System {
@@ -85,15 +85,9 @@ export default class DrawSystem implements System {
     }
   }
 
-  private _drawSprite(graphic: Graphic, position: RaylibVector): void {
-    const { texture } = graphic.image;
-
-    if (texture === undefined) {
-      return;
-    }
-
+  private _drawSprite(graphic: Sprite, position: RaylibVector): void {
     drawTexturePro({
-      texture: texture,
+      texture: graphic.texture,
       source: graphic.source,
       dest: {
         x: position.x,

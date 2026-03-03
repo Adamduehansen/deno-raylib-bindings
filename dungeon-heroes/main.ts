@@ -1,7 +1,7 @@
 import {
   closeWindow,
-  // getScreenHeight,
-  // getScreenWidth,
+  getScreenHeight,
+  getScreenWidth,
   initWindow,
   setTargetFPS,
   windowShouldClose,
@@ -35,11 +35,11 @@ const systems: System[] = [new DrawSystem()];
 entityCollection.add(entityFactory.createWizard({ x: 0, y: 0 }));
 entityCollection.add(entityFactory.createKnight({ x: 200, y: 200 }));
 
-// for (let i = 0; i < 300; i++) {
-//   const spawnX = Math.floor(Math.random() * getScreenWidth());
-//   const spawnY = Math.floor(Math.random() * getScreenHeight());
-//   entityCollection.add(entityFactory.createWizard({ x: spawnX, y: spawnY }));
-// }
+for (let i = 0; i < 4500; i++) {
+  const spawnX = Math.floor(Math.random() * getScreenWidth());
+  const spawnY = Math.floor(Math.random() * getScreenHeight());
+  entityCollection.add(entityFactory.createWizard({ x: spawnX, y: spawnY }));
+}
 
 while (windowShouldClose() === false) {
   for (const system of systems) {
