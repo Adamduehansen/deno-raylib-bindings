@@ -18,6 +18,18 @@ export default class EntityFactory {
     const entity = new Entity();
     const sprite: Sprite = {
       image: args.imageResource,
+      source: {
+        x: 0,
+        y: 0,
+        width: args.imageResource.texture?.width ?? 0,
+        height: args.imageResource.texture?.height ?? 0,
+      },
+      dest: {
+        x: args.position.x,
+        y: args.position.y,
+        width: args.imageResource.texture?.width ?? 0,
+        height: args.imageResource.texture?.height ?? 0,
+      },
       color: White,
       type: "sprite",
     };

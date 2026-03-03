@@ -94,21 +94,16 @@ export default class DrawSystem implements System {
 
     drawTexturePro({
       texture: texture,
-      source: {
-        x: 0,
-        y: 0,
-        width: texture.width,
-        height: texture.height,
-      },
+      source: graphic.source,
       dest: {
         x: position.x,
         y: position.y,
-        width: texture.width,
-        height: texture.height,
+        width: graphic.dest.width,
+        height: graphic.dest.height,
       },
       origin: {
-        x: texture.width / 2,
-        y: texture.height / 2,
+        x: graphic.dest.width / 2,
+        y: graphic.dest.height / 2,
       },
       rotation: 0,
       tint: graphic.color,
