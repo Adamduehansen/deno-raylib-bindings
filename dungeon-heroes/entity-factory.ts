@@ -1,4 +1,4 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibVector, White } from "@adamduehansen/raylib-bindings/r-core";
 import ComponentManager from "./component-manager.ts";
 import { GraphicComponent, TransformComponent } from "./components.ts";
 import { Entity } from "./entity.ts";
@@ -16,9 +16,11 @@ export default class EntityFactory {
 
   createActor(args: ActorArgs): Entity {
     const entity = new Entity();
-    const sprite = new Sprite({
+    const sprite: Sprite = {
       image: args.imageResource,
-    });
+      color: White,
+      type: "sprite",
+    };
     const graphicComponent = new GraphicComponent(sprite);
     this.componentManager.add(entity, graphicComponent);
     this.componentManager.add(entity, new TransformComponent(args.position));
