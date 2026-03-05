@@ -36,6 +36,7 @@ export class Sprite extends Graphic {
     super();
 
     if (image.texture === undefined) {
+      // TODO: Maybe create a ImageNotLoadedError to reuse?
       throw new Error("Cant use an image resource that is not loaded!");
     }
 
@@ -51,6 +52,21 @@ export class Sprite extends Graphic {
       height: size?.height ?? source.height,
     };
     this.color = color ?? White;
+  }
+
+  static fromImage(image: ImageResource): Sprite {
+    const { texture } = image;
+    if (texture === undefined) {
+      throw new Error("Cant use an image resource that is not loaded!");
+    }
+
+    return new Sprite({
+      image: image,
+      source: {
+        width: texture.width,
+        height: texture.height,
+      },
+    });
   }
 }
 

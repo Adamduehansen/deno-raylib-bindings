@@ -7,9 +7,10 @@ import {
   endMode2D,
   getScreenHeight,
   getScreenWidth,
+  Green,
   RaylibVector,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
+import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
 import System from "./system.ts";
 import { EntityCollection } from "./entity-collection.ts";
 import ComponentManager from "./component-manager.ts";
@@ -71,6 +72,13 @@ export default class DrawSystem implements System {
     endMode2D();
 
     drawFPS(0, 0);
+    drawText({
+      posX: 0,
+      posY: 20,
+      text: `Entities: ${entityCollection.length}`,
+      fontSize: 20,
+      color: Green,
+    });
 
     endDrawing();
   }

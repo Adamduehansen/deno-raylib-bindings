@@ -16,14 +16,7 @@ export default class EntityFactory {
 
   createActor(args: ActorArgs): Entity {
     const entity = new Entity();
-    // TODO: Create a Sprite.fromImage(args.imageResource)
-    const sprite = new Sprite({
-      image: args.imageResource,
-      source: {
-        width: 16,
-        height: 16,
-      },
-    });
+    const sprite = Sprite.fromImage(args.imageResource);
     const graphicComponent = new GraphicComponent(sprite);
     this.componentManager.add(entity, graphicComponent);
     this.componentManager.add(entity, new TransformComponent(args.position));
