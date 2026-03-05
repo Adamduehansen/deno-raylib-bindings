@@ -32,3 +32,5 @@ Deno.test("should return null for component that does not exist", () => {
   assertFalse(hasComponent);
   assertEquals(testComponent, null);
 });
+
+// TODO: add tests for remove.
