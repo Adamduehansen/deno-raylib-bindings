@@ -1,7 +1,7 @@
 import {
   closeWindow,
-  getScreenHeight,
-  getScreenWidth,
+  // getScreenHeight,
+  // getScreenWidth,
   initWindow,
   setTargetFPS,
   windowShouldClose,
@@ -12,6 +12,11 @@ import { EntityCollection } from "./entity-collection.ts";
 import EntityFactory from "./entity-factory.ts";
 import ComponentManager from "./component-manager.ts";
 import { Resources } from "./resources.ts";
+import Tile from "./tile.ts";
+import { Entity } from "./entity.ts";
+import { GraphicComponent, TransformComponent } from "./components.ts";
+import SpriteSheet from "./sprite-sheet.ts";
+import { Graphic } from "./graphic.ts";
 
 initWindow({
   title: "Dungeon heroes",
@@ -37,24 +42,30 @@ const systems: System[] = [new DrawSystem()];
 // entityCollection.add(entityFactory.createGhost({ x: 100, y: 100 }));
 // entityCollection.add(entityFactory.createManaPotion({ x: 150, y: 150 }));
 
-for (let i = 0; i < 4300; i++) {
-  const spawnX = Math.floor(Math.random() * getScreenWidth());
-  const spawnY = Math.floor(Math.random() * getScreenHeight());
-  const rand = Math.floor(Math.random() * 4);
-  if (rand === 0) {
-    entityCollection.add(entityFactory.createWizard({ x: spawnX, y: spawnY }));
-  } else if (rand === 1) {
-    entityCollection.add(entityFactory.createKnight({ x: spawnX, y: spawnY }));
-  } else if (rand === 2) {
-    entityCollection.add(entityFactory.createGhost({ x: spawnX, y: spawnY }));
-  } else if (rand === 3) {
-    entityCollection.add(
-      entityFactory.createManaPotion({ x: spawnX, y: spawnY }),
-    );
-  } else {
-    console.log("This wasnt expected!");
-  }
+const startTile = new Tile();
+for (const cell of startTile.cells) {
+  const floor = entityFactory.createFloor({ x: cell.x, y: cell.y });
+  entityCollection.add(floor);
 }
+
+// for (let i = 0; i < 4300; i++) {
+//   const spawnX = Math.floor(Math.random() * getScreenWidth());
+//   const spawnY = Math.floor(Math.random() * getScreenHeight());
+//   const rand = Math.floor(Math.random() * 4);
+//   if (rand === 0) {
+//     entityCollection.add(entityFactory.createWizard({ x: spawnX, y: spawnY }));
+//   } else if (rand === 1) {
+//     entityCollection.add(entityFactory.createKnight({ x: spawnX, y: spawnY }));
+//   } else if (rand === 2) {
+//     entityCollection.add(entityFactory.createGhost({ x: spawnX, y: spawnY }));
+//   } else if (rand === 3) {
+//     entityCollection.add(
+//       entityFactory.createManaPotion({ x: spawnX, y: spawnY }),
+//     );
+//   } else {
+//     console.log("This wasnt expected!");
+//   }
+// }
 
 while (windowShouldClose() === false) {
   for (const system of systems) {

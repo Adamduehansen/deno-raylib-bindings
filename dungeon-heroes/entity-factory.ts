@@ -72,4 +72,13 @@ export default class EntityFactory {
     this.componentManager.add(entity, new TransformComponent(position));
     return entity;
   }
+
+  createFloor(position: RaylibVector): Entity {
+    const entity = new Entity();
+    const sprite = spriteSheet.getSprite(0, 4);
+    const graphicComponent = new GraphicComponent(sprite);
+    this.componentManager.add(entity, graphicComponent);
+    this.componentManager.add(entity, new TransformComponent(position));
+    return entity;
+  }
 }
