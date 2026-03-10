@@ -16,7 +16,6 @@ import Tile from "./tile.ts";
 import { Entity } from "./entity.ts";
 import { GraphicComponent, TransformComponent } from "./components.ts";
 import SpriteSheet from "./sprite-sheet.ts";
-import { Graphic } from "./graphic.ts";
 
 initWindow({
   title: "Dungeon heroes",
@@ -42,10 +41,46 @@ const systems: System[] = [new DrawSystem()];
 // entityCollection.add(entityFactory.createGhost({ x: 100, y: 100 }));
 // entityCollection.add(entityFactory.createManaPotion({ x: 150, y: 150 }));
 
+const spriteSheet = new SpriteSheet(Resources.tilemap, {
+  grid: {
+    rows: 11,
+    columns: 12,
+    spriteWidth: 16,
+    spriteHeight: 16,
+  },
+  spacing: {
+    margin: {
+      x: 1,
+      y: 1,
+    },
+  },
+});
+
 const startTile = new Tile();
-for (const cell of startTile.cells) {
-  const floor = entityFactory.createFloor({ x: cell.x, y: cell.y });
-  entityCollection.add(floor);
+for (let rowIndex = 0; rowIndex < startTile.cells.length; rowIndex++) {
+  const cellRow = startTile.cells[rowIndex];
+  for (let columnIndex = 0; columnIndex < cellRow.length; columnIndex++) {
+    const cell = cellRow[columnIndex];
+    if (cell === 0) {
+      continue;
+    }
+
+    const entity = new Entity();
+    const transformComponent = new TransformComponent({
+      x: columnIndex * 16,
+      y: rowIndex * 16,
+    });
+    componentManager.add(entity, transformComponent);
+    const shifted = cell - 1;
+    const spriteX = shifted % spriteSheet.options.grid.columns;
+    const spriteY = Math.floor(
+      shifted / spriteSheet.options.grid.columns,
+    );
+    const sprite = spriteSheet.getSprite(spriteX, spriteY);
+    const graphicComponent = new GraphicComponent(sprite);
+    componentManager.add(entity, graphicComponent);
+    entityCollection.add(entity);
+  }
 }
 
 // for (let i = 0; i < 4300; i++) {

@@ -1,13 +1,19 @@
-interface Cell {
-  x: number;
-  y: number;
-}
+// interface Cell {
+//   tilesetId: number;
+//   pos: {
+//     x: number;
+//     y: number;
+//   };
+// }
 
 export default class Tile {
-  cells: readonly Cell[] = [{
-    x: 0,
-    y: 0,
-  }];
+  cells: readonly number[][] = [
+    [0, 51, 51, 52, 51, 51, 53, 0],
+    [51, 49, 49, 49, 49, 49, 54, 51],
+    [50, 49, 49, 49, 49, 43, 49, 49],
+    [0, 49, 50, 49, 49, 49, 49, 0],
+    [0, 49, 49, 49, 49, 49, 49, 0],
+  ];
 
   constructor() {
   }
