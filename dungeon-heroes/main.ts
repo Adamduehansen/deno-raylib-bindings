@@ -65,18 +65,24 @@ for (let rowIndex = 0; rowIndex < startTile.cells.length; rowIndex++) {
       continue;
     }
 
+    const tileId = cell & 0x0FFFFFFF;
+    const flippedHorizontally = (cell & 0x80000000) !== 0;
+    const flippedVertically = (cell & 0x40000000) !== 0;
+
     const entity = new Entity();
     const transformComponent = new TransformComponent({
       x: columnIndex * 16,
       y: rowIndex * 16,
     });
     componentManager.add(entity, transformComponent);
-    const shifted = cell - 1;
+    const shifted = tileId - 1;
     const spriteX = shifted % spriteSheet.options.grid.columns;
     const spriteY = Math.floor(
       shifted / spriteSheet.options.grid.columns,
     );
     const sprite = spriteSheet.getSprite(spriteX, spriteY);
+    sprite.flipHorizontal = flippedHorizontally;
+    sprite.flipVertically = flippedVertically;
     const graphicComponent = new GraphicComponent(sprite);
     componentManager.add(entity, graphicComponent);
     entityCollection.add(entity);

@@ -32,6 +32,9 @@ export class Sprite extends Graphic {
   };
   readonly color: RaylibColor;
 
+  flipHorizontal: boolean = false;
+  flipVertically: boolean = false;
+
   constructor({ image, source, color, size }: SpriteArgs) {
     super();
 

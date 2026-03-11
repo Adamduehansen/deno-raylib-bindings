@@ -85,21 +85,27 @@ export default class DrawSystem implements System {
 
   private _draw(graphic: Graphic, position: RaylibVector): void {
     if (graphic instanceof Sprite) {
+      const { color, flipHorizontal, flipVertically, source, texture } =
+        graphic;
       drawTexturePro({
-        texture: graphic.texture,
-        source: graphic.source,
+        texture: texture,
+        source: {
+          ...source,
+          width: flipHorizontal ? -source.width : source.width,
+          height: flipVertically ? -source.height : source.height,
+        },
         dest: {
           x: position.x,
           y: position.y,
-          width: graphic.source.width,
-          height: graphic.source.height,
+          width: source.width,
+          height: source.height,
         },
         origin: {
-          x: graphic.source.width / 2,
-          y: graphic.source.height / 2,
+          x: source.width / 2,
+          y: source.height / 2,
         },
         rotation: 0,
-        tint: graphic.color,
+        tint: color,
       });
     }
   }
