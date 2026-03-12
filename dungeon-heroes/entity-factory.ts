@@ -1,11 +1,12 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import ComponentManager from "./component-manager.ts";
-import { GraphicComponent, TransformComponent } from "./components.ts";
-import { Entity } from "./entity.ts";
+import ComponentManager from "./entity-component-system/component-manager.ts";
+import { Entity } from "./entity-component-system/entity.ts";
 import { Resources } from "./resources.ts";
-import { ImageResource } from "./resource.ts";
-import { Sprite } from "./graphic.ts";
-import SpriteSheet from "./sprite-sheet.ts";
+import ImageResource from "./resources/image-resource.ts";
+import { Sprite } from "./graphic/graphic.ts";
+import SpriteSheet from "./graphic/sprite-sheet.ts";
+import GraphicComponent from "./graphic/graphic-component.ts";
+import TransformComponent from "./entity-component-system/transform-component.ts";
 
 interface ActorArgs {
   imageResource: ImageResource;

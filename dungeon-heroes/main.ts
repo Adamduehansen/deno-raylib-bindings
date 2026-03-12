@@ -6,16 +6,17 @@ import {
   setTargetFPS,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
-import System from "./system.ts";
-import DrawSystem from "./draw-system.ts";
-import { EntityCollection } from "./entity-collection.ts";
+import System from "./entity-component-system/system.ts";
+import { EntityCollection } from "./entity-component-system/entity-collection.ts";
 import EntityFactory from "./entity-factory.ts";
-import ComponentManager from "./component-manager.ts";
+import ComponentManager from "./entity-component-system/component-manager.ts";
 import { Resources } from "./resources.ts";
 import Tile from "./tile.ts";
-import { Entity } from "./entity.ts";
-import { GraphicComponent, TransformComponent } from "./components.ts";
-import SpriteSheet from "./sprite-sheet.ts";
+import { Entity } from "./entity-component-system/entity.ts";
+import SpriteSheet from "./graphic/sprite-sheet.ts";
+import GraphicComponent from "./graphic/graphic-component.ts";
+import DrawSystem from "./graphic/draw-system.ts";
+import TransformComponent from "./entity-component-system/transform-component.ts";
 
 initWindow({
   title: "Dungeon heroes",

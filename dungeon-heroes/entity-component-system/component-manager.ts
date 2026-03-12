@@ -1,4 +1,6 @@
-import { Component, ComponentCtor } from "./components.ts";
+import Component, {
+  ComponentCtor,
+} from "../entity-component-system/component.ts";
 import { Entity } from "./entity.ts";
 
 export default class ComponentManager {

@@ -3,7 +3,7 @@ import {
   RaylibTexture,
   White,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { ImageResource } from "./resource.ts";
+import ImageResource from "../resources/image-resource.ts";
 import { RaylibRectangle } from "@adamduehansen/raylib-bindings/r-shapes";
 
 export abstract class Graphic {}

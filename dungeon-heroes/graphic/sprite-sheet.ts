@@ -1,5 +1,5 @@
 import { Sprite } from "./graphic.ts";
-import { ImageResource } from "./resource.ts";
+import ImageResource from "../resources/image-resource.ts";
 
 interface Options {
   grid: {

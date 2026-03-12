@@ -1,7 +1,7 @@
 import { assertEquals, assertFalse } from "@std/assert";
 import { Entity } from "./entity.ts";
-import ComponentManager from "./component-manager.ts";
-import { Component } from "./components.ts";
+import ComponentManager from "../entity-component-system/component-manager.ts";
+import Component from "./component.ts";
 
 Deno.test("should add component for entity", () => {
   // Arrange

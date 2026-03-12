@@ -11,13 +11,14 @@ import {
   RaylibVector,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
-import System from "./system.ts";
-import { EntityCollection } from "./entity-collection.ts";
-import ComponentManager from "./component-manager.ts";
-import { GraphicComponent, TransformComponent } from "./components.ts";
-import Camera from "./camera.ts";
+import System from "../entity-component-system/system.ts";
+import { EntityCollection } from "../entity-component-system/entity-collection.ts";
+import ComponentManager from "../entity-component-system/component-manager.ts";
+import TransformComponent from "../entity-component-system/transform-component.ts";
+import Camera from "../camera.ts";
 import { Graphic, Sprite } from "./graphic.ts";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
+import GraphicComponent from "./graphic-component.ts";
 
 export default class DrawSystem implements System {
   private _camera = new Camera({
