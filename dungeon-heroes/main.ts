@@ -17,6 +17,8 @@ import SpriteSheet from "./graphic/sprite-sheet.ts";
 import GraphicComponent from "./graphic/graphic-component.ts";
 import DrawSystem from "./graphic/draw-system.ts";
 import TransformComponent from "./entity-component-system/transform-component.ts";
+import PointerComponent from "./entity-component-system/pointer-component.ts";
+import PointerSystem from "./input/pointer-system.ts";
 
 initWindow({
   title: "Dungeon heroes",
@@ -35,7 +37,7 @@ const entityCollection = new EntityCollection();
 
 const entityFactory = new EntityFactory(componentManager);
 
-const systems: System[] = [new DrawSystem()];
+const systems: System[] = [new DrawSystem(), new PointerSystem()];
 
 // entityCollection.add(entityFactory.createWizard({ x: 0, y: 0 }));
 // entityCollection.add(entityFactory.createKnight({ x: 200, y: 200 }));
@@ -71,11 +73,13 @@ for (let rowIndex = 0; rowIndex < startTile.cells.length; rowIndex++) {
     const flippedVertically = (cell & 0x40000000) !== 0;
 
     const entity = new Entity();
+
     const transformComponent = new TransformComponent({
       x: columnIndex * 16,
       y: rowIndex * 16,
     });
     componentManager.add(entity, transformComponent);
+
     const shifted = tileId - 1;
     const spriteX = shifted % spriteSheet.options.grid.columns;
     const spriteY = Math.floor(
@@ -86,6 +90,16 @@ for (let rowIndex = 0; rowIndex < startTile.cells.length; rowIndex++) {
     sprite.flipVertically = flippedVertically;
     const graphicComponent = new GraphicComponent(sprite);
     componentManager.add(entity, graphicComponent);
+
+    componentManager.add(
+      entity,
+      new PointerComponent(() => {
+        console.log("Entered");
+      }, () => {
+        console.log("Exited");
+      }),
+    );
+
     entityCollection.add(entity);
   }
 }
