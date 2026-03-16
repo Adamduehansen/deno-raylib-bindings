@@ -8,3 +8,5 @@ export * from "./graphic/graphic.ts";
 export * from "./graphic/graphic-component.ts";
 
 export * from "./physics/transform-component.ts";
+
+export * from "./actor.ts";

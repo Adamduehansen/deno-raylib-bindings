@@ -67,7 +67,7 @@ export class DrawSystem implements System {
         TransformComponent,
       )!;
 
-      this._draw(graphicComponent.graphic, transformComponent.position);
+      this._draw(graphicComponent.current, transformComponent.position);
     }
     endMode2D();
 
@@ -83,7 +83,7 @@ export class DrawSystem implements System {
     endDrawing();
   }
 
-  private _draw(graphic: Graphic, position: RaylibVector): void {
+  private _draw(graphic: Graphic | null, position: RaylibVector): void {
     if (graphic instanceof Sprite) {
       const { color, flipHorizontal, flipVertically, source, texture } =
         graphic;
