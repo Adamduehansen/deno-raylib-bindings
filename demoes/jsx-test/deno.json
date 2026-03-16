@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "saga"
+  },
+  "tasks": {
+    "dev": "deno run --allow-ffi main.tsx"
+  },
+  "imports": {
+    "saga/jsx-runtime": "./jsx-runtime.ts"
+  }
+}
