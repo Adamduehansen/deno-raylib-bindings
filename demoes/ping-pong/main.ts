@@ -14,6 +14,24 @@ import {
   System,
 } from "@adamduehansen/saga";
 
+const PADDLE_HEIGHT = 200;
+const PADDLE_WIDTH = 25;
+
+class Player extends Actor {
+  constructor() {
+    super({
+      x: getScreenWidth() - 100,
+      y: getScreenHeight() / 2 - PADDLE_HEIGHT / 2,
+      width: PADDLE_WIDTH,
+      height: PADDLE_HEIGHT,
+    });
+  }
+
+  override update(): void {
+    console.log("Updating the player");
+  }
+}
+
 initWindow({
   title: "Ping pong",
   width: 1280,
@@ -26,35 +44,17 @@ const componentManager = new ComponentManager();
 const entityCollection = new EntityCollection();
 const systems: System[] = [new DrawSystem()];
 
-const PADDLE_HEIGHT = 200;
-const PADDLE_WIDTH = 25;
-
-const player = new Actor({
-  x: getScreenWidth() - 100,
-  y: getScreenHeight() / 2 - PADDLE_HEIGHT / 2,
-  width: PADDLE_WIDTH,
-  height: PADDLE_HEIGHT,
-});
+const player = new Player();
 componentManager.add(player, player.transform);
 componentManager.add(player, player.graphic);
-
 entityCollection.add(player);
 
-// const player = new Entity();
-// componentManager.add(
-//   player,
-//   new TransformComponent({
-//     x: getScreenWidth() - 100,
-//     y: getScreenHeight() / 2 - PADDLE_HEIGHT / 2,
-//   }),
-// );
-// const graphicComponent = new GraphicComponent(
-//   new Rectangle(PADDLE_WIDTH, PADDLE_HEIGHT),
-// );
-// componentManager.add(player, graphicComponent);
-// entityCollection.add(player);
-
 while (windowShouldClose() === false) {
+  for (const entity of entityCollection) {
+    if (entity.update) {
+      entity.update();
+    }
+  }
   for (const system of systems) {
     system.process(entityCollection, componentManager);
   }

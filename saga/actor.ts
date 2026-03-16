@@ -62,11 +62,13 @@ export class Actor extends Entity {
   constructor(args?: ActorArgs) {
     super();
 
-    const { width = 0, height = 0, color = RayWhite } = { ...args };
+    const { x = 0, y = 0, width = 0, height = 0, color = RayWhite } = {
+      ...args,
+    };
 
     this.transform = new TransformComponent({
-      x: args?.x ?? 0,
-      y: args?.y ?? 0,
+      x: x,
+      y: y,
     });
 
     this.graphic = new GraphicComponent();
