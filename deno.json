@@ -3,10 +3,12 @@
     "./bindings",
     "./saga",
     "./demoes/ping-pong",
+    "./demoes/jsx-test",
     "./dungeon-heroes"
   ],
   "tasks": {
     "dev": "deno task --cwd=dungeon-heroes dev",
-    "ping-pong": "deno task --cwd=demoes/ping-pong dev"
+    "ping-pong": "deno task --cwd=demoes/ping-pong dev",
+    "jsx": "deno task --cwd=demoes/jsx-test dev"
   }
 }
