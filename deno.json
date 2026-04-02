@@ -2,13 +2,11 @@
   "workspace": [
     "./bindings",
     "./saga",
-    "./demoes/ping-pong",
     "./demoes/jsx-test",
-    "./dungeon-heroes"
+    "./demoes/dungeon-heroes"
   ],
   "tasks": {
-    "dev": "deno task --cwd=dungeon-heroes dev",
-    "ping-pong": "deno task --cwd=demoes/ping-pong dev",
+    "heroes": "deno task --cwd=demoes/dungeon-heroes dev",
     "jsx": "deno task --cwd=demoes/jsx-test dev"
   }
 }

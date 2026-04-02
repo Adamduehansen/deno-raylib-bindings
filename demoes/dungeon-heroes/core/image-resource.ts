@@ -1,11 +1,11 @@
-import { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
+import type { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 import {
   loadTexture,
   unloadTexture,
 } from "@adamduehansen/raylib-bindings/r-textures";
-import { Resource } from "./resource.ts";
+import type { Resource } from "./resource.ts";
 
-export default class ImageResource implements Resource {
+export default class TextureResource implements Resource {
   texture?: RaylibTexture;
 
   constructor(readonly path: string) {}

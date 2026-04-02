@@ -1,0 +1,8 @@
+# Libraries
+lib
+
+# Assets
+assets/tiny-dungeon-assets
+
+# Project files
+*.tiled-session
