@@ -1,6 +1,5 @@
 import {
   isKeyDown,
-  isKeyPressed,
   KeyDown,
   KeyLeft,
   KeyRight,
@@ -11,6 +10,7 @@ import { Entity } from "./core/entity.ts";
 import { Sprite } from "./core/sprite.ts";
 import { Resources } from "./resources.ts";
 import { DemoLevel } from "./level.ts";
+import { GameContext } from "./game-context.ts";
 
 interface PlayerArgs {
   position: RaylibVector;
@@ -37,6 +37,10 @@ export class Player extends Entity {
     this._movePosition();
   }
 
+  private _tryToMoveToPosition(nextPosition: RaylibVector): boolean {
+    return this._level.canMoveToPosition(nextPosition) || GameContext.isNoclip;
+  }
+
   private _handleInput(): void {
     if (this._isMoving === true) {
       return;
@@ -48,7 +52,7 @@ export class Player extends Entity {
         x: this.position.x + this.sprite.width,
       };
 
-      if (this._level.canMoveToPosition(nextPosition) === false) {
+      if (!this._tryToMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -62,7 +66,7 @@ export class Player extends Entity {
         x: this.position.x - this.sprite.width,
       };
 
-      if (this._level.canMoveToPosition(nextPosition) === false) {
+      if (!this._tryToMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -76,7 +80,7 @@ export class Player extends Entity {
         y: this.position.y - this.sprite.height,
       };
 
-      if (this._level.canMoveToPosition(nextPosition) === false) {
+      if (!this._tryToMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -90,7 +94,7 @@ export class Player extends Entity {
         y: this.position.y + this.sprite.height,
       };
 
-      if (this._level.canMoveToPosition(nextPosition) === false) {
+      if (!this._tryToMoveToPosition(nextPosition)) {
         return;
       }
 

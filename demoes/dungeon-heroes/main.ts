@@ -19,18 +19,7 @@ import { drawEntity } from "./core/drawEntity.ts";
 import { Resources } from "./resources.ts";
 import { DemoLevel } from "./level.ts";
 import { Player } from "./player.ts";
-
-const cliArgs = Deno.args;
-
-interface GameContext {
-  debug: boolean;
-  noclip: boolean;
-}
-
-const gameContext: GameContext = {
-  debug: cliArgs.includes("--debug"),
-  noclip: cliArgs.includes("--noclip"),
-};
+import { GameContext } from "./game-context.ts";
 
 const entityCollection = new EntityCollection();
 
@@ -89,7 +78,7 @@ while (windowShouldClose() === false) {
 
   endMode2D();
 
-  if (gameContext.debug) {
+  if (GameContext.isDebug) {
     drawFPS(0, 0);
   }
 
