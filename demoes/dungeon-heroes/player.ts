@@ -1,9 +1,13 @@
 import {
   isKeyDown,
+  KeyA,
+  KeyD,
   KeyDown,
   KeyLeft,
   KeyRight,
+  KeyS,
   KeyUp,
+  KeyW,
   type RaylibVector,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "./core/entity.ts";
@@ -17,8 +21,27 @@ interface PlayerArgs {
   level: DemoLevel;
 }
 
+class InputController {
+  isRightPressed(): boolean {
+    return isKeyDown(KeyRight) || isKeyDown(KeyD);
+  }
+
+  isLeftPressed(): boolean {
+    return isKeyDown(KeyLeft) || isKeyDown(KeyA);
+  }
+
+  isUpPressed(): boolean {
+    return isKeyDown(KeyUp) || isKeyDown(KeyW);
+  }
+
+  isDownPressed(): boolean {
+    return isKeyDown(KeyDown) || isKeyDown(KeyS);
+  }
+}
+
 export class Player extends Entity {
   private _isMoving = false;
+  private _inputController = new InputController();
 
   private _level: DemoLevel;
 
@@ -37,7 +60,7 @@ export class Player extends Entity {
     this._movePosition();
   }
 
-  private _tryToMoveToPosition(nextPosition: RaylibVector): boolean {
+  private _canMoveToPosition(nextPosition: RaylibVector): boolean {
     return this._level.canMoveToPosition(nextPosition) || GameContext.isNoclip;
   }
 
@@ -46,13 +69,13 @@ export class Player extends Entity {
       return;
     }
 
-    if (isKeyDown(KeyRight)) {
+    if (this._inputController.isRightPressed()) {
       const nextPosition: RaylibVector = {
         ...this.position,
         x: this.position.x + this.sprite.width,
       };
 
-      if (!this._tryToMoveToPosition(nextPosition)) {
+      if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -60,13 +83,13 @@ export class Player extends Entity {
       this.positionToMoveTo = nextPosition;
     }
 
-    if (isKeyDown(KeyLeft)) {
+    if (this._inputController.isLeftPressed()) {
       const nextPosition: RaylibVector = {
         ...this.position,
         x: this.position.x - this.sprite.width,
       };
 
-      if (!this._tryToMoveToPosition(nextPosition)) {
+      if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -74,13 +97,13 @@ export class Player extends Entity {
       this.positionToMoveTo = nextPosition;
     }
 
-    if (isKeyDown(KeyUp)) {
+    if (this._inputController.isUpPressed()) {
       const nextPosition: RaylibVector = {
         ...this.position,
         y: this.position.y - this.sprite.height,
       };
 
-      if (!this._tryToMoveToPosition(nextPosition)) {
+      if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
@@ -88,13 +111,13 @@ export class Player extends Entity {
       this.positionToMoveTo = nextPosition;
     }
 
-    if (isKeyDown(KeyDown)) {
+    if (this._inputController.isDownPressed()) {
       const nextPosition: RaylibVector = {
         ...this.position,
         y: this.position.y + this.sprite.height,
       };
 
-      if (!this._tryToMoveToPosition(nextPosition)) {
+      if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
