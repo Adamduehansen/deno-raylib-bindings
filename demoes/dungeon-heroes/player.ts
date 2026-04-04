@@ -21,6 +21,47 @@ interface PlayerArgs {
   level: DemoLevel;
 }
 
+abstract class MoveCommand {
+  constructor(readonly player: Player) {}
+  abstract execute(): RaylibVector;
+}
+
+class MoveRightCommand extends MoveCommand {
+  execute(): RaylibVector {
+    return {
+      ...this.player.position,
+      x: this.player.position.x + this.player.sprite.width,
+    };
+  }
+}
+
+class MoveLeftCommand extends MoveCommand {
+  override execute(): RaylibVector {
+    return {
+      ...this.player.position,
+      x: this.player.position.x - this.player.sprite.width,
+    };
+  }
+}
+
+class MoveUpCommand extends MoveCommand {
+  execute(): RaylibVector {
+    return {
+      ...this.player.position,
+      y: this.player.position.y - this.player.sprite.height,
+    };
+  }
+}
+
+class MoveDownCommand extends MoveCommand {
+  override execute(): RaylibVector {
+    return {
+      ...this.player.position,
+      y: this.player.position.y + this.player.sprite.height,
+    };
+  }
+}
+
 class InputController {
   isRightPressed(): boolean {
     return isKeyDown(KeyRight) || isKeyDown(KeyD);
@@ -39,13 +80,19 @@ class InputController {
   }
 }
 
+const PLAYER_SPEED = 2;
+
 export class Player extends Entity {
   private _isMoving = false;
   private _inputController = new InputController();
+  private _rightActionPressedCommand = new MoveRightCommand(this);
+  private _leftActionPressedCommand = new MoveLeftCommand(this);
+  private _upActionPressedCommand = new MoveUpCommand(this);
+  private _downActionPressedCommand = new MoveDownCommand(this);
 
   private _level: DemoLevel;
 
-  private positionToMoveTo?: RaylibVector;
+  private _positionToMoveTo?: RaylibVector;
 
   constructor({ position, level }: PlayerArgs) {
     super({
@@ -70,79 +117,71 @@ export class Player extends Entity {
     }
 
     if (this._inputController.isRightPressed()) {
-      const nextPosition: RaylibVector = {
-        ...this.position,
-        x: this.position.x + this.sprite.width,
-      };
+      const nextPosition = this._rightActionPressedCommand.execute();
 
       if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
       this._isMoving = true;
-      this.positionToMoveTo = nextPosition;
+      this._positionToMoveTo = nextPosition;
     }
 
     if (this._inputController.isLeftPressed()) {
-      const nextPosition: RaylibVector = {
-        ...this.position,
-        x: this.position.x - this.sprite.width,
-      };
+      const nextPosition = this._leftActionPressedCommand.execute();
 
       if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
       this._isMoving = true;
-      this.positionToMoveTo = nextPosition;
+      this._positionToMoveTo = nextPosition;
     }
 
     if (this._inputController.isUpPressed()) {
-      const nextPosition: RaylibVector = {
-        ...this.position,
-        y: this.position.y - this.sprite.height,
-      };
+      const nextPosition = this._upActionPressedCommand.execute();
 
       if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
       this._isMoving = true;
-      this.positionToMoveTo = nextPosition;
+      this._positionToMoveTo = nextPosition;
     }
 
     if (this._inputController.isDownPressed()) {
-      const nextPosition: RaylibVector = {
-        ...this.position,
-        y: this.position.y + this.sprite.height,
-      };
+      const nextPosition = this._downActionPressedCommand.execute();
 
       if (!this._canMoveToPosition(nextPosition)) {
         return;
       }
 
       this._isMoving = true;
-      this.positionToMoveTo = nextPosition;
+      this._positionToMoveTo = nextPosition;
     }
   }
 
   private _movePosition(): void {
-    if (this.positionToMoveTo === undefined) {
+    if (this._positionToMoveTo === undefined) {
       return;
     }
 
-    if (this.positionToMoveTo.x !== this.position.x) {
-      this.position.x += this.positionToMoveTo.x > this.position.x ? 2 : -2;
+    if (this._positionToMoveTo.x !== this.position.x) {
+      this.position.x += this._positionToMoveTo.x > this.position.x
+        ? PLAYER_SPEED
+        : -PLAYER_SPEED;
     }
-    if (this.positionToMoveTo.y !== this.position.y) {
-      this.position.y += this.positionToMoveTo.y > this.position.y ? 2 : -2;
+    if (this._positionToMoveTo.y !== this.position.y) {
+      this.position.y += this._positionToMoveTo.y > this.position.y
+        ? PLAYER_SPEED
+        : -PLAYER_SPEED;
     }
 
     if (
-      this.positionToMoveTo.x === this.position.x &&
-      this.positionToMoveTo.y === this.position.y
+      this._positionToMoveTo.x === this.position.x &&
+      this._positionToMoveTo.y === this.position.y
     ) {
-      this.positionToMoveTo = undefined;
+      this._positionToMoveTo = undefined;
       this._isMoving = false;
     }
   }
