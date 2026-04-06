@@ -1,13 +1,78 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  getFrameTime,
+  RaylibVector,
+} from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "./core/entity.ts";
 import { Sprite } from "./core/sprite.ts";
 import { Resources } from "./resources.ts";
+import { DemoLevel } from "./level.ts";
+
+const MOVE_COUNTDOWN = 0.2;
+const SPEED = 2;
+
+interface Args {
+  position: RaylibVector;
+  level: DemoLevel;
+}
 
 export class Ghost extends Entity {
-  constructor(position: RaylibVector) {
+  private _level: DemoLevel;
+
+  private _positionToMoveTo?: RaylibVector;
+
+  private _moveCountdown = MOVE_COUNTDOWN;
+
+  constructor({ position, level }: Args) {
     super({
       sprite: new Sprite(Resources.ghost.texture!),
       position: position,
     });
+    this._level = level;
+  }
+
+  override update(): void {
+    this._setNewPosition();
+    this._moveCountdown -= getFrameTime();
+    this._movePosition();
+  }
+
+  private _setNewPosition() {
+    if (this._positionToMoveTo === undefined && this._moveCountdown <= 0) {
+      const newX = this.position.x +
+        (Math.floor(Math.random() * 2) === 1
+          ? this.sprite.width
+          : -this.sprite.width);
+
+      this._positionToMoveTo = {
+        x: newX,
+        y: this.position.y,
+      };
+      this._moveCountdown = MOVE_COUNTDOWN;
+    }
+  }
+
+  private _movePosition() {
+    if (this._positionToMoveTo === undefined) {
+      return;
+    }
+
+    if (this._positionToMoveTo.x !== this.position.x) {
+      this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
+      this.position.x += this._positionToMoveTo.x > this.position.x
+        ? SPEED
+        : -SPEED;
+    }
+    if (this._positionToMoveTo.y !== this.position.y) {
+      this.position.y += this._positionToMoveTo.y > this.position.y
+        ? SPEED
+        : -SPEED;
+    }
+
+    if (
+      this._positionToMoveTo.x === this.position.x &&
+      this._positionToMoveTo.y === this.position.y
+    ) {
+      this._positionToMoveTo = undefined;
+    }
   }
 }

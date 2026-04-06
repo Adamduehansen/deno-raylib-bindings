@@ -196,8 +196,11 @@ export class DemoLevel {
       switch (object.type) {
         case "GHOST": {
           const ghost = new Ghost({
-            x: object.x * TILE_SIZE,
-            y: object.y * TILE_SIZE,
+            level: this,
+            position: {
+              x: object.x * TILE_SIZE,
+              y: object.y * TILE_SIZE,
+            },
           });
           entityCollection.add(ghost);
         }
