@@ -11,7 +11,7 @@ export function drawEntity(entity: Entity) {
       x: x,
       y: y,
       height: height,
-      width: width,
+      width: entity.flipHorizontal === false ? width : -width,
     },
     dest: {
       x: entity.position.x,

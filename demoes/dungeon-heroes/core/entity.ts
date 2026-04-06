@@ -13,6 +13,9 @@ export class Entity {
   position: RaylibVector;
   sprite: Sprite;
 
+  flipHorizontal = false;
+  flipVertical = false;
+
   constructor({ sprite, position }: EntityArgs) {
     this.sprite = sprite;
     this.position = position;

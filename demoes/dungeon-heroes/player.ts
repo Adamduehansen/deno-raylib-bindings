@@ -167,6 +167,7 @@ export class Player extends Entity {
     }
 
     if (this._positionToMoveTo.x !== this.position.x) {
+      this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
       this.position.x += this._positionToMoveTo.x > this.position.x
         ? PLAYER_SPEED
         : -PLAYER_SPEED;
