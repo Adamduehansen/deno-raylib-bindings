@@ -2,6 +2,7 @@
   "width": 12,
   "height": 8,
   "objects": [
-    { "type": "PLAYER", "x": 3, "y": 3 }
+    { "type": "PLAYER", "x": 3, "y": 3 },
+    { "type": "GHOST", "x": 7, "y": 3 }
   ]
 }

@@ -3,9 +3,10 @@ import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 import { Entity } from "./core/entity.ts";
 import { EntityCollection } from "./core/entity-collection.ts";
 import { SpriteSheet } from "./core/sprite-sheet.ts";
+import { Sprite } from "./core/sprite.ts";
 import { Resources } from "./resources.ts";
 import demoLevel from "./levels/demo.json" with { type: "json" };
-import { Sprite } from "./core/sprite.ts";
+import { Ghost } from "./ghost.ts";
 
 const SPRITE_SHEET = new SpriteSheet(Resources.tilemap, {
   grid: {
@@ -189,5 +190,18 @@ export class DemoLevel {
       },
     });
     entityCollection.add(topRightWall);
+
+    // Add objects
+    for (const object of demoLevel.objects) {
+      switch (object.type) {
+        case "GHOST": {
+          const ghost = new Ghost({
+            x: object.x * TILE_SIZE,
+            y: object.y * TILE_SIZE,
+          });
+          entityCollection.add(ghost);
+        }
+      }
+    }
   }
 }

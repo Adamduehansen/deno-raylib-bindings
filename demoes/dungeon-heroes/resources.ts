@@ -7,6 +7,9 @@ export const Resources = {
   knight: new TextureResource(
     "./assets/tiny-dungeon-assets/Tiles/tile_0097.png",
   ),
+  ghost: new TextureResource(
+    "./assets/tiny-dungeon-assets/Tiles/tile_0121.png",
+  ),
   tilemap: new TextureResource(
     "./assets/tiny-dungeon-assets/Tilemap/tilemap.png",
   ),
