@@ -18,7 +18,7 @@ import { EntityCollection } from "./core/entity-collection.ts";
 import { drawEntity } from "./core/drawEntity.ts";
 import { Resources } from "./resources.ts";
 import { DemoLevel } from "./level.ts";
-import { Player } from "./player.ts";
+import { Player } from "./player/player.ts";
 import { GameContext } from "./game-context.ts";
 
 const entityCollection = new EntityCollection();

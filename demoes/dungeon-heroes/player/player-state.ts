@@ -1,24 +1,14 @@
-import {
-  isKeyDown,
-  KeyA,
-  KeyD,
-  KeyDown,
-  KeyLeft,
-  KeyRight,
-  KeyS,
-  KeyUp,
-  KeyW,
-  type RaylibVector,
-} from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "./core/entity.ts";
-import { Sprite } from "./core/sprite.ts";
-import { Resources } from "./resources.ts";
-import { DemoLevel } from "./level.ts";
-import { GameContext } from "./game-context.ts";
+import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import { GameContext } from "../game-context.ts";
+import { DemoLevel } from "../level.ts";
+import { Player } from "./player.ts";
+import { InputController } from "./input-controller.ts";
 
-interface PlayerArgs {
-  position: RaylibVector;
-  level: DemoLevel;
+export abstract class PlayerState {
+  constructor(readonly player: Player) {}
+
+  abstract handleInput(inputController: InputController): void;
+  abstract update(level: DemoLevel): PlayerState | null;
 }
 
 abstract class MoveCommand {
@@ -62,32 +52,7 @@ class MoveDownCommand extends MoveCommand {
   }
 }
 
-class InputController {
-  isRightPressed(): boolean {
-    return isKeyDown(KeyRight) || isKeyDown(KeyD);
-  }
-
-  isLeftPressed(): boolean {
-    return isKeyDown(KeyLeft) || isKeyDown(KeyA);
-  }
-
-  isUpPressed(): boolean {
-    return isKeyDown(KeyUp) || isKeyDown(KeyW);
-  }
-
-  isDownPressed(): boolean {
-    return isKeyDown(KeyDown) || isKeyDown(KeyS);
-  }
-}
-
-abstract class PlayerState {
-  constructor(readonly player: Player) {}
-
-  abstract handleInput(inputController: InputController): void;
-  abstract update(level: DemoLevel): PlayerState | null;
-}
-
-class IdleState extends PlayerState {
+export class IdleState extends PlayerState {
   private _rightActionPressedCommand = new MoveRightCommand(this.player);
   private _leftActionPressedCommand = new MoveLeftCommand(this.player);
   private _upActionPressedCommand = new MoveUpCommand(this.player);
@@ -121,7 +86,7 @@ class IdleState extends PlayerState {
 
 const PLAYER_SPEED = 2;
 
-class MovingState extends PlayerState {
+export class MovingState extends PlayerState {
   constructor(
     player: Player,
     private _positionToMoveTo: RaylibVector,
@@ -156,32 +121,5 @@ class MovingState extends PlayerState {
     }
 
     return null;
-  }
-}
-
-export class Player extends Entity {
-  private _inputController = new InputController();
-
-  private _state: PlayerState;
-  readonly _level: DemoLevel;
-
-  constructor({ position, level }: PlayerArgs) {
-    super({
-      sprite: new Sprite(Resources.knight.texture!),
-      position: position,
-    });
-    this._level = level;
-    this._state = new IdleState(this);
-  }
-
-  override update(): void {
-    this._state.handleInput(this._inputController);
-    const nextState = this._state.update(this._level);
-
-    if (nextState === null) {
-      return;
-    }
-
-    this._state = nextState;
   }
 }
