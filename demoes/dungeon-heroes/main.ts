@@ -14,14 +14,10 @@ import {
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import { EntityCollection } from "./core/entity-collection.ts";
 import { drawEntity } from "./core/drawEntity.ts";
 import { Resources } from "./resources.ts";
 import { DemoLevel } from "./level.ts";
-import { Player } from "./player/player.ts";
 import { GameContext } from "./game-context.ts";
-
-const entityCollection = new EntityCollection();
 
 initWindow({
   title: "Dungeon Heroes",
@@ -47,22 +43,16 @@ for (const resource of Object.values(Resources)) {
 }
 
 const level = new DemoLevel();
-level.addLevelEntitiesToCollection(entityCollection);
-
-const player = new Player({
-  position: level.playerSpawn,
-  level: level,
-});
-entityCollection.add(player);
 
 while (windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  for (const entity of entityCollection) {
+  for (const entity of level.entityCollection) {
     entity.update();
   }
 
-  camera.target = player.position;
+  // TODO: Create a vector utiltiy for ZERO.
+  camera.target = level.player?.position ?? { x: 0, y: 0 };
 
   // Draw
   // --------------------------------------------------------------------------
@@ -72,7 +62,7 @@ while (windowShouldClose() === false) {
 
   beginMode2D(camera);
 
-  for (const entity of entityCollection) {
+  for (const entity of level.entityCollection) {
     drawEntity(entity);
   }
 
