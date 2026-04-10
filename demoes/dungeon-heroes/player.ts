@@ -84,7 +84,7 @@ abstract class PlayerState {
   constructor(readonly player: Player) {}
 
   abstract handleInput(inputController: InputController): void;
-  abstract update(): PlayerState | null;
+  abstract update(level: DemoLevel): PlayerState | null;
 }
 
 class IdleState extends PlayerState {
@@ -93,14 +93,6 @@ class IdleState extends PlayerState {
   private _upActionPressedCommand = new MoveUpCommand(this.player);
   private _downActionPressedCommand = new MoveDownCommand(this.player);
   private _nextPosition?: RaylibVector;
-
-  constructor(player: Player, private _level: DemoLevel) {
-    super(player);
-  }
-
-  private _canMoveToPosition(nextPosition: RaylibVector): boolean {
-    return this._level.canMoveToPosition(nextPosition) || GameContext.isNoclip;
-  }
 
   override handleInput(inputController: InputController): void {
     if (inputController.isRightPressed()) {
@@ -114,12 +106,12 @@ class IdleState extends PlayerState {
     }
   }
 
-  override update(): PlayerState | null {
+  override update(level: DemoLevel): PlayerState | null {
     if (this._nextPosition === undefined) {
       return null;
     }
 
-    if (this._canMoveToPosition(this._nextPosition) === false) {
+    if (!level.canMoveToPosition(this._nextPosition) && !GameContext.isNoclip) {
       return null;
     }
 
@@ -130,7 +122,10 @@ class IdleState extends PlayerState {
 const PLAYER_SPEED = 2;
 
 class MovingState extends PlayerState {
-  constructor(player: Player, private _positionToMoveTo: RaylibVector) {
+  constructor(
+    player: Player,
+    private _positionToMoveTo: RaylibVector,
+  ) {
     super(player);
   }
 
@@ -157,7 +152,7 @@ class MovingState extends PlayerState {
       this._positionToMoveTo.x === this.player.position.x &&
       this._positionToMoveTo.y === this.player.position.y
     ) {
-      return new IdleState(this.player, undefined);
+      return new IdleState(this.player);
     }
 
     return null;
@@ -168,7 +163,7 @@ export class Player extends Entity {
   private _inputController = new InputController();
 
   private _state: PlayerState;
-  private _level: DemoLevel;
+  readonly _level: DemoLevel;
 
   constructor({ position, level }: PlayerArgs) {
     super({
@@ -176,12 +171,12 @@ export class Player extends Entity {
       position: position,
     });
     this._level = level;
-    this._state = new IdleState(this, this._level);
+    this._state = new IdleState(this);
   }
 
   override update(): void {
     this._state.handleInput(this._inputController);
-    const nextState = this._state.update();
+    const nextState = this._state.update(this._level);
 
     if (nextState === null) {
       return;
