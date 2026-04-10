@@ -80,19 +80,95 @@ class InputController {
   }
 }
 
+abstract class PlayerState {
+  constructor(readonly player: Player) {}
+
+  abstract handleInput(inputController: InputController): void;
+  abstract update(): PlayerState | null;
+}
+
+class IdleState extends PlayerState {
+  private _rightActionPressedCommand = new MoveRightCommand(this.player);
+  private _leftActionPressedCommand = new MoveLeftCommand(this.player);
+  private _upActionPressedCommand = new MoveUpCommand(this.player);
+  private _downActionPressedCommand = new MoveDownCommand(this.player);
+  private _nextPosition?: RaylibVector;
+
+  constructor(player: Player, private _level: DemoLevel) {
+    super(player);
+  }
+
+  private _canMoveToPosition(nextPosition: RaylibVector): boolean {
+    return this._level.canMoveToPosition(nextPosition) || GameContext.isNoclip;
+  }
+
+  override handleInput(inputController: InputController): void {
+    if (inputController.isRightPressed()) {
+      this._nextPosition = this._rightActionPressedCommand.execute();
+    } else if (inputController.isLeftPressed()) {
+      this._nextPosition = this._leftActionPressedCommand.execute();
+    } else if (inputController.isUpPressed()) {
+      this._nextPosition = this._upActionPressedCommand.execute();
+    } else if (inputController.isDownPressed()) {
+      this._nextPosition = this._downActionPressedCommand.execute();
+    }
+  }
+
+  override update(): PlayerState | null {
+    if (this._nextPosition === undefined) {
+      return null;
+    }
+
+    if (this._canMoveToPosition(this._nextPosition) === false) {
+      return null;
+    }
+
+    return new MovingState(this.player, this._nextPosition);
+  }
+}
+
 const PLAYER_SPEED = 2;
 
+class MovingState extends PlayerState {
+  constructor(player: Player, private _positionToMoveTo: RaylibVector) {
+    super(player);
+  }
+
+  override handleInput(_inputController: InputController): void {}
+
+  override update(): PlayerState | null {
+    if (this._positionToMoveTo.x !== this.player.position.x) {
+      this.player.flipHorizontal =
+        this._positionToMoveTo.x < this.player.position.x;
+
+      this.player.position.x +=
+        this._positionToMoveTo.x > this.player.position.x
+          ? PLAYER_SPEED
+          : -PLAYER_SPEED;
+    }
+    if (this._positionToMoveTo.y !== this.player.position.y) {
+      this.player.position.y +=
+        this._positionToMoveTo.y > this.player.position.y
+          ? PLAYER_SPEED
+          : -PLAYER_SPEED;
+    }
+
+    if (
+      this._positionToMoveTo.x === this.player.position.x &&
+      this._positionToMoveTo.y === this.player.position.y
+    ) {
+      return new IdleState(this.player, undefined);
+    }
+
+    return null;
+  }
+}
+
 export class Player extends Entity {
-  private _isMoving = false;
   private _inputController = new InputController();
-  private _rightActionPressedCommand = new MoveRightCommand(this);
-  private _leftActionPressedCommand = new MoveLeftCommand(this);
-  private _upActionPressedCommand = new MoveUpCommand(this);
-  private _downActionPressedCommand = new MoveDownCommand(this);
 
+  private _state: PlayerState;
   private _level: DemoLevel;
-
-  private _positionToMoveTo?: RaylibVector;
 
   constructor({ position, level }: PlayerArgs) {
     super({
@@ -100,90 +176,17 @@ export class Player extends Entity {
       position: position,
     });
     this._level = level;
+    this._state = new IdleState(this, this._level);
   }
 
   override update(): void {
-    this._handleInput();
-    this._movePosition();
-  }
+    this._state.handleInput(this._inputController);
+    const nextState = this._state.update();
 
-  private _canMoveToPosition(nextPosition: RaylibVector): boolean {
-    return this._level.canMoveToPosition(nextPosition) || GameContext.isNoclip;
-  }
-
-  private _handleInput(): void {
-    if (this._isMoving === true) {
+    if (nextState === null) {
       return;
     }
 
-    if (this._inputController.isRightPressed()) {
-      const nextPosition = this._rightActionPressedCommand.execute();
-
-      if (!this._canMoveToPosition(nextPosition)) {
-        return;
-      }
-
-      this._isMoving = true;
-      this._positionToMoveTo = nextPosition;
-    }
-
-    if (this._inputController.isLeftPressed()) {
-      const nextPosition = this._leftActionPressedCommand.execute();
-
-      if (!this._canMoveToPosition(nextPosition)) {
-        return;
-      }
-
-      this._isMoving = true;
-      this._positionToMoveTo = nextPosition;
-    }
-
-    if (this._inputController.isUpPressed()) {
-      const nextPosition = this._upActionPressedCommand.execute();
-
-      if (!this._canMoveToPosition(nextPosition)) {
-        return;
-      }
-
-      this._isMoving = true;
-      this._positionToMoveTo = nextPosition;
-    }
-
-    if (this._inputController.isDownPressed()) {
-      const nextPosition = this._downActionPressedCommand.execute();
-
-      if (!this._canMoveToPosition(nextPosition)) {
-        return;
-      }
-
-      this._isMoving = true;
-      this._positionToMoveTo = nextPosition;
-    }
-  }
-
-  private _movePosition(): void {
-    if (this._positionToMoveTo === undefined) {
-      return;
-    }
-
-    if (this._positionToMoveTo.x !== this.position.x) {
-      this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
-      this.position.x += this._positionToMoveTo.x > this.position.x
-        ? PLAYER_SPEED
-        : -PLAYER_SPEED;
-    }
-    if (this._positionToMoveTo.y !== this.position.y) {
-      this.position.y += this._positionToMoveTo.y > this.position.y
-        ? PLAYER_SPEED
-        : -PLAYER_SPEED;
-    }
-
-    if (
-      this._positionToMoveTo.x === this.position.x &&
-      this._positionToMoveTo.y === this.position.y
-    ) {
-      this._positionToMoveTo = undefined;
-      this._isMoving = false;
-    }
+    this._state = nextState;
   }
 }
