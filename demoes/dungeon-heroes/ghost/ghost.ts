@@ -2,13 +2,13 @@ import {
   getFrameTime,
   RaylibVector,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "./core/entity.ts";
-import { Sprite } from "./core/sprite.ts";
-import { Resources } from "./resources.ts";
-import { DemoLevel } from "./level.ts";
+import { Entity } from "../core/entity.ts";
+import { Sprite } from "../core/sprite.ts";
+import { Resources } from "../resources.ts";
+import { DemoLevel } from "../level.ts";
 
 const MOVE_COUNTDOWN = 0.2;
-const SPEED = 2;
+const SPEED = 5;
 
 interface Args {
   position: RaylibVector;
@@ -39,10 +39,7 @@ export class Ghost extends Entity {
   private _setNewPosition() {
     if (this._positionToMoveTo === undefined && this._moveCountdown <= 0) {
       const newX = this.position.x +
-        (Math.floor(Math.random() * 2) === 1
-          ? this.sprite.width
-          : -this.sprite.width);
-
+        (Math.floor(Math.random() * 2) === 1 ? 1 : -1);
       this._positionToMoveTo = {
         x: newX,
         y: this.position.y,
@@ -56,23 +53,23 @@ export class Ghost extends Entity {
       return;
     }
 
-    if (this._positionToMoveTo.x !== this.position.x) {
-      this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
-      this.position.x += this._positionToMoveTo.x > this.position.x
-        ? SPEED
-        : -SPEED;
-    }
-    if (this._positionToMoveTo.y !== this.position.y) {
-      this.position.y += this._positionToMoveTo.y > this.position.y
-        ? SPEED
-        : -SPEED;
-    }
+    // if (this._positionToMoveTo.x !== this.position.x) {
+    //   this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
+    //   this.position.x += this._positionToMoveTo.x > this.position.x
+    //     ? SPEED * getFrameTime()
+    //     : -SPEED * getFrameTime();
+    // }
+    // if (this._positionToMoveTo.y !== this.position.y) {
+    //   this.position.y += this._positionToMoveTo.y > this.position.y
+    //     ? SPEED * getFrameTime()
+    //     : -SPEED * getFrameTime();
+    // }
 
-    if (
-      this._positionToMoveTo.x === this.position.x &&
-      this._positionToMoveTo.y === this.position.y
-    ) {
-      this._positionToMoveTo = undefined;
-    }
+    // if (
+    //   this._positionToMoveTo.x === this.position.x &&
+    //   this._positionToMoveTo.y === this.position.y
+    // ) {
+    //   this._positionToMoveTo = undefined;
+    // }
   }
 }

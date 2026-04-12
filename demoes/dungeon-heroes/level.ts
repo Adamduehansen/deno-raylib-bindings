@@ -6,7 +6,7 @@ import { SpriteSheet } from "./core/sprite-sheet.ts";
 import { Sprite } from "./core/sprite.ts";
 import { Resources } from "./resources.ts";
 import demoLevel from "./levels/demo.json" with { type: "json" };
-import { Ghost } from "./ghost.ts";
+import { Ghost } from "./ghost/ghost.ts";
 import { Player } from "./player/player.ts";
 
 const SPRITE_SHEET = new SpriteSheet(Resources.tilemap, {
