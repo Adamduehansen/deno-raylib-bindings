@@ -24,8 +24,6 @@ const SPRITE_SHEET = new SpriteSheet(Resources.tilemap, {
   },
 });
 
-const TILE_SIZE = 16;
-
 export class DemoLevel {
   readonly width: number;
   readonly height: number;
@@ -50,8 +48,8 @@ export class DemoLevel {
         const floorTile = new Entity({
           sprite: sprite,
           position: {
-            x: colIndex * TILE_SIZE,
-            y: rowIndex * TILE_SIZE,
+            x: colIndex,
+            y: rowIndex,
           },
         });
         this.entityCollection.add(floorTile);
@@ -63,8 +61,8 @@ export class DemoLevel {
       const topWall = new Entity({
         sprite: SPRITE_SHEET.getSprite(4, 3),
         position: {
-          x: index * TILE_SIZE,
-          y: -TILE_SIZE,
+          x: index,
+          y: -1,
         },
       });
       this.entityCollection.add(topWall);
@@ -72,8 +70,8 @@ export class DemoLevel {
       const ceiling = new Entity({
         sprite: SPRITE_SHEET.getSprite(2, 0),
         position: {
-          x: index * TILE_SIZE,
-          y: -TILE_SIZE * 2,
+          x: index,
+          y: -1 * 2,
         },
       });
       this.entityCollection.add(ceiling);
@@ -81,8 +79,8 @@ export class DemoLevel {
       const bottomWall = new Entity({
         sprite: SPRITE_SHEET.getSprite(2, 2),
         position: {
-          x: index * TILE_SIZE,
-          y: this.height * TILE_SIZE,
+          x: index,
+          y: this.height,
         },
       });
       this.entityCollection.add(bottomWall);
@@ -93,8 +91,8 @@ export class DemoLevel {
       const leftWall = new Entity({
         sprite: SPRITE_SHEET.getSprite(1, 1),
         position: {
-          x: -TILE_SIZE,
-          y: index * TILE_SIZE,
+          x: -1,
+          y: index,
         },
       });
       this.entityCollection.add(leftWall);
@@ -102,8 +100,8 @@ export class DemoLevel {
       const rightWall = new Entity({
         sprite: SPRITE_SHEET.getSprite(3, 1),
         position: {
-          x: this.width * TILE_SIZE,
-          y: index * TILE_SIZE,
+          x: this.width,
+          y: index,
         },
       });
       this.entityCollection.add(rightWall);
@@ -112,8 +110,8 @@ export class DemoLevel {
     const bottomRightCorner = new Entity({
       sprite: SPRITE_SHEET.getSprite(1, 2),
       position: {
-        x: -TILE_SIZE,
-        y: this.height * TILE_SIZE,
+        x: -1,
+        y: this.height,
       },
     });
     this.entityCollection.add(bottomRightCorner);
@@ -121,8 +119,8 @@ export class DemoLevel {
     const bottomLeftCorner = new Entity({
       sprite: SPRITE_SHEET.getSprite(3, 2),
       position: {
-        x: this.width * TILE_SIZE,
-        y: this.height * TILE_SIZE,
+        x: this.width,
+        y: this.height,
       },
     });
     this.entityCollection.add(bottomLeftCorner);
@@ -130,8 +128,8 @@ export class DemoLevel {
     const topLeftCeiling = new Entity({
       sprite: SPRITE_SHEET.getSprite(1, 0),
       position: {
-        x: -TILE_SIZE,
-        y: -TILE_SIZE * 2,
+        x: -1,
+        y: -1 * 2,
       },
     });
     this.entityCollection.add(topLeftCeiling);
@@ -139,8 +137,8 @@ export class DemoLevel {
     const topLeftWall = new Entity({
       sprite: SPRITE_SHEET.getSprite(1, 1),
       position: {
-        x: -TILE_SIZE,
-        y: -TILE_SIZE,
+        x: -1,
+        y: -1,
       },
     });
     this.entityCollection.add(topLeftWall);
@@ -148,8 +146,8 @@ export class DemoLevel {
     const topRightCeiling = new Entity({
       sprite: SPRITE_SHEET.getSprite(3, 0),
       position: {
-        x: this.width * TILE_SIZE,
-        y: -TILE_SIZE * 2,
+        x: this.width,
+        y: -1 * 2,
       },
     });
     this.entityCollection.add(topRightCeiling);
@@ -157,8 +155,8 @@ export class DemoLevel {
     const topRightWall = new Entity({
       sprite: SPRITE_SHEET.getSprite(3, 1),
       position: {
-        x: this.width * TILE_SIZE,
-        y: -TILE_SIZE,
+        x: this.width,
+        y: -1,
       },
     });
     this.entityCollection.add(topRightWall);
@@ -170,8 +168,8 @@ export class DemoLevel {
           const ghost = new Ghost({
             level: this,
             position: {
-              x: object.x * TILE_SIZE,
-              y: object.y * TILE_SIZE,
+              x: object.x,
+              y: object.y,
             },
           });
           this.entityCollection.add(ghost);
@@ -179,7 +177,10 @@ export class DemoLevel {
         }
         case "PLAYER": {
           const player = new Player({
-            position: vector2Scale(object, TILE_SIZE),
+            position: {
+              x: object.x,
+              y: object.y,
+            },
             level: this,
           });
           this.player = player;
@@ -191,20 +192,19 @@ export class DemoLevel {
   }
 
   canMoveToPosition(position: RaylibVector): boolean {
-    const levelPosition = vector2Scale(position, 1 / TILE_SIZE);
-    if (levelPosition.x >= this.width) {
+    if (position.x >= this.width) {
       return false;
     }
 
-    if (levelPosition.x < 0) {
+    if (position.x < 0) {
       return false;
     }
 
-    if (levelPosition.y < 0) {
+    if (position.y < 0) {
       return false;
     }
 
-    if (levelPosition.y >= this.height) {
+    if (position.y >= this.height) {
       return false;
     }
 

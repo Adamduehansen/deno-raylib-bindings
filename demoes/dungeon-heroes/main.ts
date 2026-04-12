@@ -9,12 +9,15 @@ import {
   getScreenHeight,
   getScreenWidth,
   initWindow,
+  LOG_DEBUG,
+  LOG_INFO,
   RaylibCamera,
   setTargetFPS,
+  setTraceLogLevel,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import { drawEntity } from "./core/drawEntity.ts";
+import { drawEntity } from "./core/draw-entity.ts";
 import { Resources } from "./resources.ts";
 import { DemoLevel } from "./level.ts";
 import { GameContext } from "./game-context.ts";
@@ -26,6 +29,8 @@ initWindow({
 });
 
 setTargetFPS(60);
+
+setTraceLogLevel(GameContext.isDebug ? LOG_DEBUG : LOG_INFO);
 
 const camera: RaylibCamera = {
   target: { x: 0, y: 0 },
@@ -52,7 +57,7 @@ while (windowShouldClose() === false) {
   }
 
   // TODO: Create a vector utiltiy for ZERO.
-  camera.target = level.player?.position ?? { x: 0, y: 0 };
+  camera.target = level.player?.worldPosition ?? { x: 0, y: 0 };
 
   // Draw
   // --------------------------------------------------------------------------

@@ -1,8 +1,14 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  getFrameTime,
+  LOG_DEBUG,
+  RaylibVector,
+  traceLog,
+} from "@adamduehansen/raylib-bindings/r-core";
 import { GameContext } from "../game-context.ts";
 import { DemoLevel } from "../level.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
+import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
@@ -20,7 +26,7 @@ class MoveRightCommand extends MoveCommand {
   execute(): RaylibVector {
     return {
       ...this.player.position,
-      x: this.player.position.x + this.player.sprite.width,
+      x: this.player.position.x + 1,
     };
   }
 }
@@ -29,7 +35,7 @@ class MoveLeftCommand extends MoveCommand {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
-      x: this.player.position.x - this.player.sprite.width,
+      x: this.player.position.x - 1,
     };
   }
 }
@@ -38,7 +44,7 @@ class MoveUpCommand extends MoveCommand {
   execute(): RaylibVector {
     return {
       ...this.player.position,
-      y: this.player.position.y - this.player.sprite.height,
+      y: this.player.position.y - 1,
     };
   }
 }
@@ -47,7 +53,7 @@ class MoveDownCommand extends MoveCommand {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
-      y: this.player.position.y + this.player.sprite.height,
+      y: this.player.position.y + 1,
     };
   }
 }
@@ -80,11 +86,20 @@ export class IdleState extends PlayerState {
       return null;
     }
 
+    traceLog(
+      LOG_DEBUG,
+      "Next player position: {",
+      this._nextPosition.x.toString(),
+      ", ",
+      this._nextPosition.y.toString(),
+      "}",
+    );
+
     return new MovingState(this.player, this._nextPosition);
   }
 }
 
-const PLAYER_SPEED = 2;
+const PLAYER_SPEED = 5;
 
 export class MovingState extends PlayerState {
   constructor(
@@ -97,27 +112,48 @@ export class MovingState extends PlayerState {
   override handleInput(_inputController: InputController): void {}
 
   override update(): PlayerState | null {
-    if (this._positionToMoveTo.x !== this.player.position.x) {
-      this.player.flipHorizontal =
-        this._positionToMoveTo.x < this.player.position.x;
+    const { position, worldPosition, sprite } = this.player;
+    const nextWorldPosition = vector2Scale(
+      this._positionToMoveTo,
+      sprite.width,
+    );
 
-      this.player.position.x +=
-        this._positionToMoveTo.x > this.player.position.x
-          ? PLAYER_SPEED
-          : -PLAYER_SPEED;
-    }
-    if (this._positionToMoveTo.y !== this.player.position.y) {
-      this.player.position.y +=
-        this._positionToMoveTo.y > this.player.position.y
-          ? PLAYER_SPEED
-          : -PLAYER_SPEED;
+    // Move right
+    if (nextWorldPosition.x > worldPosition.x) {
+      this.player.flipHorizontal = false;
+      position.x += PLAYER_SPEED * getFrameTime();
+      if (position.x > this._positionToMoveTo.x) {
+        this.player.position = this._positionToMoveTo;
+        return new IdleState(this.player);
+      }
     }
 
-    if (
-      this._positionToMoveTo.x === this.player.position.x &&
-      this._positionToMoveTo.y === this.player.position.y
-    ) {
-      return new IdleState(this.player);
+    // Move left
+    if (nextWorldPosition.x < worldPosition.x) {
+      this.player.flipHorizontal = true;
+      position.x -= PLAYER_SPEED * getFrameTime();
+      if (position.x < this._positionToMoveTo.x) {
+        this.player.position = this._positionToMoveTo;
+        return new IdleState(this.player);
+      }
+    }
+
+    // Move up
+    if (nextWorldPosition.y > worldPosition.y) {
+      position.y += PLAYER_SPEED * getFrameTime();
+      if (position.y > this._positionToMoveTo.y) {
+        this.player.position = this._positionToMoveTo;
+        return new IdleState(this.player);
+      }
+    }
+
+    // Move down
+    if (nextWorldPosition.y < worldPosition.y) {
+      position.y -= PLAYER_SPEED * getFrameTime();
+      if (position.y < this._positionToMoveTo.y) {
+        this.player.position = this._positionToMoveTo;
+        return new IdleState(this.player);
+      }
     }
 
     return null;

@@ -15,7 +15,8 @@ export class Player extends Entity {
   private _inputController = new InputController();
 
   private _state: PlayerState;
-  readonly _level: DemoLevel;
+
+  private readonly _level: DemoLevel;
 
   constructor({ position, level }: PlayerArgs) {
     super({

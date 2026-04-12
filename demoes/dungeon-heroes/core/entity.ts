@@ -1,5 +1,6 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Sprite } from "./sprite.ts";
+import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 
 interface EntityArgs {
   sprite: Sprite;
@@ -15,6 +16,10 @@ export class Entity {
 
   flipHorizontal = false;
   flipVertical = false;
+
+  get worldPosition(): RaylibVector {
+    return vector2Scale(this.position, this.sprite.width);
+  }
 
   constructor({ sprite, position }: EntityArgs) {
     this.sprite = sprite;
