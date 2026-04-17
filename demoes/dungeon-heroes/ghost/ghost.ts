@@ -1,14 +1,12 @@
-import {
-  getFrameTime,
-  RaylibVector,
-} from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "../core/entity.ts";
 import { Sprite } from "../core/sprite.ts";
 import { Resources } from "../resources.ts";
 import { DemoLevel } from "../level.ts";
+import { GhostState, IdleState } from "./ghost-state.ts";
 
 const MOVE_COUNTDOWN = 0.2;
-const SPEED = 5;
+// const SPEED = 5;
 
 interface Args {
   position: RaylibVector;
@@ -21,6 +19,7 @@ export class Ghost extends Entity {
   private _positionToMoveTo?: RaylibVector;
 
   private _moveCountdown = MOVE_COUNTDOWN;
+  private _state: GhostState = new IdleState(this);
 
   constructor({ position, level }: Args) {
     super({
@@ -31,45 +30,46 @@ export class Ghost extends Entity {
   }
 
   override update(): void {
-    this._setNewPosition();
-    this._moveCountdown -= getFrameTime();
-    this._movePosition();
+    this._state.update();
+    // this._setNewPosition();
+    // this._moveCountdown -= getFrameTime();
+    // this._movePosition();
   }
 
-  private _setNewPosition() {
-    if (this._positionToMoveTo === undefined && this._moveCountdown <= 0) {
-      const newX = this.position.x +
-        (Math.floor(Math.random() * 2) === 1 ? 1 : -1);
-      this._positionToMoveTo = {
-        x: newX,
-        y: this.position.y,
-      };
-      this._moveCountdown = MOVE_COUNTDOWN;
-    }
-  }
+  // private _setNewPosition() {
+  //   if (this._positionToMoveTo === undefined && this._moveCountdown <= 0) {
+  //     const newX = this.position.x +
+  //       (Math.floor(Math.random() * 2) === 1 ? 1 : -1);
+  //     this._positionToMoveTo = {
+  //       x: newX,
+  //       y: this.position.y,
+  //     };
+  //     this._moveCountdown = MOVE_COUNTDOWN;
+  //   }
+  // }
 
-  private _movePosition() {
-    if (this._positionToMoveTo === undefined) {
-      return;
-    }
+  // private _movePosition() {
+  //   if (this._positionToMoveTo === undefined) {
+  //     return;
+  //   }
 
-    // if (this._positionToMoveTo.x !== this.position.x) {
-    //   this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
-    //   this.position.x += this._positionToMoveTo.x > this.position.x
-    //     ? SPEED * getFrameTime()
-    //     : -SPEED * getFrameTime();
-    // }
-    // if (this._positionToMoveTo.y !== this.position.y) {
-    //   this.position.y += this._positionToMoveTo.y > this.position.y
-    //     ? SPEED * getFrameTime()
-    //     : -SPEED * getFrameTime();
-    // }
+  //   if (this._positionToMoveTo.x !== this.position.x) {
+  //     this.flipHorizontal = this._positionToMoveTo.x < this.position.x;
+  //     this.position.x += this._positionToMoveTo.x > this.position.x
+  //       ? SPEED * getFrameTime()
+  //       : -SPEED * getFrameTime();
+  //   }
+  //   if (this._positionToMoveTo.y !== this.position.y) {
+  //     this.position.y += this._positionToMoveTo.y > this.position.y
+  //       ? SPEED * getFrameTime()
+  //       : -SPEED * getFrameTime();
+  //   }
 
-    // if (
-    //   this._positionToMoveTo.x === this.position.x &&
-    //   this._positionToMoveTo.y === this.position.y
-    // ) {
-    //   this._positionToMoveTo = undefined;
-    // }
-  }
+  //   if (
+  //     this._positionToMoveTo.x === this.position.x &&
+  //     this._positionToMoveTo.y === this.position.y
+  //   ) {
+  //     this._positionToMoveTo = undefined;
+  //   }
+  // }
 }
