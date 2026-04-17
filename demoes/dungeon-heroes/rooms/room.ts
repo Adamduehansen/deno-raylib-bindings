@@ -1,13 +1,11 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
-import { Entity } from "./core/entity.ts";
-import { EntityCollection } from "./core/entity-collection.ts";
-import { SpriteSheet } from "./core/sprite-sheet.ts";
-import { Sprite } from "./core/sprite.ts";
-import { Resources } from "./resources.ts";
-import demoLevel from "./levels/demo.json" with { type: "json" };
-import { Ghost } from "./ghost/ghost.ts";
-import { Player } from "./player/player.ts";
+import { EntityCollection } from "../core/entity-collection.ts";
+import { Entity } from "../core/entity.ts";
+import { SpriteSheet } from "../core/sprite-sheet.ts";
+import { Sprite } from "../core/sprite.ts";
+import { Ghost } from "../ghost/ghost.ts";
+import { Player } from "../player/player.ts";
+import { Resources } from "../resources.ts";
 
 const SPRITE_SHEET = new SpriteSheet(Resources.tilemap, {
   grid: {
@@ -24,17 +22,21 @@ const SPRITE_SHEET = new SpriteSheet(Resources.tilemap, {
   },
 });
 
-export class DemoLevel {
-  readonly width: number;
-  readonly height: number;
+interface RoomObject {
+  type: string;
+  x: number;
+  y: number;
+}
+
+export abstract class Room {
+  readonly entityCollection = new EntityCollection();
   readonly player?: Player;
 
-  readonly entityCollection = new EntityCollection();
-
-  constructor() {
-    this.width = demoLevel.width;
-    this.height = demoLevel.height;
-
+  constructor(
+    readonly width: number,
+    readonly height: number,
+    readonly roomObjects: RoomObject[],
+  ) {
     // Add floor
     for (let rowIndex = 0; rowIndex < this.height; rowIndex++) {
       for (let colIndex = 0; colIndex < this.width; colIndex++) {
@@ -162,7 +164,7 @@ export class DemoLevel {
     this.entityCollection.add(topRightWall);
 
     // Add objects
-    for (const object of demoLevel.objects) {
+    for (const object of roomObjects) {
       switch (object.type) {
         case "GHOST": {
           const ghost = new Ghost({

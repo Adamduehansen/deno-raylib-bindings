@@ -19,8 +19,9 @@ import {
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import { drawEntity } from "./core/draw-entity.ts";
 import { Resources } from "./resources.ts";
-import { DemoLevel } from "./level.ts";
+import { Room1 } from "./rooms/room1.ts";
 import { GameContext } from "./game-context.ts";
+import { Room } from "./rooms/room.ts";
 
 initWindow({
   title: "Dungeon Heroes",
@@ -47,7 +48,7 @@ for (const resource of Object.values(Resources)) {
   resource.load();
 }
 
-const level = new DemoLevel();
+const level: Room = new Room1();
 
 while (windowShouldClose() === false) {
   // Update

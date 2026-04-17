@@ -2,7 +2,7 @@ import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "../core/entity.ts";
 import { Sprite } from "../core/sprite.ts";
 import { Resources } from "../resources.ts";
-import { DemoLevel } from "../level.ts";
+import { Room1 } from "../rooms/room1.ts";
 import { GhostState, IdleState } from "./ghost-state.ts";
 
 const MOVE_COUNTDOWN = 0.2;
@@ -10,11 +10,11 @@ const MOVE_COUNTDOWN = 0.2;
 
 interface Args {
   position: RaylibVector;
-  level: DemoLevel;
+  level: Room1;
 }
 
 export class Ghost extends Entity {
-  private _level: DemoLevel;
+  private _level: Room1;
 
   private _positionToMoveTo?: RaylibVector;
 

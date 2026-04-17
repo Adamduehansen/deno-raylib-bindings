@@ -1,0 +1,7 @@
+{
+  "width": 7,
+  "height": 5,
+  "objects": [
+    { "type": "PLAYER", "x": 3, "y": 2 }
+  ]
+}
