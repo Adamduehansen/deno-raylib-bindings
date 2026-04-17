@@ -57,8 +57,7 @@ while (windowShouldClose() === false) {
     entity.update();
   }
 
-  // TODO: Create a vector utiltiy for ZERO.
-  camera.target = level.player?.worldPosition ?? { x: 0, y: 0 };
+  camera.target = level.player.worldPosition;
 
   // Draw
   // --------------------------------------------------------------------------

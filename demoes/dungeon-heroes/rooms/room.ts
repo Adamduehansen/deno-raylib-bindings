@@ -30,7 +30,7 @@ interface RoomObject {
 
 export abstract class Room {
   readonly entityCollection = new EntityCollection();
-  readonly player?: Player;
+  readonly player!: Player;
 
   constructor(
     readonly width: number,
