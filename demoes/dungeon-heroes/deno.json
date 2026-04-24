@@ -1,9 +1,10 @@
 {
   "tasks": {
-    "dev": "deno run --allow-ffi main.ts"
+    "dev": "deno run --allow-ffi --allow-read=assets main.ts"
   },
   "imports": {
     "@adamduehansen/raylib-bindings": "jsr:@adamduehansen/raylib-bindings@^0.1.19",
-    "@std/assert": "jsr:@std/assert@1"
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/xml": "jsr:@std/xml@^0.1.0"
   }
 }
