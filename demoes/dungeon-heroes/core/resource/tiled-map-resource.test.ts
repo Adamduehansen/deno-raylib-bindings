@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert/equals";
 import { TiledMapResource } from "./tiled-map-resource.ts";
 
-Deno.test("Should parse data from Tiled map", () => {
+Deno.test("Should parse map data", () => {
   // Arrange
   const tiledMapResource = new TiledMapResource("./assets/test-map.tmx");
 
@@ -11,6 +11,16 @@ Deno.test("Should parse data from Tiled map", () => {
   // Assert
   assertEquals(tiledMapResource.width, 10);
   assertEquals(tiledMapResource.height, 5);
+});
+
+Deno.test("Should parse layer data", () => {
+  // Arrange
+  const tiledMapResource = new TiledMapResource("./assets/test-map.tmx");
+
+  // Act
+  tiledMapResource.load();
+
+  // Assert
   assertEquals(tiledMapResource.layers.length, 2);
   for (let index = 0; index < tiledMapResource.layers.length; index++) {
     const layer = tiledMapResource.layers[index];
@@ -31,4 +41,6 @@ Deno.test("Should parse data from Tiled map", () => {
   }
   assertEquals(tiledMapResource.layers[0].visible, true);
   assertEquals(tiledMapResource.layers[1].visible, false);
+  assertEquals(tiledMapResource.layers[1].properties["solid"].type, "bool");
+  assertEquals(tiledMapResource.layers[1].properties["solid"].value, "true");
 });

@@ -1,6 +1,13 @@
 import { parse as parseXml, XmlNode, type XmlElement } from "@std/xml";
 import { Resource } from "./resource.ts";
 
+interface LayerProperty {
+  type: string;
+  value: string;
+}
+
+type LayerProperties = Record<string, LayerProperty>;
+
 interface LayerData {
   encoding: string;
   content: string;
@@ -12,6 +19,7 @@ interface Layer {
   height: number;
   data: LayerData;
   visible: boolean;
+  properties: LayerProperties;
 }
 
 export class TiledMapResource implements Resource {
@@ -44,7 +52,9 @@ export class TiledMapResource implements Resource {
     this._layers = this._parseLayers(map);
   }
 
-  unload(): void {}
+  unload(): void {
+    // TODO: unload textures!
+  }
 
   private _getTiledMapContent(): string {
     try {
@@ -72,13 +82,40 @@ export class TiledMapResource implements Resource {
           height: Number(attributes["height"]),
           width: Number(attributes["width"]),
           visible: isNaN(visibleAttr) ? true : Boolean(Number(visibleAttr)),
+          properties: this._parseLayerProperties(children),
         };
       })
       .toArray();
   }
 
-  private _parseLayerData(xmlNode: readonly XmlNode[]): LayerData {
-    const dataElement = xmlNode.find(
+  private _parseLayerProperties(xmlNodes: readonly XmlNode[]): LayerProperties {
+    const propertiesElement = xmlNodes.find(
+      (xmlNode) =>
+        xmlNode.type === "element" && xmlNode.name.raw === "properties",
+    ) as XmlElement;
+
+    if (propertiesElement === undefined) {
+      return {};
+    }
+
+    const propertyElements = propertiesElement.children.filter(
+      (xmlNode) => xmlNode.type === "element",
+    );
+
+    return propertyElements.reduce<LayerProperties>((properties, xmlNode) => {
+      const { name, type, value } = xmlNode.attributes;
+
+      properties[name] = {
+        type: type,
+        value: value,
+      };
+
+      return properties;
+    }, {});
+  }
+
+  private _parseLayerData(xmlNodes: readonly XmlNode[]): LayerData {
+    const dataElement = xmlNodes.find(
       (xmlNode) => xmlNode.type === "element" && xmlNode.name.raw === "data",
     ) as XmlElement;
 
