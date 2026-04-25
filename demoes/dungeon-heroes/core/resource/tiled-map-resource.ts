@@ -3,6 +3,7 @@ import { Resource } from "./resource.ts";
 
 interface LayerData {
   encoding: string;
+  content: string;
 }
 
 interface Layer {
@@ -10,6 +11,7 @@ interface Layer {
   width: number;
   height: number;
   data: LayerData;
+  visible: boolean;
 }
 
 export class TiledMapResource implements Resource {
@@ -63,11 +65,13 @@ export class TiledMapResource implements Resource {
       .filter((xmlNode) => xmlNode.type === "element")
       .filter((xmlElement) => xmlElement.name.raw === "layer")
       .map(({ attributes, children }): Layer => {
+        const visibleAttr = Number(attributes["visible"]);
         return {
           name: attributes["name"],
-          width: Number(attributes["width"]),
-          height: Number(attributes["height"]),
           data: this._parseLayerData(children),
+          height: Number(attributes["height"]),
+          width: Number(attributes["width"]),
+          visible: isNaN(visibleAttr) ? true : Boolean(Number(visibleAttr)),
         };
       })
       .toArray();
@@ -82,8 +86,13 @@ export class TiledMapResource implements Resource {
       throw new Error("Data element is missing!");
     }
 
+    const content = dataElement.children.find(
+      (xmlNode) => xmlNode.type === "text",
+    );
+
     return {
       encoding: dataElement.attributes["encoding"],
+      content: content?.text ?? "",
     };
   }
 }

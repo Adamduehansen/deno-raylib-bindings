@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert/equals";
 import { TiledMapResource } from "./tiled-map-resource.ts";
 
-Deno.test("should add entity to collection", () => {
+Deno.test("Should parse data from Tiled map", () => {
   // Arrange
   const tiledMapResource = new TiledMapResource("./assets/test-map.tmx");
 
@@ -18,5 +18,17 @@ Deno.test("should add entity to collection", () => {
     assertEquals(layer.width, 10);
     assertEquals(layer.height, 5);
     assertEquals(layer.data.encoding, "csv");
+    assertEquals(
+      layer.data.content,
+      `
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0
+`,
+    );
   }
+  assertEquals(tiledMapResource.layers[0].visible, true);
+  assertEquals(tiledMapResource.layers[1].visible, false);
 });
