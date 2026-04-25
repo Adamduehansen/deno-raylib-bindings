@@ -1,4 +1,10 @@
-import { parse as parseXml, XmlNode, type XmlElement } from "@std/xml";
+import {
+  parse as parseXml,
+  XmlDocument,
+  XmlNode,
+  type XmlElement,
+} from "@std/xml";
+import { resolve, dirname } from "@std/path";
 import { Resource } from "./resource.ts";
 
 interface LayerProperty {
@@ -9,8 +15,82 @@ interface LayerProperty {
 type LayerProperties = Record<string, LayerProperty>;
 
 interface LayerData {
-  encoding: string;
-  content: string;
+  readonly encoding: string;
+  readonly content: string;
+}
+
+class TilesetImage {
+  readonly source: string;
+  readonly width: number;
+  readonly height: number;
+
+  constructor({ attributes }: XmlElement) {
+    this.source = attributes["source"];
+    this.width = Number(attributes["width"]);
+    this.height = Number(attributes["height"]);
+  }
+}
+
+class Tileset {
+  readonly name: string;
+  readonly tileWidth: number;
+  readonly tileHeight: number;
+  readonly spacing: number;
+  readonly columns: number;
+  readonly tileCount: number;
+  readonly image: TilesetImage;
+
+  constructor(xmlDocument: XmlDocument) {
+    const { root } = xmlDocument;
+    const { attributes, children } = root;
+
+    const image = children.find(
+      (xmlNode) => xmlNode.type === "element" && xmlNode.name.raw === "image",
+    ) as XmlElement;
+
+    if (image === undefined) {
+      throw new Error("Tilset does not hav an 'image' element!");
+    }
+
+    this.name = attributes["name"];
+    this.tileWidth = Number(attributes["tilewidth"]);
+    this.tileHeight = Number(attributes["tileheight"]);
+    this.spacing = Number(attributes["spacing"]);
+    this.columns = Number(attributes["tilecount"]);
+    this.tileCount = Number(attributes["columns"]);
+    this.image = new TilesetImage(image);
+  }
+}
+
+class MapTileset {
+  readonly tileset: Tileset;
+  readonly firstGid: number;
+  readonly source: string;
+
+  constructor(xmlElement: XmlElement, mapPath: string) {
+    const { attributes } = xmlElement;
+    this.source = attributes["source"];
+    this.firstGid = Number(attributes["firstgid"]);
+
+    const resolvedPath = resolve(dirname(mapPath), this.source);
+    const content = this._getSourceContent(resolvedPath);
+    const tilesetXml = parseXml(content);
+    this.tileset = new Tileset(tilesetXml);
+  }
+
+  private _getSourceContent(path: string): string {
+    try {
+      return Deno.readTextFileSync(path);
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) {
+        throw new Error(`Could not read source at: '${path}'`);
+      } else if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error(`Unknown error: ${error}`);
+      }
+    }
+  }
 }
 
 interface Layer {
@@ -27,6 +107,7 @@ export class TiledMapResource implements Resource {
 
   private _width: number = 0;
   private _height: number = 0;
+  private _tilesets: MapTileset[] = [];
   private _layers: Layer[] = [];
 
   get width(): number {
@@ -35,6 +116,10 @@ export class TiledMapResource implements Resource {
 
   get height(): number {
     return this._height;
+  }
+
+  get tilesets(): readonly MapTileset[] {
+    return this._tilesets;
   }
 
   get layers(): readonly Layer[] {
@@ -50,6 +135,9 @@ export class TiledMapResource implements Resource {
     this._width = Number(map.attributes["width"]);
     this._height = Number(map.attributes["height"]);
     this._layers = this._parseLayers(map);
+    this._tilesets = this._parseTilesets(map);
+
+    // TODO load textures
   }
 
   unload(): void {
@@ -61,13 +149,23 @@ export class TiledMapResource implements Resource {
       return Deno.readTextFileSync(this._path);
     } catch (error) {
       if (error instanceof Deno.errors.NotFound) {
-        throw new Error(`Could not read Tiled map at: ${this._path}`);
+        throw new Error(`Could not read Tiled map at: '${this._path}'`);
       } else if (error instanceof Error) {
         throw error;
       } else {
         throw new Error(`Unknown error: ${error}`);
       }
     }
+  }
+
+  private _parseTilesets(map: XmlElement): MapTileset[] {
+    return Iterator.from(map.children)
+      .filter((xml) => xml.type === "element")
+      .filter((xmlElement) => xmlElement.name.raw === "tileset")
+      .map((xmlElement): MapTileset => {
+        return new MapTileset(xmlElement, this._path);
+      })
+      .toArray();
   }
 
   private _parseLayers(map: XmlElement): Layer[] {
