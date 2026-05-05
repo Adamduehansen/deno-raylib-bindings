@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --allow-ffi --allow-read=assets main.ts"
+    "dev": "deno run --allow-ffi --allow-read=resources main.ts"
   },
   "imports": {
     "@adamduehansen/raylib-bindings": "jsr:@adamduehansen/raylib-bindings@^0.1.19",

@@ -6,6 +6,11 @@ import {
 } from "@std/xml";
 import { resolve, dirname } from "@std/path";
 import { Resource } from "./resource.ts";
+import {
+  loadTexture,
+  unloadTexture,
+} from "@adamduehansen/raylib-bindings/r-textures";
+import { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 
 interface LayerProperty {
   type: string;
@@ -109,6 +114,7 @@ export class TiledMapResource implements Resource {
   private _height: number = 0;
   private _tilesets: MapTileset[] = [];
   private _layers: Layer[] = [];
+  private _textures: RaylibTexture[] = [];
 
   get width(): number {
     return this._width;
@@ -137,11 +143,17 @@ export class TiledMapResource implements Resource {
     this._layers = this._parseLayers(map);
     this._tilesets = this._parseTilesets(map);
 
-    // TODO load textures
+    for (const { tileset } of this._tilesets) {
+      this._textures.push(
+        loadTexture(resolve(dirname(this._path), tileset.image.source)),
+      );
+    }
   }
 
   unload(): void {
-    // TODO: unload textures!
+    for (const texture of this._textures) {
+      unloadTexture(texture);
+    }
   }
 
   private _getTiledMapContent(): string {

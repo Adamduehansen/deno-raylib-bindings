@@ -2,7 +2,7 @@
 lib
 
 # Assets
-assets/tiny-dungeon-assets
+assets
 
 # Project files
 *.tiled-session

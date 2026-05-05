@@ -1,4 +1,5 @@
-import TextureResource from "./core/image-resource.ts";
+import TextureResource from "./core/resource/image-resource.ts";
+import { TiledMapResource } from "./core/resource/tiled-map-resource.ts";
 
 export const Resources = {
   wizard: new TextureResource(
@@ -13,5 +14,5 @@ export const Resources = {
   tilemap: new TextureResource(
     "./assets/tiny-dungeon-assets/Tilemap/tilemap.png",
   ),
-  // startTile: new TiledMapResource("./resources/start-tile.tmx"),
+  startTile: new TiledMapResource("./resources/room-1.tmx"),
 } as const;
