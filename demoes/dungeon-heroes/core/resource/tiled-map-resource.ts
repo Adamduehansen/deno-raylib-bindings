@@ -4,7 +4,7 @@ import {
   XmlNode,
   type XmlElement,
 } from "@std/xml";
-import { resolve, dirname } from "@std/path";
+import { resolve, dirname, basename } from "@std/path";
 import { Resource } from "./resource.ts";
 import {
   loadTexture,
@@ -116,6 +116,8 @@ export class TiledMapResource implements Resource {
   private _layers: Layer[] = [];
   private _textures: RaylibTexture[] = [];
 
+  readonly name: string;
+
   get width(): number {
     return this._width;
   }
@@ -134,6 +136,7 @@ export class TiledMapResource implements Resource {
 
   constructor(path: string) {
     this._path = path;
+    this.name = basename(this._path);
   }
 
   load(): void {
