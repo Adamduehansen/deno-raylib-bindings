@@ -6,11 +6,6 @@ import {
 } from "@std/xml";
 import { resolve, dirname, basename } from "@std/path";
 import { Resource } from "./resource.ts";
-import {
-  loadTexture,
-  unloadTexture,
-} from "@adamduehansen/raylib-bindings/r-textures";
-import { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 import TextureResource from "./image-resource.ts";
 
 interface LayerProperty {

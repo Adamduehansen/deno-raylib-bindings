@@ -1,7 +1,7 @@
-import { Scene } from "../core/scene.ts";
 import { Resources } from "../resources.ts";
+import { Room } from "./room.ts";
 
-export class Room1 extends Scene {
+export class Room1 extends Room {
   constructor() {
     super();
 
