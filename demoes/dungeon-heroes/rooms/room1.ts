@@ -1,8 +1,10 @@
-import room1 from "./room1.json" with { type: "json" };
-import { Room } from "./room.ts";
+import { Scene } from "../core/scene.ts";
+import { Resources } from "../resources.ts";
 
-export class Room1 extends Room {
+export class Room1 extends Scene {
   constructor() {
-    super(room1.width, room1.height, room1.objects);
+    super();
+
+    this.addTiledMap(Resources.room1);
   }
 }

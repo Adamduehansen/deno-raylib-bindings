@@ -1,4 +1,4 @@
-import type TextureResource from "./image-resource.ts";
+import TextureResource from "./resource/image-resource.ts";
 import { Sprite } from "./sprite.ts";
 
 interface Options {
@@ -17,8 +17,10 @@ interface Options {
 }
 
 export class SpriteSheet {
-  constructor(readonly image: TextureResource, readonly options: Options) {
-  }
+  constructor(
+    readonly image: TextureResource,
+    readonly options: Options,
+  ) {}
 
   getSprite(x: number, y: number) {
     const { grid, spacing } = this.options;

@@ -6,12 +6,9 @@ import {
   DarkGray,
   endDrawing,
   endMode2D,
-  getScreenHeight,
-  getScreenWidth,
   initWindow,
   LOG_DEBUG,
   LOG_INFO,
-  RaylibCamera,
   setTargetFPS,
   setTraceLogLevel,
   windowShouldClose,
@@ -21,7 +18,7 @@ import { drawEntity } from "./core/draw-entity.ts";
 import { Resources } from "./resources.ts";
 import { Room1 } from "./rooms/room1.ts";
 import { GameContext } from "./game-context.ts";
-import { Room } from "./rooms/room.ts";
+import { Scene } from "./core/scene.ts";
 
 initWindow({
   title: "Dungeon Heroes",
@@ -33,31 +30,31 @@ setTargetFPS(60);
 
 setTraceLogLevel(GameContext.isDebug ? LOG_DEBUG : LOG_INFO);
 
-const camera: RaylibCamera = {
-  target: { x: 0, y: 0 },
-  offset: {
-    x: getScreenWidth() / 2,
-    y: getScreenHeight() / 2,
-  },
-  rotation: 0,
-  zoom: 3,
-};
+// const camera: RaylibCamera = {
+//   target: { x: 0, y: 0 },
+//   offset: {
+//     x: getScreenWidth() / 2,
+//     y: getScreenHeight() / 2,
+//   },
+//   rotation: 0,
+//   zoom: 3,
+// };
 
 // Load resources
 for (const resource of Object.values(Resources)) {
   resource.load();
 }
 
-const level: Room = new Room1();
+const scene: Scene = new Room1();
 
 while (windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  for (const entity of level.entityCollection) {
+  for (const entity of scene.entities) {
     entity.update();
   }
 
-  camera.target = level.player.worldPosition;
+  // camera.target = scene.player.worldPosition;
 
   // Draw
   // --------------------------------------------------------------------------
@@ -65,9 +62,9 @@ while (windowShouldClose() === false) {
 
   clearBackground(DarkGray);
 
-  beginMode2D(camera);
+  beginMode2D(scene.camera.nativeCamera);
 
-  for (const entity of level.entityCollection) {
+  for (const entity of scene.entities) {
     drawEntity(entity);
   }
 

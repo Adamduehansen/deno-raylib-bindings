@@ -11,6 +11,7 @@ import {
   unloadTexture,
 } from "@adamduehansen/raylib-bindings/r-textures";
 import { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
+import TextureResource from "./image-resource.ts";
 
 interface LayerProperty {
   type: string;
@@ -114,7 +115,7 @@ export class TiledMapResource implements Resource {
   private _height: number = 0;
   private _tilesets: MapTileset[] = [];
   private _layers: Layer[] = [];
-  private _textures: RaylibTexture[] = [];
+  private _textures: TextureResource[] = [];
 
   readonly name: string;
 
@@ -134,6 +135,10 @@ export class TiledMapResource implements Resource {
     return this._layers;
   }
 
+  get textures(): readonly TextureResource[] {
+    return this._textures;
+  }
+
   constructor(path: string) {
     this._path = path;
     this.name = basename(this._path);
@@ -147,15 +152,16 @@ export class TiledMapResource implements Resource {
     this._tilesets = this._parseTilesets(map);
 
     for (const { tileset } of this._tilesets) {
-      this._textures.push(
-        loadTexture(resolve(dirname(this._path), tileset.image.source)),
-      );
+      const pathToTexture = resolve(dirname(this._path), tileset.image.source);
+      const textureResource = new TextureResource(pathToTexture);
+      textureResource.load();
+      this._textures.push(textureResource);
     }
   }
 
   unload(): void {
     for (const texture of this._textures) {
-      unloadTexture(texture);
+      texture.unload();
     }
   }
 
