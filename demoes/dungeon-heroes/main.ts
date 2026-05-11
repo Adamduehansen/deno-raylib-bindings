@@ -30,16 +30,6 @@ setTargetFPS(60);
 
 setTraceLogLevel(GameContext.isDebug ? LOG_DEBUG : LOG_INFO);
 
-// const camera: RaylibCamera = {
-//   target: { x: 0, y: 0 },
-//   offset: {
-//     x: getScreenWidth() / 2,
-//     y: getScreenHeight() / 2,
-//   },
-//   rotation: 0,
-//   zoom: 3,
-// };
-
 // Load resources
 for (const resource of Object.values(Resources)) {
   resource.load();
@@ -53,8 +43,6 @@ while (windowShouldClose() === false) {
   for (const entity of scene.entities) {
     entity.update();
   }
-
-  // camera.target = scene.player.worldPosition;
 
   // Draw
   // --------------------------------------------------------------------------

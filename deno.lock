@@ -31,7 +31,6 @@
     "members": {
       "demoes/dungeon-heroes": {
         "dependencies": [
-          "jsr:@adamduehansen/raylib-bindings@~0.1.19",
           "jsr:@std/assert@1",
           "jsr:@std/path@^1.1.4",
           "jsr:@std/xml@0.1"
