@@ -4,7 +4,7 @@ import { TiledMapResource } from "./tiled-map-resource.ts";
 Deno.test("Should parse map data", () => {
   // Arrange
   const tiledMapResource = new TiledMapResource(
-    "./core/_test-assets/test-map.tmx",
+    "./core/_test-assets/layers-test-map.tmx",
   );
 
   // Act
@@ -13,12 +13,14 @@ Deno.test("Should parse map data", () => {
   // Assert
   assertEquals(tiledMapResource.width, 10);
   assertEquals(tiledMapResource.height, 5);
+
+  tiledMapResource.unload();
 });
 
 Deno.test("Should parse layer data", () => {
   // Arrange
   const tiledMapResource = new TiledMapResource(
-    "./core/_test-assets/test-map.tmx",
+    "./core/_test-assets/layers-test-map.tmx",
   );
 
   // Act
@@ -47,6 +49,8 @@ Deno.test("Should parse layer data", () => {
   assertEquals(tiledMapResource.layers[1].visible, false);
   assertEquals(tiledMapResource.layers[1].properties["solid"].type, "bool");
   assertEquals(tiledMapResource.layers[1].properties["solid"].value, "true");
+
+  tiledMapResource.unload();
 });
 
 Deno.test("should parse tileset", () => {
@@ -68,8 +72,10 @@ Deno.test("should parse tileset", () => {
   assertEquals(tileset1.firstGid, 1);
   assertEquals(
     tileset1.tileset.image.source,
-    "../../../assets/tiny-dungeon-assets/Tilemap/tilemap.png",
+    "../../assets/tiny-dungeon-assets/Tilemap/tilemap.png",
   );
   assertEquals(tileset1.tileset.image.height, 186);
   assertEquals(tileset1.tileset.image.width, 203);
+
+  tiledMapResource.unload();
 });

@@ -5,6 +5,7 @@ import {
   type XmlElement,
 } from "@std/xml";
 import { resolve, dirname, basename } from "@std/path";
+import { isWindowReady } from "@adamduehansen/raylib-bindings/r-core";
 import { Resource } from "./resource.ts";
 import TextureResource from "./image-resource.ts";
 
@@ -146,11 +147,16 @@ export class TiledMapResource implements Resource {
     this._layers = this._parseLayers(map);
     this._tilesets = this._parseTilesets(map);
 
-    for (const { tileset } of this._tilesets) {
-      const pathToTexture = resolve(dirname(this._path), tileset.image.source);
-      const textureResource = new TextureResource(pathToTexture);
-      textureResource.load();
-      this._textures.push(textureResource);
+    if (isWindowReady()) {
+      for (const { tileset } of this._tilesets) {
+        const pathToTexture = resolve(
+          dirname(this._path),
+          tileset.image.source,
+        );
+        const textureResource = new TextureResource(pathToTexture);
+        textureResource.load();
+        this._textures.push(textureResource);
+      }
     }
   }
 
