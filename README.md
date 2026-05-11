@@ -6,10 +6,17 @@
 
 ## Tasks
 
-- Restructure project. Have the main game in a separate folder and tests in another folder.
+### Game
+
 - Have the player spawn in the room.
 - Have player the move.
 - Finish GDD.
+- Create init scripts.
+
+### Bindings
+
+- Build for other OS.
+- Create init script.
 
 ## Assets
 
