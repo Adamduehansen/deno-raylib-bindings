@@ -13,5 +13,8 @@
     "./r-shapes": "./src/r-shapes.ts",
     "./r-text": "./src/r-text.ts",
     "./r-textures": "./src/r-textures.ts"
+  },
+  "imports": {
+    "@std/path": "jsr:@std/path@^1.1.4"
   }
 }
