@@ -3,8 +3,9 @@
 Bindings for Raylib. The bindings are separated into modules according to the
 [cheatsheet](https://www.raylib.com/cheatsheet/cheatsheet.html).
 
-The bindings assume that a binaries for Raylib are located at
-{project-root}/lib/{binray-file}.
+The bindings assume that a binaries for Raylib are located at {project-root}/lib/{binaray-file}.
+
+**Currently this project only supports Linux! Support for other platforms is planned.**
 
 Example: Draw "Hello, World"
 
