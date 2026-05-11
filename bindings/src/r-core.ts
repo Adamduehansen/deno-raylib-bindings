@@ -142,10 +142,32 @@ function toRaylibCamera2D(camera: RaylibCamera): BufferSource {
 // ----------------------------------------------------------------------------
 
 /**
+ * Initialize window and OpenGL context.
+ */
+export function initWindow(options: {
+  width: number;
+  height: number;
+  title: string;
+}): void {
+  raylib.symbols.InitWindow(
+    options.width,
+    options.height,
+    toCString(options.title),
+  );
+}
+
+/**
  * Close window and unload OpenGL context.
  */
 export function closeWindow(): void {
   raylib.symbols.CloseWindow();
+}
+
+/**
+ * Check if window has been initialized successfully.
+ */
+export function isWindowReady(): boolean {
+  return raylib.symbols.IsWindowReady();
 }
 
 /**
@@ -189,21 +211,6 @@ export function getScreenWidth(): number {
  */
 export function getScreenHeight(): number {
   return raylib.symbols.GetScreenHeight();
-}
-
-/**
- * Initialize window and OpenGL context.
- */
-export function initWindow(options: {
-  width: number;
-  height: number;
-  title: string;
-}): void {
-  raylib.symbols.InitWindow(
-    options.width,
-    options.height,
-    toCString(options.title),
-  );
 }
 
 /**
@@ -396,10 +403,12 @@ export function getScreenToWorld2D(
   position: RaylibVector,
   camera: RaylibCamera,
 ): RaylibVector {
-  return toVector(raylib.symbols.GetScreenToWorld2D(
-    toRaylibVector2(position),
-    toRaylibCamera2D(camera),
-  ));
+  return toVector(
+    raylib.symbols.GetScreenToWorld2D(
+      toRaylibVector2(position),
+      toRaylibCamera2D(camera),
+    ),
+  );
 }
 
 //-----------------------------------------------------------------------------

@@ -84,11 +84,7 @@ const FontStruct = {
 } as const;
 
 const RenderTexture2DStruct = {
-  struct: [
-    "i16",
-    TextureStruct,
-    TextureStruct,
-  ],
+  struct: ["i16", TextureStruct, TextureStruct],
 } as const;
 
 export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
@@ -328,6 +324,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   },
   IsMouseButtonPressed: {
     parameters: ["i16"],
+    result: "bool",
+  },
+  IsWindowReady: {
+    parameters: [],
     result: "bool",
   },
   LoadMusicStream: {
