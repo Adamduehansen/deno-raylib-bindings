@@ -8,7 +8,8 @@
 
 ### Game
 
-- Have player the move.
+- Go fullscreen.
+- Make it possible to zoom.
 - Finish GDD.
 - Create init scripts.
 

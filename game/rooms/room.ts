@@ -27,6 +27,7 @@ export class Room extends Scene {
   }
 
   canMoveToPosition(nextPosition: RaylibVector) {
+    // TODO: check for multiple tiles and if one is solid.
     const tileAtNextPosition = this.entities.find((entity) =>
       entity.position.x === nextPosition.x &&
       entity.position.y === nextPosition.y
