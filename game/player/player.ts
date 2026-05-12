@@ -2,13 +2,13 @@ import { type RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "../core/entity.ts";
 import { Sprite } from "../core/sprite.ts";
 import { Resources } from "../resources.ts";
-import { Room1 } from "../rooms/room1.ts";
 import { IdleState, PlayerState } from "./player-state.ts";
 import { InputController } from "./input-controller.ts";
+import { Room } from "../rooms/room.ts";
 
 interface PlayerArgs {
   position: RaylibVector;
-  level: Room1;
+  level: Room;
 }
 
 export class Player extends Entity {
@@ -16,7 +16,7 @@ export class Player extends Entity {
 
   private _state: PlayerState = new IdleState(this);
 
-  private readonly _level: Room1;
+  private readonly _level: Room;
 
   constructor({ position, level }: PlayerArgs) {
     super({

@@ -8,10 +8,14 @@
 
 ### Game
 
-- Have the player spawn in the room.
 - Have player the move.
 - Finish GDD.
 - Create init scripts.
+
+## Engine
+
+- Logger static/singleton
+- Cleanup TiledMap resource
 
 ### Bindings
 

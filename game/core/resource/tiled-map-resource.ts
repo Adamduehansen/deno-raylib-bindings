@@ -99,12 +99,14 @@ class ObjectLayerObject {
   readonly id: string;
   readonly x: string;
   readonly y: string;
+  readonly name: string;
   readonly type: string;
 
   constructor(xmlElement: XmlElement) {
     this.id = xmlElement.attributes["id"];
     this.x = xmlElement.attributes["x"];
     this.y = xmlElement.attributes["y"];
+    this.name = xmlElement.attributes["name"];
     this.type = this._parseType(xmlElement);
   }
 

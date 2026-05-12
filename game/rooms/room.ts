@@ -1,10 +1,19 @@
-import { LOG_DEBUG, traceLog } from "@adamduehansen/raylib-bindings/r-core";
+import {
+  LOG_DEBUG,
+  RaylibVector,
+  traceLog,
+} from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "../core/entity.ts";
 import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
 import { Scene } from "../core/scene.ts";
 import { SpriteSheet } from "../core/sprite-sheet.ts";
+import { Player } from "../player/player.ts";
 
 export class Room extends Scene {
+  canMoveToPosition(nextPosition: RaylibVector) {
+    return false;
+  }
+
   addTiledMap(tiledMapResource: TiledMapResource): void {
     traceLog(
       LOG_DEBUG,
@@ -31,7 +40,7 @@ export class Room extends Scene {
     });
 
     for (const layer of tiledMapResource.tileLayers) {
-      traceLog(LOG_DEBUG, "Adding layer:", `"${layer.name}"`);
+      traceLog(LOG_DEBUG, "SCENE:", "Adding tile layer:", `"${layer.name}"`);
       const rows = layer.data.content.split("\n").filter((row) => row !== "");
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         const spriteIndexes = rows[rowIndex].split(",");
@@ -54,6 +63,23 @@ export class Room extends Scene {
             },
           });
           this.entities.add(entity);
+        }
+      }
+    }
+
+    for (const layer of tiledMapResource.objectLayers) {
+      traceLog(LOG_DEBUG, "SCENE:", "Adding object layer:", `"${layer.name}"`);
+      for (const object of layer.objects) {
+        if (object.name === "Player") {
+          traceLog(LOG_DEBUG, "SCENE:", "Spawning player");
+          const player = new Player({
+            level: this,
+            position: {
+              x: Number(object.x),
+              y: Number(object.y),
+            },
+          });
+          this.entities.add(player);
         }
       }
     }

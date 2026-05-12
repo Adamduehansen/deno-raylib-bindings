@@ -5,16 +5,16 @@ import {
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { GameContext } from "../game-context.ts";
-import { Room1 } from "../rooms/room1.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
 import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
+import { Room } from "../rooms/room.ts";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
 
   abstract handleInput(inputController: InputController): void;
-  abstract update(level: Room1): PlayerState | null;
+  abstract update(room: Room): PlayerState | null;
 }
 
 abstract class MoveCommand {
@@ -77,12 +77,12 @@ export class IdleState extends PlayerState {
     }
   }
 
-  override update(level: Room1): PlayerState | null {
+  override update(room: Room): PlayerState | null {
     if (this._nextPosition === undefined) {
       return null;
     }
 
-    if (!level.canMoveToPosition(this._nextPosition) && !GameContext.isNoclip) {
+    if (!room.canMoveToPosition(this._nextPosition) && !GameContext.isNoclip) {
       return null;
     }
 

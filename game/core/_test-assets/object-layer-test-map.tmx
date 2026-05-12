@@ -7,15 +7,15 @@
 </data>
  </layer>
  <objectgroup id="2" name="Object Layer 1">
-  <object id="1" x="16" y="16">
+  <object id="1" name="Obj1" x="16" y="16">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="3" name="Object Layer 2">
-  <object id="2" x="0" y="0">
+  <object id="2" name="Obj2" x="0" y="0">
    <point/>
   </object>
-  <object id="4" x="32" y="0">
+  <object id="4" name="Obj3" x="32" y="0">
    <ellipse/>
   </object>
  </objectgroup>
