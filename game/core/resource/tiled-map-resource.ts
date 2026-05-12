@@ -9,12 +9,12 @@ import { isWindowReady } from "@adamduehansen/raylib-bindings/r-core";
 import { Resource } from "./resource.ts";
 import TextureResource from "./image-resource.ts";
 
-interface LayerProperty {
+interface Property {
   type: string;
   value: string;
 }
 
-type LayerProperties = Record<string, LayerProperty>;
+type Properties = Record<string, Property>;
 
 interface LayerData {
   readonly encoding: string;
@@ -101,6 +101,7 @@ class ObjectLayerObject {
   readonly y: string;
   readonly name: string;
   readonly type: string;
+  readonly properties: Properties;
 
   constructor(xmlElement: XmlElement) {
     this.id = xmlElement.attributes["id"];
@@ -108,6 +109,33 @@ class ObjectLayerObject {
     this.y = xmlElement.attributes["y"];
     this.name = xmlElement.attributes["name"];
     this.type = this._parseType(xmlElement);
+    this.properties = this._parseLayerProperties(xmlElement.children);
+  }
+
+  private _parseLayerProperties(xmlNodes: readonly XmlNode[]): Properties {
+    const propertiesElement = xmlNodes.find(
+      (xmlNode) =>
+        xmlNode.type === "element" && xmlNode.name.raw === "properties",
+    ) as XmlElement;
+
+    if (propertiesElement === undefined) {
+      return {};
+    }
+
+    const propertyElements = propertiesElement.children.filter(
+      (xmlNode) => xmlNode.type === "element",
+    );
+
+    return propertyElements.reduce<Properties>((properties, xmlNode) => {
+      const { name, type, value } = xmlNode.attributes;
+
+      properties[name] = {
+        type: type,
+        value: value,
+      };
+
+      return properties;
+    }, {});
   }
 
   private _parseType(xmlElement: XmlElement): string {
@@ -147,7 +175,7 @@ interface TileLayer {
   height: number;
   data: LayerData;
   visible: boolean;
-  properties: LayerProperties;
+  properties: Properties;
 }
 
 export class TiledMapResource implements Resource {
@@ -199,6 +227,8 @@ export class TiledMapResource implements Resource {
     this._objectLayers = this._parseObjectLayers(map);
     this._tilesets = this._parseTilesets(map);
 
+    // Trying to load textures without having Raylib initialized can lead to
+    // crashes. This is relevant for test cases.
     if (isWindowReady()) {
       for (const { tileset } of this._tilesets) {
         const pathToTexture = resolve(
@@ -268,7 +298,7 @@ export class TiledMapResource implements Resource {
       .toArray();
   }
 
-  private _parseLayerProperties(xmlNodes: readonly XmlNode[]): LayerProperties {
+  private _parseLayerProperties(xmlNodes: readonly XmlNode[]): Properties {
     const propertiesElement = xmlNodes.find(
       (xmlNode) =>
         xmlNode.type === "element" && xmlNode.name.raw === "properties",
@@ -282,7 +312,7 @@ export class TiledMapResource implements Resource {
       (xmlNode) => xmlNode.type === "element",
     );
 
-    return propertyElements.reduce<LayerProperties>((properties, xmlNode) => {
+    return propertyElements.reduce<Properties>((properties, xmlNode) => {
       const { name, type, value } = xmlNode.attributes;
 
       properties[name] = {

@@ -7,14 +7,16 @@ import {
 import { GameContext } from "../game-context.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
-import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 import { Room } from "../rooms/room.ts";
+import Tp from "../tp.ts";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
 
   abstract handleInput(inputController: InputController): void;
   abstract update(room: Room): PlayerState | null;
+
+  enter(room: Room): void {}
 }
 
 abstract class MoveCommand {
@@ -98,6 +100,19 @@ export class IdleState extends PlayerState {
 
     return new MovingState(this.player, this._nextPosition);
   }
+
+  override enter(room: Room): void {
+    console.log("TODO: check for TP");
+    const tp = room.entities.find((entity) =>
+      entity instanceof Tp && this.player.position.x === entity.position.x &&
+      this.player.position.y === entity.position.y
+    );
+    if (tp === undefined) {
+      return;
+    }
+
+    console.log(tp);
+  }
 }
 
 const PLAYER_SPEED = 60;
@@ -113,14 +128,10 @@ export class MovingState extends PlayerState {
   override handleInput(_inputController: InputController): void {}
 
   override update(): PlayerState | null {
-    const { position, worldPosition, sprite } = this.player;
-    const nextWorldPosition = vector2Scale(
-      this._positionToMoveTo,
-      sprite.width,
-    );
+    const { position } = this.player;
 
     // Move right
-    if (nextWorldPosition.x > worldPosition.x) {
+    if (position.x < this._positionToMoveTo.x) {
       this.player.flipHorizontal = false;
       position.x += PLAYER_SPEED * getFrameTime();
       if (position.x > this._positionToMoveTo.x) {
@@ -130,7 +141,7 @@ export class MovingState extends PlayerState {
     }
 
     // Move left
-    if (nextWorldPosition.x < worldPosition.x) {
+    if (position.x > this._positionToMoveTo.x) {
       this.player.flipHorizontal = true;
       position.x -= PLAYER_SPEED * getFrameTime();
       if (position.x < this._positionToMoveTo.x) {
@@ -140,18 +151,18 @@ export class MovingState extends PlayerState {
     }
 
     // Move up
-    if (nextWorldPosition.y > worldPosition.y) {
-      position.y += PLAYER_SPEED * getFrameTime();
-      if (position.y > this._positionToMoveTo.y) {
+    if (position.y > this._positionToMoveTo.y) {
+      position.y -= PLAYER_SPEED * getFrameTime();
+      if (position.y < this._positionToMoveTo.y) {
         this.player.position = this._positionToMoveTo;
         return new IdleState(this.player);
       }
     }
 
     // Move down
-    if (nextWorldPosition.y < worldPosition.y) {
-      position.y -= PLAYER_SPEED * getFrameTime();
-      if (position.y < this._positionToMoveTo.y) {
+    if (position.y < this._positionToMoveTo.y) {
+      position.y += PLAYER_SPEED * getFrameTime();
+      if (position.y > this._positionToMoveTo.y) {
         this.player.position = this._positionToMoveTo;
         return new IdleState(this.player);
       }

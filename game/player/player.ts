@@ -16,24 +16,25 @@ export class Player extends Entity {
 
   private _state: PlayerState = new IdleState(this);
 
-  private readonly _level: Room;
+  private readonly _room: Room;
 
   constructor({ position, level }: PlayerArgs) {
     super({
       sprite: new Sprite(Resources.knight.texture!),
       position: position,
     });
-    this._level = level;
+    this._room = level;
   }
 
   override update(): void {
     this._state.handleInput(this._inputController);
-    const nextState = this._state.update(this._level);
+    const nextState = this._state.update(this._room);
 
     if (nextState === null) {
       return;
     }
 
     this._state = nextState;
+    this._state.enter(this._room);
   }
 }

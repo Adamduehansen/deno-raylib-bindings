@@ -8,6 +8,7 @@ import { Scene } from "../core/scene.ts";
 import { SpriteSheet } from "../core/sprite-sheet.ts";
 import { Player } from "../player/player.ts";
 import { Tile } from "../tile.ts";
+import Tp from "../tp.ts";
 
 export class Room extends Scene {
   player?: Player;
@@ -96,7 +97,7 @@ export class Room extends Scene {
     for (const layer of tiledMapResource.objectLayers) {
       traceLog(LOG_DEBUG, "SCENE:", "Adding object layer:", `"${layer.name}"`);
       for (const object of layer.objects) {
-        if (object.name === "Player") {
+        if (object.name === "player") {
           traceLog(LOG_DEBUG, "SCENE:", "Spawning player");
           const player = new Player({
             level: this,
@@ -107,6 +108,16 @@ export class Room extends Scene {
           });
           this.entities.add(player);
           this.player = player;
+        } else if (object.name === "tp") {
+          traceLog(LOG_DEBUG, "Scene", "Spawning tp");
+          const tp = new Tp({
+            position: {
+              x: Number(object.x),
+              y: Number(object.y),
+            },
+            destination: object.properties["destination"].value,
+          });
+          this.entities.add(tp);
         }
       }
     }

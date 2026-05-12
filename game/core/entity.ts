@@ -1,9 +1,9 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Sprite } from "./sprite.ts";
-import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 
 export interface EntityArgs {
-  sprite: Sprite;
+  sprite?: Sprite;
+  name?: string;
   position: RaylibVector;
 }
 
@@ -11,19 +11,19 @@ export class Entity {
   static CURRENT_MAX_ID = 1;
 
   readonly id = Entity.CURRENT_MAX_ID++;
+
+  readonly name?: string;
+
   position: RaylibVector;
-  sprite: Sprite;
+  sprite?: Sprite;
 
   flipHorizontal = false;
   flipVertical = false;
 
-  get worldPosition(): RaylibVector {
-    return vector2Scale(this.position, this.sprite.width);
-  }
-
-  constructor({ sprite, position }: EntityArgs) {
+  constructor({ sprite, position, name }: EntityArgs) {
     this.sprite = sprite;
     this.position = position;
+    this.name = name;
   }
 
   /**
