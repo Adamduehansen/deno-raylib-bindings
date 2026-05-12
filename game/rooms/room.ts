@@ -6,9 +6,9 @@ import {
 import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
 import { Scene } from "../core/scene.ts";
 import { SpriteSheet } from "../core/sprite-sheet.ts";
-import { Player } from "../player/player.ts";
-import { Tile } from "../tile.ts";
-import Tp from "../tp.ts";
+import { Player } from "../entities/player/player.ts";
+import { Tile } from "../entities/tile.ts";
+import Tp from "../entities/tp.ts";
 
 export class Room extends Scene {
   player?: Player;

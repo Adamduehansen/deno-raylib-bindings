@@ -1,10 +1,10 @@
 import { type RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "../core/entity.ts";
-import { Sprite } from "../core/sprite.ts";
-import { Resources } from "../resources.ts";
+import { Entity } from "../../core/entity.ts";
+import { Sprite } from "../../core/sprite.ts";
+import { Resources } from "../../resources.ts";
 import { IdleState, PlayerState } from "./player-state.ts";
 import { InputController } from "./input-controller.ts";
-import { Room } from "../rooms/room.ts";
+import { Room } from "../../rooms/room.ts";
 
 interface PlayerArgs {
   position: RaylibVector;

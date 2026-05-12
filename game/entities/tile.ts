@@ -1,4 +1,4 @@
-import { Entity, EntityArgs } from "./core/entity.ts";
+import { Entity, EntityArgs } from "../core/entity.ts";
 
 interface Args extends EntityArgs {
   solid: boolean;

@@ -4,11 +4,11 @@ import {
   RaylibVector,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { GameContext } from "../game-context.ts";
+import { GameContext } from "../../game-context.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
-import { Room } from "../rooms/room.ts";
-import Tp from "../tp.ts";
+import { Room } from "../../rooms/room.ts";
+import Tp from "../../entities/tp.ts";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
@@ -16,6 +16,7 @@ export abstract class PlayerState {
   abstract handleInput(inputController: InputController): void;
   abstract update(room: Room): PlayerState | null;
 
+  // deno-lint-ignore no-unused-vars
   enter(room: Room): void {}
 }
 
