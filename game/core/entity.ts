@@ -2,7 +2,7 @@ import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Sprite } from "./sprite.ts";
 import { vector2Scale } from "@adamduehansen/raylib-bindings/r-math";
 
-interface EntityArgs {
+export interface EntityArgs {
   sprite: Sprite;
   position: RaylibVector;
 }

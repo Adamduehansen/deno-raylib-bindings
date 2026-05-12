@@ -27,6 +27,10 @@ export class EntityCollection {
     return this._entities.find((entity) => entity.id === entityId);
   }
 
+  find(predicate: (entity: Entity) => boolean) {
+    return this._entities.find(predicate);
+  }
+
   [Symbol.iterator]() {
     let index = 0;
     const entities = this._entities;

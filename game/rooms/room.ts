@@ -3,11 +3,11 @@ import {
   RaylibVector,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "../core/entity.ts";
 import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
 import { Scene } from "../core/scene.ts";
 import { SpriteSheet } from "../core/sprite-sheet.ts";
 import { Player } from "../player/player.ts";
+import { Tile } from "../tile.ts";
 
 export class Room extends Scene {
   player?: Player;
@@ -27,6 +27,14 @@ export class Room extends Scene {
   }
 
   canMoveToPosition(nextPosition: RaylibVector) {
+    const tileAtNextPosition = this.entities.find((entity) =>
+      entity.position.x === nextPosition.x &&
+      entity.position.y === nextPosition.y
+    );
+    if (tileAtNextPosition instanceof Tile && tileAtNextPosition.solid) {
+      return false;
+    }
+
     return true;
   }
 
@@ -71,12 +79,13 @@ export class Room extends Scene {
 
           const sprite = spritesheet.getSprite(x, y);
 
-          const entity = new Entity({
+          const entity = new Tile({
             sprite: sprite,
             position: {
               x: sprite.width * colIndex,
               y: sprite.height * rowIndex,
             },
+            solid: Boolean(layer.properties["solid"]?.value),
           });
           this.entities.add(entity);
         }
