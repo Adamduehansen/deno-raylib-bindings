@@ -19,6 +19,7 @@ import { Resources } from "./resources.ts";
 import { Room1 } from "./rooms/room1.ts";
 import { GameContext } from "./game-context.ts";
 import { Scene } from "./core/scene.ts";
+import { Room2 } from "./rooms/room2.ts";
 
 initWindow({
   title: "Dungeon Heroes",
@@ -35,12 +36,17 @@ for (const resource of Object.values(Resources)) {
   resource.load();
 }
 
-const scene: Scene = new Room1();
+const scenes: Record<string, Scene> = {
+  "0": new Room1(),
+  "1": new Room2(),
+};
+
+const currentScene: Scene = scenes["0"];
 
 while (windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  scene.update();
+  currentScene.update();
 
   // Draw
   // --------------------------------------------------------------------------
@@ -48,9 +54,9 @@ while (windowShouldClose() === false) {
 
   clearBackground(DarkGray);
 
-  beginMode2D(scene.camera.nativeCamera);
+  beginMode2D(currentScene.camera.nativeCamera);
 
-  for (const entity of scene.entities) {
+  for (const entity of currentScene.entities) {
     drawEntity(entity);
   }
 

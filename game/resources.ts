@@ -15,4 +15,5 @@ export const Resources = {
     "./assets/tiny-dungeon-assets/Tilemap/tilemap.png",
   ),
   room1: new TiledMapResource("./resources/room-1.tmx"),
+  room2: new TiledMapResource("./resources/room-2.tmx"),
 } as const;

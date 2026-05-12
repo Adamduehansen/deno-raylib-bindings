@@ -103,7 +103,6 @@ export class IdleState extends PlayerState {
   }
 
   override enter(room: Room): void {
-    console.log("TODO: check for TP");
     const tp = room.entities.find((entity) =>
       entity instanceof Tp && this.player.position.x === entity.position.x &&
       this.player.position.y === entity.position.y
