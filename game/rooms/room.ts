@@ -11,7 +11,7 @@ import { Player } from "../player/player.ts";
 
 export class Room extends Scene {
   canMoveToPosition(nextPosition: RaylibVector) {
-    return false;
+    return true;
   }
 
   addTiledMap(tiledMapResource: TiledMapResource): void {

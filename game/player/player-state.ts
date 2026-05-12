@@ -26,7 +26,7 @@ class MoveRightCommand extends MoveCommand {
   execute(): RaylibVector {
     return {
       ...this.player.position,
-      x: this.player.position.x + 1,
+      x: this.player.position.x + 16,
     };
   }
 }
@@ -35,7 +35,7 @@ class MoveLeftCommand extends MoveCommand {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
-      x: this.player.position.x - 1,
+      x: this.player.position.x - 16,
     };
   }
 }
@@ -44,7 +44,7 @@ class MoveUpCommand extends MoveCommand {
   execute(): RaylibVector {
     return {
       ...this.player.position,
-      y: this.player.position.y - 1,
+      y: this.player.position.y - 16,
     };
   }
 }
@@ -53,7 +53,7 @@ class MoveDownCommand extends MoveCommand {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
-      y: this.player.position.y + 1,
+      y: this.player.position.y + 16,
     };
   }
 }
@@ -88,6 +88,7 @@ export class IdleState extends PlayerState {
 
     traceLog(
       LOG_DEBUG,
+      "PLAYER:",
       "Next player position: {",
       this._nextPosition.x.toString(),
       ", ",
@@ -99,7 +100,7 @@ export class IdleState extends PlayerState {
   }
 }
 
-const PLAYER_SPEED = 5;
+const PLAYER_SPEED = 30;
 
 export class MovingState extends PlayerState {
   constructor(
