@@ -1,10 +1,10 @@
 import {
   parse as parseXml,
   XmlDocument,
-  XmlNode,
   type XmlElement,
+  XmlNode,
 } from "@std/xml";
-import { resolve, dirname, basename } from "@std/path";
+import { basename, dirname, resolve } from "@std/path";
 import { isWindowReady } from "@adamduehansen/raylib-bindings/r-core";
 import { Resource } from "./resource.ts";
 import TextureResource from "./image-resource.ts";
@@ -95,7 +95,51 @@ class MapTileset {
   }
 }
 
-interface Layer {
+class ObjectLayerObject {
+  readonly id: string;
+  readonly x: string;
+  readonly y: string;
+  readonly type: string;
+
+  constructor(xmlElement: XmlElement) {
+    this.id = xmlElement.attributes["id"];
+    this.x = xmlElement.attributes["x"];
+    this.y = xmlElement.attributes["y"];
+    this.type = this._parseType(xmlElement);
+  }
+
+  private _parseType(xmlElement: XmlElement): string {
+    const type = xmlElement.children.find((xmlNode) =>
+      xmlNode.type === "element"
+    );
+    if (type === undefined) {
+      throw new Error(
+        "Error when parsing object layer. Could not find a type for object",
+      );
+    }
+    return type.name.raw;
+  }
+}
+
+class ObjectLayer {
+  readonly id: string;
+  readonly name: string;
+  readonly objects: ObjectLayerObject[];
+
+  constructor(xmlElement: XmlElement) {
+    const { attributes } = xmlElement;
+    this.id = attributes["id"];
+    this.name = attributes["name"];
+
+    this.objects = Iterator.from(xmlElement.children)
+      .filter((xmlNode) => xmlNode.type === "element")
+      .filter((xmlElement) => xmlElement.name.raw === "object")
+      .map((xmlElement) => new ObjectLayerObject(xmlElement))
+      .toArray();
+  }
+}
+
+interface TileLayer {
   name: string;
   width: number;
   height: number;
@@ -110,7 +154,8 @@ export class TiledMapResource implements Resource {
   private _width: number = 0;
   private _height: number = 0;
   private _tilesets: MapTileset[] = [];
-  private _layers: Layer[] = [];
+  private _tileLayers: TileLayer[] = [];
+  private _objectLayers: ObjectLayer[] = [];
   private _textures: TextureResource[] = [];
 
   readonly name: string;
@@ -127,8 +172,12 @@ export class TiledMapResource implements Resource {
     return this._tilesets;
   }
 
-  get layers(): readonly Layer[] {
-    return this._layers;
+  get tileLayers(): readonly TileLayer[] {
+    return this._tileLayers;
+  }
+
+  get objectLayers(): readonly ObjectLayer[] {
+    return this._objectLayers;
   }
 
   get textures(): readonly TextureResource[] {
@@ -144,7 +193,8 @@ export class TiledMapResource implements Resource {
     const { root: map } = parseXml(this._getTiledMapContent());
     this._width = Number(map.attributes["width"]);
     this._height = Number(map.attributes["height"]);
-    this._layers = this._parseLayers(map);
+    this._tileLayers = this._parseTileLayers(map);
+    this._objectLayers = this._parseObjectLayers(map);
     this._tilesets = this._parseTilesets(map);
 
     if (isWindowReady()) {
@@ -190,11 +240,11 @@ export class TiledMapResource implements Resource {
       .toArray();
   }
 
-  private _parseLayers(map: XmlElement): Layer[] {
+  private _parseTileLayers(map: XmlElement): TileLayer[] {
     return Iterator.from(map.children)
       .filter((xmlNode) => xmlNode.type === "element")
       .filter((xmlElement) => xmlElement.name.raw === "layer")
-      .map(({ attributes, children }): Layer => {
+      .map(({ attributes, children }): TileLayer => {
         const visibleAttr = Number(attributes["visible"]);
         return {
           name: attributes["name"],
@@ -205,6 +255,14 @@ export class TiledMapResource implements Resource {
           properties: this._parseLayerProperties(children),
         };
       })
+      .toArray();
+  }
+
+  private _parseObjectLayers(map: XmlElement): ObjectLayer[] {
+    return Iterator.from(map.children)
+      .filter((xmlNode) => xmlNode.type === "element")
+      .filter((xmlElement) => xmlElement.name.raw === "objectgroup")
+      .map((xmlElement): ObjectLayer => new ObjectLayer(xmlElement))
       .toArray();
   }
 

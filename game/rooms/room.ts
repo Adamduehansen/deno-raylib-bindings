@@ -1,4 +1,4 @@
-import { traceLog, LOG_DEBUG } from "@adamduehansen/raylib-bindings/r-core";
+import { LOG_DEBUG, traceLog } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "../core/entity.ts";
 import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
 import { Scene } from "../core/scene.ts";
@@ -30,7 +30,7 @@ export class Room extends Scene {
       },
     });
 
-    for (const layer of tiledMapResource.layers) {
+    for (const layer of tiledMapResource.tileLayers) {
       traceLog(LOG_DEBUG, "Adding layer:", `"${layer.name}"`);
       const rows = layer.data.content.split("\n").filter((row) => row !== "");
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
