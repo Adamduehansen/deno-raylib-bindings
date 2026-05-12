@@ -40,9 +40,7 @@ const scene: Scene = new Room1();
 while (windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  for (const entity of scene.entities) {
-    entity.update();
-  }
+  scene.update();
 
   // Draw
   // --------------------------------------------------------------------------

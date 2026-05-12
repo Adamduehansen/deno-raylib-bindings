@@ -100,7 +100,7 @@ export class IdleState extends PlayerState {
   }
 }
 
-const PLAYER_SPEED = 30;
+const PLAYER_SPEED = 40;
 
 export class MovingState extends PlayerState {
   constructor(

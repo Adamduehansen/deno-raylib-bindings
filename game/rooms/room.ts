@@ -10,6 +10,22 @@ import { SpriteSheet } from "../core/sprite-sheet.ts";
 import { Player } from "../player/player.ts";
 
 export class Room extends Scene {
+  player?: Player;
+
+  constructor() {
+    super();
+
+    this.camera.nativeCamera.zoom = 3;
+  }
+
+  override update(): void {
+    super.update();
+
+    if (this.player !== undefined) {
+      this.camera.focus(this.player);
+    }
+  }
+
   canMoveToPosition(nextPosition: RaylibVector) {
     return true;
   }
@@ -80,6 +96,7 @@ export class Room extends Scene {
             },
           });
           this.entities.add(player);
+          this.player = player;
         }
       }
     }
