@@ -8,6 +8,10 @@
 
 ### Game
 
+- Create a "game" container object for scenes.
+- Move from one map to another.
+- Player should be able to turn the character around when quick pressing a
+  direction.
 - Go fullscreen.
 - Make it possible to zoom.
 - Finish GDD.
@@ -16,7 +20,7 @@
 ## Engine
 
 - Logger static/singleton
-- Cleanup TiledMap resource
+- Cleanup TiledMap resource. Refactor to use more classes and utility functions.
 
 ### Bindings
 
