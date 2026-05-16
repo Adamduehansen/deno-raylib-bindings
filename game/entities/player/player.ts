@@ -4,11 +4,11 @@ import { Sprite } from "../../core/sprite.ts";
 import { Resources } from "../../resources.ts";
 import { IdleState, PlayerState } from "./player-state.ts";
 import { InputController } from "./input-controller.ts";
-import { Room } from "../../rooms/room.ts";
+import { GameScene } from "../../scenes/game-scene.ts";
 
 interface PlayerArgs {
   position: RaylibVector;
-  level: Room;
+  scene: GameScene;
 }
 
 export class Player extends Entity {
@@ -16,25 +16,25 @@ export class Player extends Entity {
 
   private _state: PlayerState = new IdleState(this);
 
-  private readonly _room: Room;
+  private readonly _gameScene: GameScene;
 
-  constructor({ position, level }: PlayerArgs) {
+  constructor({ position, scene }: PlayerArgs) {
     super({
       sprite: new Sprite(Resources.knight.texture!),
       position: position,
     });
-    this._room = level;
+    this._gameScene = scene;
   }
 
   override update(): void {
     this._state.handleInput(this._inputController);
-    const nextState = this._state.update(this._room);
+    const nextState = this._state.update(this._gameScene);
 
     if (nextState === null) {
       return;
     }
 
     this._state = nextState;
-    this._state.enter(this._room);
+    this._state.enter(this._gameScene);
   }
 }

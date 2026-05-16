@@ -9,14 +9,19 @@ import { SpriteSheet } from "../core/sprite-sheet.ts";
 import { Player } from "../entities/player/player.ts";
 import { Tile } from "../entities/tile.ts";
 import Tp from "../entities/tp.ts";
+import { Resources } from "../resources.ts";
 
-export class Room extends Scene {
+export class GameScene extends Scene {
   player?: Player;
 
   constructor() {
     super();
 
     this.camera.nativeCamera.zoom = 3;
+  }
+
+  override init(): void {
+    this.addTiledMap(Resources.room1);
   }
 
   override update(): void {
@@ -100,7 +105,7 @@ export class Room extends Scene {
         if (object.name === "player") {
           traceLog(LOG_DEBUG, "SCENE:", "Spawning player");
           const player = new Player({
-            level: this,
+            scene: this,
             position: {
               x: Number(object.x),
               y: Number(object.y),

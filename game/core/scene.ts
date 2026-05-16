@@ -10,4 +10,6 @@ export class Scene {
       entity.update();
     }
   }
+
+  init(): void {}
 }

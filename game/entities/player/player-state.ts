@@ -7,17 +7,17 @@ import {
 import { GameContext } from "../../game-context.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
-import { Room } from "../../rooms/room.ts";
+import { GameScene } from "../../scenes/game-scene.ts";
 import Tp from "../../entities/tp.ts";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
 
   abstract handleInput(inputController: InputController): void;
-  abstract update(room: Room): PlayerState | null;
+  abstract update(room: GameScene): PlayerState | null;
 
   // deno-lint-ignore no-unused-vars
-  enter(room: Room): void {}
+  enter(room: GameScene): void {}
 }
 
 abstract class MoveCommand {
@@ -80,7 +80,7 @@ export class IdleState extends PlayerState {
     }
   }
 
-  override update(room: Room): PlayerState | null {
+  override update(room: GameScene): PlayerState | null {
     if (this._nextPosition === undefined) {
       return null;
     }
@@ -102,7 +102,7 @@ export class IdleState extends PlayerState {
     return new MovingState(this.player, this._nextPosition);
   }
 
-  override enter(room: Room): void {
+  override enter(room: GameScene): void {
     const tp = room.entities.find((entity) =>
       entity instanceof Tp && this.player.position.x === entity.position.x &&
       this.player.position.y === entity.position.y
