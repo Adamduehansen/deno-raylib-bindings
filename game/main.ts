@@ -1,77 +1,70 @@
-import {
-  beginDrawing,
-  beginMode2D,
-  clearBackground,
-  closeWindow,
-  DarkGray,
-  endDrawing,
-  endMode2D,
-  initWindow,
-  LOG_DEBUG,
-  LOG_INFO,
-  setTargetFPS,
-  setTraceLogLevel,
-  windowShouldClose,
-} from "@adamduehansen/raylib-bindings/r-core";
-import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
-import { drawEntity } from "./core/draw-entity.ts";
+import Game from "./core/game.ts";
 import { Resources } from "./resources.ts";
 import { Room1 } from "./rooms/room1.ts";
-import { GameContext } from "./game-context.ts";
-import { Scene } from "./core/scene.ts";
 import { Room2 } from "./rooms/room2.ts";
 
-initWindow({
+using game = new Game({
   title: "Dungeon Heroes",
   width: 1024,
   height: 768,
+  targetFPS: 60,
+  scenes: {
+    "0": new Room1(),
+    "1": new Room2(),
+  },
+  resources: Resources,
 });
 
-setTargetFPS(60);
+game.start();
 
-setTraceLogLevel(GameContext.isDebug ? LOG_DEBUG : LOG_INFO);
+// initWindow({
+// });
 
-// Load resources
-for (const resource of Object.values(Resources)) {
-  resource.load();
-}
+// setTargetFPS(60);
 
-const scenes: Record<string, Scene> = {
-  "0": new Room1(),
-  "1": new Room2(),
-};
+// setTraceLogLevel(GameContext.isDebug ? LOG_DEBUG : LOG_INFO);
 
-const currentScene: Scene = scenes["0"];
+// // Load resources
+// for (const resource of Object.values(Resources)) {
+//   resource.load();
+// }
 
-while (windowShouldClose() === false) {
-  // Update
-  // --------------------------------------------------------------------------
-  currentScene.update();
+// const scenes: Record<string, Scene> = {
+//   "0": new Room1(),
+//   "1": new Room2(),
+// };
 
-  // Draw
-  // --------------------------------------------------------------------------
-  beginDrawing();
+// const currentScene: Scene = scenes["0"];
 
-  clearBackground(DarkGray);
+// while (windowShouldClose() === false) {
+//   // Update
+//   // --------------------------------------------------------------------------
+//   currentScene.update();
 
-  beginMode2D(currentScene.camera.nativeCamera);
+//   // Draw
+//   // --------------------------------------------------------------------------
+//   beginDrawing();
 
-  for (const entity of currentScene.entities) {
-    drawEntity(entity);
-  }
+//   clearBackground(DarkGray);
 
-  endMode2D();
+//   beginMode2D(currentScene.camera.nativeCamera);
 
-  if (GameContext.isDebug) {
-    drawFPS(0, 0);
-  }
+//   for (const entity of currentScene.entities) {
+//     drawEntity(entity);
+//   }
 
-  endDrawing();
-}
+//   endMode2D();
 
-// Unload resources
-for (const resource of Object.values(Resources)) {
-  resource.unload();
-}
+//   if (GameContext.isDebug) {
+//     drawFPS(0, 0);
+//   }
 
-closeWindow();
+//   endDrawing();
+// }
+
+// // Unload resources
+// for (const resource of Object.values(Resources)) {
+//   resource.unload();
+// }
+
+// closeWindow();
