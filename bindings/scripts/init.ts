@@ -1,4 +1,5 @@
-import { resolve } from "@std/path";
+import { dirname, normalize, resolve } from "@std/path";
+import { UntarStream } from "@std/tar/untar-stream";
 
 async function dirExists(path: string): Promise<boolean> {
   try {
@@ -8,6 +9,11 @@ async function dirExists(path: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * INIT
+ * ----------------------------------------------------------------------------
+ */
 
 console.log("Deno Raylib bindings: init project");
 
@@ -30,6 +36,11 @@ if (await dirExists(projectDir)) {
 console.log("-> Creating project at", `"${projectDir}"`);
 await Deno.mkdir(projectDir);
 
+/**
+ * deno.json
+ * ----------------------------------------------------------------------------
+ */
+
 console.log('-> Creating "deno.json"');
 const denoFileContent = `{
   "tasks": {
@@ -41,6 +52,11 @@ const denoFileContent = `{
 }
 `;
 await Deno.writeTextFile(resolve(projectDir, "deno.json"), denoFileContent);
+
+/**
+ * main.ts
+ * ----------------------------------------------------------------------------
+ */
 
 console.log('-> Creating "main.ts"');
 const mainFileContent = `import {
@@ -83,8 +99,17 @@ closeWindow();
 `;
 await Deno.writeTextFile(resolve(projectDir, "main.ts"), mainFileContent);
 
+/**
+ * Fetching binaries
+ * ----------------------------------------------------------------------------
+ */
+
 console.log("Fetching binaries");
-await Deno.mkdir(resolve(projectDir, "tmp"));
+const tmpFolder = resolve(projectDir, "tmp");
+await Deno.mkdir(tmpFolder);
+
+const libFolderPath = resolve(projectDir, "lib");
+await Deno.mkdir(libFolderPath);
 
 const response = await fetch(
   "https://github.com/raysan5/raylib/releases/download/5.5/raylib-5.5_linux_amd64.tar.gz",
@@ -97,6 +122,28 @@ if (!response.ok) {
 const bytes = new Uint8Array(await response.arrayBuffer());
 const archivePath = resolve(projectDir, "tmp", "raylib-5.5_linux_amd64.tar.gz");
 await Deno.writeFile(archivePath, bytes);
+
+// This runs for each file inside the zip.
+for await (
+  const entry of (await Deno.open(archivePath))
+    .readable
+    .pipeThrough(new DecompressionStream("gzip"))
+    .pipeThrough(new UntarStream())
+) {
+  console.log(entry.path);
+  const path = normalize(entry.path);
+  await Deno.mkdir(resolve(tmpFolder, dirname(path)), { recursive: true });
+  await entry.readable?.pipeTo(
+    (await Deno.create(resolve(tmpFolder, path))).writable,
+  );
+}
+
+await Deno.remove(tmpFolder, { recursive: true });
+
+/**
+ * Finishing
+ * ----------------------------------------------------------------------------
+ */
 
 console.log("Done!");
 console.log();

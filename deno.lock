@@ -5,6 +5,8 @@
     "jsr:@std/assert@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
+    "jsr:@std/streams@^1.0.17": "1.1.0",
+    "jsr:@std/tar@~0.1.10": "0.1.10",
     "jsr:@std/xml@0.1": "0.1.0"
   },
   "jsr": {
@@ -23,6 +25,15 @@
         "jsr:@std/internal"
       ]
     },
+    "@std/streams@1.1.0": {
+      "integrity": "2f7024d841f343fd478afe0c958a3f0f068ef2a0d2bcc954f550f97ac1fa22e3"
+    },
+    "@std/tar@0.1.10": {
+      "integrity": "6bf907f3a4bc8bfef42973ba132d946756a6161ef6b914a9e1c06debe664db17",
+      "dependencies": [
+        "jsr:@std/streams"
+      ]
+    },
     "@std/xml@0.1.0": {
       "integrity": "e2b7755a45d7d252bea25d8058eff1edffa8de5ab9802cca8f253b70ede733bb"
     }
@@ -31,7 +42,8 @@
     "members": {
       "bindings": {
         "dependencies": [
-          "jsr:@std/path@^1.1.4"
+          "jsr:@std/path@^1.1.4",
+          "jsr:@std/tar@~0.1.10"
         ]
       },
       "game": {
