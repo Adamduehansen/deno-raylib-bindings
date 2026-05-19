@@ -106,10 +106,13 @@ export class IdleState extends PlayerState {
     const tp = room.entities.find((entity) =>
       entity instanceof Tp && this.player.position.x === entity.position.x &&
       this.player.position.y === entity.position.y
-    );
-    if (tp === undefined) {
+    ) as Tp;
+    if (tp === undefined || tp.discovered) {
       return;
     }
+
+    traceLog(LOG_DEBUG, "Unlocking new room", tp.id.toString());
+    tp.discover();
 
     this.player.scene?.events.emit("add_map", this.player.position);
   }

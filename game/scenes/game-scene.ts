@@ -24,7 +24,6 @@ export class GameScene extends Scene {
     this.addTiledMap(Resources.room1);
 
     this.events.on("add_map", () => {
-      console.log(-Resources.room2.width * Resources.room2.tileWidth);
       this.addTiledMap(Resources.room2, {
         x: -Resources.room2.width * Resources.room2.tileWidth,
         y: 0,
@@ -42,12 +41,13 @@ export class GameScene extends Scene {
   }
 
   canMoveToPosition(nextPosition: RaylibVector) {
-    // TODO: check for multiple tiles and if one is solid.
-    const tileAtNextPosition = this.entities.find((entity) =>
+    const solidTileAtNextPosition = this.entities.find((entity) =>
+      entity instanceof Tile &&
+      entity.solid &&
       entity.position.x === nextPosition.x &&
       entity.position.y === nextPosition.y
     );
-    if (tileAtNextPosition instanceof Tile && tileAtNextPosition.solid) {
+    if (solidTileAtNextPosition !== undefined) {
       return false;
     }
 
