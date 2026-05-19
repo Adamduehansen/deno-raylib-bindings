@@ -10,10 +10,13 @@
 0,49,49,49,50,49,52,
 0,49,49,49,49,49,0,
 0,49,50,49,49,49,0,
-0,0,0,49,0,0,0
+0,0,0,3221225523,0,0,0
 </data>
  </layer>
  <layer id="2" name="walls" width="7" height="8">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <data encoding="csv">
 2,3,3,3,3,3,4,
 14,15,29,21,29,15,16,

@@ -108,6 +108,7 @@ export default class Game {
 
       if (this.isDebug) {
         drawFPS(0, 0);
+        // TODO: Draw how many entities are on screen.
       }
 
       endDrawing();

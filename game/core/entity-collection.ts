@@ -20,6 +20,7 @@ export class EntityCollection {
    */
   add(entity: Entity): void {
     this._entities.push(entity);
+    this._entities.sort((entityA, entityB) => entityA.z - entityB.z);
     entity.scene = this._scene;
   }
 

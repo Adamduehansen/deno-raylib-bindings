@@ -22,6 +22,7 @@ export class Player extends Entity {
     super({
       sprite: new Sprite(Resources.knight.texture!),
       position: position,
+      z: 2,
     });
     this._gameScene = scene;
   }

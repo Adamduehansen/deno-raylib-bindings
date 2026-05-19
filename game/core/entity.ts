@@ -3,9 +3,10 @@ import { Sprite } from "./sprite.ts";
 import { Scene } from "./scene.ts";
 
 export interface EntityArgs {
+  position: RaylibVector;
   sprite?: Sprite;
   name?: string;
-  position: RaylibVector;
+  z?: number;
 }
 
 export class Entity {
@@ -16,16 +17,18 @@ export class Entity {
   readonly name?: string;
 
   position: RaylibVector;
+  z: number;
   sprite?: Sprite;
   scene?: Scene;
 
   flipHorizontal = false;
   flipVertical = false;
 
-  constructor({ sprite, position, name }: EntityArgs) {
-    this.sprite = sprite;
-    this.position = position;
-    this.name = name;
+  constructor(args: EntityArgs) {
+    this.sprite = args.sprite;
+    this.position = args.position;
+    this.name = args.name;
+    this.z = args.z ?? 1;
   }
 
   /**
