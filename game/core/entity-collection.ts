@@ -1,10 +1,16 @@
 import { Entity } from "./entity.ts";
+import { Scene } from "./scene.ts";
 
 export class EntityCollection {
   private _entities: Entity[] = [];
+  private _scene: Scene;
 
   get length(): number {
     return this._entities.length;
+  }
+
+  constructor(scene: Scene) {
+    this._scene = scene;
   }
 
   /**
@@ -14,6 +20,7 @@ export class EntityCollection {
    */
   add(entity: Entity): void {
     this._entities.push(entity);
+    entity.scene = this._scene;
   }
 
   /**

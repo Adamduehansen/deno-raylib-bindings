@@ -3,6 +3,7 @@ import { type RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 import { EntityCollection } from "./entity-collection.ts";
 import { Entity } from "./entity.ts";
 import { Sprite } from "./sprite.ts";
+import { Scene } from "./scene.ts";
 
 const testTexture: RaylibTexture = {
   id: 0,
@@ -25,7 +26,7 @@ class TestEntity extends Entity {
 
 Deno.test("should add entity to collection", () => {
   // Arrange
-  const entityCollection = new EntityCollection();
+  const entityCollection = new EntityCollection(new Scene());
 
   // Act
   const testEntity = new TestEntity();

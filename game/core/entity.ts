@@ -1,5 +1,6 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { Sprite } from "./sprite.ts";
+import { Scene } from "./scene.ts";
 
 export interface EntityArgs {
   sprite?: Sprite;
@@ -16,6 +17,7 @@ export class Entity {
 
   position: RaylibVector;
   sprite?: Sprite;
+  scene?: Scene;
 
   flipHorizontal = false;
   flipVertical = false;

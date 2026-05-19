@@ -22,11 +22,20 @@ export class GameScene extends Scene {
 
   override init(): void {
     this.addTiledMap(Resources.room1);
+
+    this.events.on("add_map", () => {
+      console.log(-Resources.room2.width * Resources.room2.tileWidth);
+      this.addTiledMap(Resources.room2, {
+        x: -Resources.room2.width * Resources.room2.tileWidth,
+        y: 0,
+      });
+    });
   }
 
   override update(): void {
     super.update();
 
+    // TODO: Can this be abstracted somewhere?
     if (this.player !== undefined) {
       this.camera.focus(this.player);
     }
@@ -45,7 +54,11 @@ export class GameScene extends Scene {
     return true;
   }
 
-  addTiledMap(tiledMapResource: TiledMapResource): void {
+  addTiledMap(
+    tiledMapResource: TiledMapResource,
+    // TODO: Should make a Vector wrapper with utility functions.
+    position: RaylibVector = { x: 0, y: 0 },
+  ): void {
     traceLog(
       LOG_DEBUG,
       "SCENE:",
@@ -89,8 +102,8 @@ export class GameScene extends Scene {
           const entity = new Tile({
             sprite: sprite,
             position: {
-              x: sprite.width * colIndex,
-              y: sprite.height * rowIndex,
+              x: position.x + sprite.width * colIndex,
+              y: position.y + sprite.height * rowIndex,
             },
             solid: Boolean(layer.properties["solid"]?.value),
           });

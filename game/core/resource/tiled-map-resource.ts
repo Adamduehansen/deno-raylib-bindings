@@ -181,8 +181,11 @@ interface TileLayer {
 export class TiledMapResource implements Resource {
   private _path: string;
 
-  private _width: number = 0;
-  private _height: number = 0;
+  private _width = 0;
+  private _height = 0;
+  private _tileWidth = 0;
+  private _tileHeight = 0;
+
   private _tilesets: MapTileset[] = [];
   private _tileLayers: TileLayer[] = [];
   private _objectLayers: ObjectLayer[] = [];
@@ -196,6 +199,14 @@ export class TiledMapResource implements Resource {
 
   get height(): number {
     return this._height;
+  }
+
+  get tileWidth(): number {
+    return this._tileWidth;
+  }
+
+  get tileHeight(): number {
+    return this._tileHeight;
   }
 
   get tilesets(): readonly MapTileset[] {
@@ -223,6 +234,8 @@ export class TiledMapResource implements Resource {
     const { root: map } = parseXml(this._getTiledMapContent());
     this._width = Number(map.attributes["width"]);
     this._height = Number(map.attributes["height"]);
+    this._tileWidth = Number(map.attributes["tilewidth"]);
+    this._tileHeight = Number(map.attributes["tileheight"]);
     this._tileLayers = this._parseTileLayers(map);
     this._objectLayers = this._parseObjectLayers(map);
     this._tilesets = this._parseTilesets(map);

@@ -111,7 +111,7 @@ export class IdleState extends PlayerState {
       return;
     }
 
-    console.log(tp);
+    this.player.scene?.events.emit("add_map", this.player.position);
   }
 }
 
