@@ -15,6 +15,7 @@
     "./r-textures": "./src/r-textures.ts"
   },
   "imports": {
-    "@std/path": "jsr:@std/path@^1.1.4"
+    "@std/path": "jsr:@std/path@^1.1.4",
+    "@std/tar": "jsr:@std/tar@^0.1.10"
   }
 }
