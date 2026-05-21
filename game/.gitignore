@@ -6,3 +6,6 @@ assets
 
 # Project files
 *.tiled-session
+
+# Build project
+bin

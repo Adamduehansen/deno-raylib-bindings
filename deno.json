@@ -1,7 +1,8 @@
 {
   "workspace": ["./bindings", "./saga", "./game", "./tests/jsx-test"],
   "tasks": {
-    "start": "deno task --cwd=game dev",
+    "start": "deno task --cwd=game start",
+    "compile": "deno task --cwd=game compile",
     "jsx": "deno task --cwd=tests/jsx-test dev"
   }
 }

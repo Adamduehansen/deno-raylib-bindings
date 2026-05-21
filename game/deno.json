@@ -1,6 +1,12 @@
 {
   "tasks": {
-    "dev": "deno run --allow-ffi --allow-read=resources main.ts"
+    "start": "deno run --allow-ffi --allow-read=resources main.ts",
+    "compile": "deno compile -P --allow-read=resources --output bin/main ./main.ts"
+  },
+  "compile": {
+    "permissions": {
+      "ffi": true
+    }
   },
   "test": {
     "permissions": {
