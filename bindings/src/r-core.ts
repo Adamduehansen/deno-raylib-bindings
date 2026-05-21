@@ -276,6 +276,13 @@ export function isKeyPressed(key: number): boolean {
 }
 
 /**
+ * Check if a key has been released once
+ */
+export function isKeyReleased(key: number): boolean {
+  return raylib.symbols.IsKeyReleased(key);
+}
+
+/**
  * Get key pressed (keycode), call it multiple times for keys queued, returns 0
  * when the queue is empty
  */

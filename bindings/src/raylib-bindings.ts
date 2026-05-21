@@ -314,6 +314,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: ["i16"],
     result: "bool",
   },
+  IsKeyReleased: {
+    parameters: ["i16"],
+    result: "bool",
+  },
   IsMouseButtonDown: {
     parameters: ["i16"],
     result: "bool",
