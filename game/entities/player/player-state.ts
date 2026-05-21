@@ -19,12 +19,12 @@ export abstract class PlayerState {
   enter(room: GameScene): void {}
 }
 
-abstract class MoveCommand {
+abstract class PlayerCommand<TExecuteReturn = void> {
   constructor(readonly player: Player) {}
-  abstract execute(): RaylibVector;
+  abstract execute(): TExecuteReturn;
 }
 
-class MoveRightCommand extends MoveCommand {
+class MoveRightCommand extends PlayerCommand<RaylibVector> {
   execute(): RaylibVector {
     return {
       ...this.player.position,
@@ -33,7 +33,7 @@ class MoveRightCommand extends MoveCommand {
   }
 }
 
-class MoveLeftCommand extends MoveCommand {
+class MoveLeftCommand extends PlayerCommand<RaylibVector> {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
@@ -42,7 +42,7 @@ class MoveLeftCommand extends MoveCommand {
   }
 }
 
-class MoveUpCommand extends MoveCommand {
+class MoveUpCommand extends PlayerCommand<RaylibVector> {
   execute(): RaylibVector {
     return {
       ...this.player.position,
@@ -51,7 +51,7 @@ class MoveUpCommand extends MoveCommand {
   }
 }
 
-class MoveDownCommand extends MoveCommand {
+class MoveDownCommand extends PlayerCommand<RaylibVector> {
   override execute(): RaylibVector {
     return {
       ...this.player.position,
@@ -60,22 +60,46 @@ class MoveDownCommand extends MoveCommand {
   }
 }
 
+class TurnRightCommand extends PlayerCommand {
+  override execute(): void {
+    this.player.flipHorizontal = false;
+  }
+}
+
+class TurnLeftCommand extends PlayerCommand {
+  override execute(): void {
+    this.player.flipHorizontal = true;
+  }
+}
+
 export class IdleState extends PlayerState {
-  private _rightActionPressedCommand = new MoveRightCommand(this.player);
-  private _leftActionPressedCommand = new MoveLeftCommand(this.player);
-  private _upActionPressedCommand = new MoveUpCommand(this.player);
-  private _downActionPressedCommand = new MoveDownCommand(this.player);
+  private _rightActionDownCommand = new MoveRightCommand(this.player);
+  private _leftActionDownCommand = new MoveLeftCommand(this.player);
+  private _upActionDownCommand = new MoveUpCommand(this.player);
+  private _downActionDownCommand = new MoveDownCommand(this.player);
+  private _rightActionPressedCommand = new TurnRightCommand(this.player);
+  private _leftActionPressedCommand = new TurnLeftCommand(this.player);
+
   private _nextPosition?: RaylibVector;
 
   override handleInput(inputController: InputController): void {
     if (inputController.isRightPressed()) {
-      this._nextPosition = this._rightActionPressedCommand.execute();
-    } else if (inputController.isLeftPressed()) {
-      this._nextPosition = this._leftActionPressedCommand.execute();
-    } else if (inputController.isUpPressed()) {
-      this._nextPosition = this._upActionPressedCommand.execute();
-    } else if (inputController.isDownPressed()) {
-      this._nextPosition = this._downActionPressedCommand.execute();
+      this._rightActionPressedCommand.execute();
+    } else if (inputController.isRightDown()) {
+      this._nextPosition = this._rightActionDownCommand.execute();
+      return;
+    }
+    if (inputController.isLeftPressed()) {
+      this._leftActionPressedCommand.execute();
+    } else if (inputController.isLeftDown()) {
+      this._nextPosition = this._leftActionDownCommand.execute();
+      return;
+    }
+    if (inputController.isUpPressed()) {
+      this._nextPosition = this._upActionDownCommand.execute();
+    }
+    if (inputController.isDownPressed()) {
+      this._nextPosition = this._downActionDownCommand.execute();
     }
   }
 

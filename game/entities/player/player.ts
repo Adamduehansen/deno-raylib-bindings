@@ -28,6 +28,7 @@ export class Player extends Entity {
   }
 
   override update(): void {
+    this._inputController.update();
     this._state.handleInput(this._inputController);
     const nextState = this._state.update(this._gameScene);
 
