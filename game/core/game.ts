@@ -7,18 +7,16 @@ import {
   endDrawing,
   endMode2D,
   initWindow,
-  LOG_DEBUG,
-  LOG_INFO,
   RaylibColor,
   setTargetFPS,
-  setTraceLogLevel,
-  traceLog,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
 import { Resource } from "./resource/resource.ts";
 import { Scene } from "./scene.ts";
 import { drawEntity } from "./draw-entity.ts";
+import { Logger } from "./logger.ts";
+import { GameContext } from "../game-context.ts";
 
 const DEFAULT_TARGET_FPS = 60;
 const DEFAULT_RESOURCES = {};
@@ -38,7 +36,6 @@ export default class Game {
   readonly width: number;
   readonly height: number;
   readonly targetFPS: number;
-  readonly isDebug: boolean;
   readonly resources: Record<string, Resource>;
   readonly scenes: Record<string, Scene>;
   readonly currentScene: Scene;
@@ -58,7 +55,6 @@ export default class Game {
     this.resources = args.resources ?? DEFAULT_RESOURCES;
     this.backgroundColor = args.backgroundColor ?? Black;
 
-    this.isDebug = Deno.args.includes("--debug");
     this.currentScene = this.scenes[Object.keys(this.scenes)[0]];
   }
 
@@ -74,15 +70,12 @@ export default class Game {
 
     setTargetFPS(60);
 
-    // TODO: Create a logger and move the initialization to that.
-    setTraceLogLevel(this.isDebug ? LOG_DEBUG : LOG_INFO);
-
-    traceLog(LOG_INFO, "Loading resources...");
+    Logger.getInstance().info("Loading resources...");
     for (const resource of Object.values(this.resources)) {
       resource.load();
     }
 
-    traceLog(LOG_INFO, "Initializing scenes...");
+    Logger.getInstance().info("Initializing scenes...");
     for (const scene of Object.values(this.scenes)) {
       scene.init();
     }
@@ -106,7 +99,7 @@ export default class Game {
 
       endMode2D();
 
-      if (this.isDebug) {
+      if (GameContext.isDebug) {
         drawFPS(0, 0);
         // TODO: Draw how many entities are on screen.
       }
@@ -116,9 +109,9 @@ export default class Game {
   }
 
   [Symbol.dispose]() {
-    traceLog(LOG_INFO, "Disposing the game...");
+    Logger.getInstance().info("Disposing the game...");
 
-    traceLog(LOG_INFO, "Unloading resources...");
+    Logger.getInstance().info("Unloading resources...");
     for (const resource of Object.values(this.resources)) {
       resource.unload();
     }

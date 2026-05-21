@@ -1,8 +1,4 @@
-import {
-  LOG_DEBUG,
-  RaylibVector,
-  traceLog,
-} from "@adamduehansen/raylib-bindings/r-core";
+import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
 import { Scene } from "../core/scene.ts";
 import { SpriteSheet } from "../core/sprite-sheet.ts";
@@ -59,8 +55,7 @@ export class GameScene extends Scene {
     // TODO: Should make a Vector wrapper with utility functions.
     position: RaylibVector = { x: 0, y: 0 },
   ): void {
-    traceLog(
-      LOG_DEBUG,
+    this.logger.debug(
       "SCENE:",
       "Adding Tiled map:",
       `"${tiledMapResource.name}"`,
@@ -84,7 +79,11 @@ export class GameScene extends Scene {
     });
 
     for (const layer of tiledMapResource.tileLayers) {
-      traceLog(LOG_DEBUG, "SCENE:", "Adding tile layer:", `"${layer.name}"`);
+      this.logger.debug(
+        "SCENE:",
+        "Adding tile layer:",
+        `"${layer.name}"`,
+      );
       const rows = layer.data.content.split("\n").filter((row) => row !== "");
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         const spriteIndexes = rows[rowIndex].split(",");
@@ -113,10 +112,14 @@ export class GameScene extends Scene {
     }
 
     for (const layer of tiledMapResource.objectLayers) {
-      traceLog(LOG_DEBUG, "SCENE:", "Adding object layer:", `"${layer.name}"`);
+      this.logger.debug(
+        "SCENE:",
+        "Adding object layer:",
+        `"${layer.name}"`,
+      );
       for (const object of layer.objects) {
         if (object.name === "player") {
-          traceLog(LOG_DEBUG, "SCENE:", "Spawning player");
+          this.logger.debug("SCENE:", "Spawning player");
           const player = new Player({
             scene: this,
             position: {
@@ -127,7 +130,7 @@ export class GameScene extends Scene {
           this.entities.add(player);
           this.player = player;
         } else if (object.name === "tp") {
-          traceLog(LOG_DEBUG, "Scene", "Spawning tp");
+          this.logger.debug("Scene", "Spawning tp");
           const tp = new Tp({
             position: {
               x: Number(object.x),

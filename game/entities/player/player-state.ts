@@ -1,14 +1,13 @@
 import {
   getFrameTime,
-  LOG_DEBUG,
   RaylibVector,
-  traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { GameContext } from "../../game-context.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
 import { GameScene } from "../../scenes/game-scene.ts";
 import Tp from "../../entities/tp.ts";
+import { Logger } from "../../core/logger.ts";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
@@ -89,8 +88,7 @@ export class IdleState extends PlayerState {
       return null;
     }
 
-    traceLog(
-      LOG_DEBUG,
+    Logger.getInstance().debug(
       "PLAYER:",
       "Next player position: {",
       this._nextPosition.x.toString(),
@@ -111,7 +109,7 @@ export class IdleState extends PlayerState {
       return;
     }
 
-    traceLog(LOG_DEBUG, "Unlocking new room", tp.id.toString());
+    Logger.getInstance().debug("Unlocking new room", tp.id.toString());
     tp.discover();
 
     this.player.scene?.events.emit("add_map", this.player.position);
