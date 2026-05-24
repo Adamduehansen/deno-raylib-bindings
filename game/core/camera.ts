@@ -5,7 +5,25 @@ import {
 } from "@adamduehansen/raylib-bindings/r-core";
 import { Entity } from "./entity.ts";
 
+interface CameraStrategy {
+  update(camera: RaylibCamera): void;
+}
+
+export class FollowEntityStrategy implements CameraStrategy {
+  constructor(readonly entity: Entity) {}
+
+  update(camera: RaylibCamera): void {
+    camera.target = this.entity.position;
+    camera.offset = {
+      x: getScreenWidth() / 2,
+      y: getScreenHeight() / 2,
+    };
+  }
+}
+
 export class Camera {
+  strategy?: CameraStrategy;
+
   private _camera: RaylibCamera;
 
   get nativeCamera(): RaylibCamera {
@@ -27,11 +45,7 @@ export class Camera {
     };
   }
 
-  focus(entity: Entity) {
-    this._camera.target = entity.position;
-    this._camera.offset = {
-      x: getScreenWidth() / 2,
-      y: getScreenHeight() / 2,
-    };
+  update() {
+    this.strategy?.update(this._camera);
   }
 }

@@ -6,6 +6,7 @@ import { Player } from "../entities/player/player.ts";
 import { Tile } from "../entities/tile.ts";
 import Tp from "../entities/tp.ts";
 import { Resources } from "../resources.ts";
+import { FollowEntityStrategy } from "../core/camera.ts";
 
 export class GameScene extends Scene {
   player?: Player;
@@ -25,15 +26,8 @@ export class GameScene extends Scene {
         y: 0,
       });
     });
-  }
 
-  override update(): void {
-    super.update();
-
-    // TODO: Can this be abstracted somewhere?
-    if (this.player !== undefined) {
-      this.camera.focus(this.player);
-    }
+    this.camera.strategy = new FollowEntityStrategy(this.player!);
   }
 
   canMoveToPosition(nextPosition: RaylibVector) {

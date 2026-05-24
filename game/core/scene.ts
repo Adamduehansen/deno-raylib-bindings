@@ -13,6 +13,7 @@ export class Scene {
     for (const entity of this.entities) {
       entity.update();
     }
+    this.camera.update();
   }
 
   /**

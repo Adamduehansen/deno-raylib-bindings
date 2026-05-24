@@ -62,18 +62,6 @@ class MoveDownCommand extends PlayerCommand<RaylibVector> {
   }
 }
 
-class TurnRightCommand extends PlayerCommand {
-  override execute(): void {
-    this.player.flipHorizontal = false;
-  }
-}
-
-class TurnLeftCommand extends PlayerCommand {
-  override execute(): void {
-    this.player.flipHorizontal = true;
-  }
-}
-
 class TurningState extends PlayerState {
   private _framesSpendTurning = 0;
 
