@@ -7,6 +7,7 @@ import { Tile } from "../entities/tile.ts";
 import Tp from "../entities/tp.ts";
 import { Resources } from "../resources.ts";
 import { FollowEntityStrategy } from "../core/camera.ts";
+import { Vector } from "../core/vector.ts";
 
 export class GameScene extends Scene {
   player?: Player;
@@ -46,8 +47,7 @@ export class GameScene extends Scene {
 
   addTiledMap(
     tiledMapResource: TiledMapResource,
-    // TODO: Should make a Vector wrapper with utility functions.
-    position: RaylibVector = { x: 0, y: 0 },
+    position = Vector.zero,
   ): void {
     this.logger.debug(
       "SCENE:",
