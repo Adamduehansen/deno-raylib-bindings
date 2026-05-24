@@ -4,6 +4,7 @@ import {
   Black,
   clearBackground,
   closeWindow,
+  DarkGreen,
   endDrawing,
   endMode2D,
   initWindow,
@@ -11,7 +12,7 @@ import {
   setTargetFPS,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { drawFPS } from "@adamduehansen/raylib-bindings/r-text";
+import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
 import { Resource } from "./resource/resource.ts";
 import { Scene } from "./scene.ts";
 import { drawEntity } from "./draw-entity.ts";
@@ -101,7 +102,13 @@ export default class Game {
 
       if (GameContext.isDebug) {
         drawFPS(0, 0);
-        // TODO: Draw how many entities are on screen.
+        drawText({
+          color: [0, 255, 0, 150],
+          fontSize: 20,
+          posX: 0,
+          posY: 20,
+          text: `No. of entities: ${this.currentScene.entities.length}`,
+        });
       }
 
       endDrawing();
