@@ -12,8 +12,10 @@ import { Logger } from "../../core/logger.ts";
 export abstract class PlayerState {
   constructor(readonly player: Player) {}
 
-  abstract handleInput(inputController: InputController): void;
-  abstract update(room: GameScene): PlayerState | null;
+  abstract update(
+    inputController: InputController,
+    room: GameScene,
+  ): PlayerState | null;
 
   // deno-lint-ignore no-unused-vars
   enter(room: GameScene): void {}
@@ -72,28 +74,48 @@ class TurnLeftCommand extends PlayerCommand {
   }
 }
 
+class TurningState extends PlayerState {
+  private _framesSpendTurning = 0;
+
+  constructor(player: Player) {
+    super(player);
+    this.player.flipHorizontal = !this.player.flipHorizontal;
+  }
+
+  override update(): PlayerState | null {
+    if (this._framesSpendTurning === 2) {
+      return new IdleState(this.player);
+    }
+
+    this._framesSpendTurning += 1;
+    return null;
+  }
+}
+
 export class IdleState extends PlayerState {
   private _rightActionDownCommand = new MoveRightCommand(this.player);
   private _leftActionDownCommand = new MoveLeftCommand(this.player);
   private _upActionDownCommand = new MoveUpCommand(this.player);
   private _downActionDownCommand = new MoveDownCommand(this.player);
-  private _rightActionPressedCommand = new TurnRightCommand(this.player);
-  private _leftActionPressedCommand = new TurnLeftCommand(this.player);
 
   private _nextPosition?: RaylibVector;
 
-  override handleInput(inputController: InputController): void {
+  override update(
+    inputController: InputController,
+    room: GameScene,
+  ): PlayerState | null {
     if (inputController.isRightPressed()) {
-      this._rightActionPressedCommand.execute();
-    } else if (inputController.isRightDown()) {
+      if (this.player.flipHorizontal === true) {
+        return new TurningState(this.player);
+      }
       this._nextPosition = this._rightActionDownCommand.execute();
-      return;
     }
     if (inputController.isLeftPressed()) {
-      this._leftActionPressedCommand.execute();
-    } else if (inputController.isLeftDown()) {
-      this._nextPosition = this._leftActionDownCommand.execute();
-      return;
+      if (this.player.flipHorizontal === false) {
+        return new TurningState(this.player);
+      } else {
+        this._nextPosition = this._leftActionDownCommand.execute();
+      }
     }
     if (inputController.isUpPressed()) {
       this._nextPosition = this._upActionDownCommand.execute();
@@ -101,9 +123,7 @@ export class IdleState extends PlayerState {
     if (inputController.isDownPressed()) {
       this._nextPosition = this._downActionDownCommand.execute();
     }
-  }
 
-  override update(room: GameScene): PlayerState | null {
     if (this._nextPosition === undefined) {
       return null;
     }
@@ -149,8 +169,6 @@ export class MovingState extends PlayerState {
   ) {
     super(player);
   }
-
-  override handleInput(_inputController: InputController): void {}
 
   override update(): PlayerState | null {
     const { position } = this.player;
