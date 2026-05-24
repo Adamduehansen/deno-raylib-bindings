@@ -14,7 +14,7 @@ export class GameScene extends Scene {
   constructor() {
     super();
 
-    this.camera.nativeCamera.zoom = 3;
+    this.camera.zoom = 3;
   }
 
   override init(): void {

@@ -1,12 +1,9 @@
 import {
   beginDrawing,
-  beginMode2D,
   Black,
   clearBackground,
   closeWindow,
-  DarkGreen,
   endDrawing,
-  endMode2D,
   initWindow,
   RaylibColor,
   setTargetFPS,
@@ -92,13 +89,13 @@ export default class Game {
 
       clearBackground(this.backgroundColor);
 
-      beginMode2D(this.currentScene.camera.nativeCamera);
+      this.currentScene.camera.beginRender();
 
       for (const entity of this.currentScene.entities) {
         drawEntity(entity);
       }
 
-      endMode2D();
+      this.currentScene.camera.endRender();
 
       if (GameContext.isDebug) {
         drawFPS(0, 0);

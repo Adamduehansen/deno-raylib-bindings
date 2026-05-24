@@ -1,4 +1,6 @@
 import {
+  beginMode2D,
+  endMode2D,
   getScreenHeight,
   getScreenWidth,
   RaylibCamera,
@@ -24,14 +26,14 @@ export class FollowEntityStrategy implements CameraStrategy {
 export class Camera {
   strategy?: CameraStrategy;
 
-  private _camera: RaylibCamera;
-
-  get nativeCamera(): RaylibCamera {
-    return this._camera;
+  set zoom(value: number) {
+    this._raylibCamera.zoom = value;
   }
 
+  private _raylibCamera: RaylibCamera;
+
   constructor() {
-    this._camera = {
+    this._raylibCamera = {
       target: {
         x: 0,
         y: 0,
@@ -46,6 +48,14 @@ export class Camera {
   }
 
   update() {
-    this.strategy?.update(this._camera);
+    this.strategy?.update(this._raylibCamera);
+  }
+
+  beginRender(): void {
+    beginMode2D(this._raylibCamera);
+  }
+
+  endRender(): void {
+    endMode2D();
   }
 }
