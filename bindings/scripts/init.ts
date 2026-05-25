@@ -130,7 +130,6 @@ for await (
     .pipeThrough(new DecompressionStream("gzip"))
     .pipeThrough(new UntarStream())
 ) {
-  console.log(entry.path);
   const path = normalize(entry.path);
   await Deno.mkdir(resolve(tmpFolder, dirname(path)), { recursive: true });
   await entry.readable?.pipeTo(
@@ -155,4 +154,4 @@ console.log();
 console.log("Next steps:");
 console.log("-> cd", projectName);
 console.log("-> deno install");
-console.log("-> deno run starts");
+console.log("-> deno run start");
