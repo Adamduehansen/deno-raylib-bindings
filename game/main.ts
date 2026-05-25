@@ -13,6 +13,10 @@ using game = new Game({
   },
   resources: Resources,
   backgroundColor: DarkGray,
+  isFullscreen: true,
+  onUpdate: function (game: Game) {
+    game.setFullScreen(true);
+  },
 });
 
 game.start();

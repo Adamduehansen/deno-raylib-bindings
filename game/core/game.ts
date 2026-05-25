@@ -4,9 +4,14 @@ import {
   clearBackground,
   closeWindow,
   endDrawing,
+  getCurrentMonitor,
+  getMonitorHeight,
+  getMonitorWidth,
   initWindow,
   RaylibColor,
   setTargetFPS,
+  setWindowSize,
+  toggleFullScreen,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
@@ -27,6 +32,8 @@ interface GameArgs {
   targetFPS?: number;
   resources?: Record<string, Resource>;
   backgroundColor?: RaylibColor;
+  isFullscreen: boolean;
+  onUpdate?: (game: Game) => void;
 }
 
 export default class Game {
@@ -38,6 +45,7 @@ export default class Game {
   readonly scenes: Record<string, Scene>;
   readonly currentScene: Scene;
   readonly backgroundColor: RaylibColor;
+  readonly isFullscreen: boolean;
 
   /**
    * Creates a new instance of a game. This will prepare the properties of the
@@ -48,12 +56,21 @@ export default class Game {
     this.width = args.width;
     this.height = args.height;
     this.scenes = args.scenes;
+    this.isFullscreen = args.isFullscreen;
 
     this.targetFPS = args.targetFPS ?? DEFAULT_TARGET_FPS;
     this.resources = args.resources ?? DEFAULT_RESOURCES;
     this.backgroundColor = args.backgroundColor ?? Black;
 
     this.currentScene = this.scenes[Object.keys(this.scenes)[0]];
+  }
+
+  setFullScreen(value: boolean): void {
+    // TODO: implement this feature.
+
+    // const display = getCurrentMonitor();
+    // setWindowSize(getMonitorWidth(display), getMonitorHeight(display));
+    // toggleFullScreen();
   }
 
   /**
@@ -78,6 +95,7 @@ export default class Game {
       scene.init();
     }
 
+    Logger.getInstance().info("Running game...");
     while (windowShouldClose() === false) {
       // Update the game
       // ----------------------------------------------------------------------
@@ -90,6 +108,8 @@ export default class Game {
       clearBackground(this.backgroundColor);
 
       this.currentScene.camera.beginRender();
+
+      // TODO: cache the current length of entities and update/render only that list.
 
       for (const entity of this.currentScene.entities) {
         drawEntity(entity);

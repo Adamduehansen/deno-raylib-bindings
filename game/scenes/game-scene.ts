@@ -92,6 +92,8 @@ export class GameScene extends Scene {
 
           const sprite = spritesheet.getSprite(x, y);
 
+          // TODO: support rotated tile.
+
           const entity = new Tile({
             sprite: sprite,
             position: {
