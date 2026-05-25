@@ -1,6 +1,6 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { Sprite } from "./sprite.ts";
-import { Scene } from "./scene.ts";
+import type { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import type { Sprite } from "./sprite.ts";
+import type { Scene } from "./scene.ts";
 
 export interface EntityArgs {
   position: RaylibVector;

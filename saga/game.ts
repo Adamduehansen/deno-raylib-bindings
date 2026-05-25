@@ -4,22 +4,17 @@ import {
   clearBackground,
   closeWindow,
   endDrawing,
-  getCurrentMonitor,
-  getMonitorHeight,
-  getMonitorWidth,
   initWindow,
-  RaylibColor,
+  type RaylibColor,
   setTargetFPS,
-  setWindowSize,
-  toggleFullScreen,
   windowShouldClose,
 } from "@adamduehansen/raylib-bindings/r-core";
 import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
-import { Resource } from "./resource/resource.ts";
-import { Scene } from "./scene.ts";
+import type { Resource } from "./resource/resource.ts";
+import type { Scene } from "./scene.ts";
 import { drawEntity } from "./draw-entity.ts";
 import { Logger } from "./logger.ts";
-import { GameContext } from "../game-context.ts";
+import { GameContext } from "./game-context.ts";
 
 const DEFAULT_TARGET_FPS = 60;
 const DEFAULT_RESOURCES = {};
@@ -36,7 +31,7 @@ interface GameArgs {
   onUpdate?: (game: Game) => void;
 }
 
-export default class Game {
+export class Game {
   readonly title: string;
   readonly width: number;
   readonly height: number;

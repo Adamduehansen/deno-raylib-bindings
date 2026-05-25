@@ -1,4 +1,4 @@
-import TextureResource from "./resource/image-resource.ts";
+import type { TextureResource } from "./resource/texture-resource.ts";
 import { Sprite } from "./sprite.ts";
 
 interface Options {

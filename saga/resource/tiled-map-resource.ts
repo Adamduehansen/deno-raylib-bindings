@@ -1,13 +1,13 @@
 import {
   parse as parseXml,
-  XmlDocument,
+  type XmlDocument,
   type XmlElement,
-  XmlNode,
+  type XmlNode,
 } from "@std/xml";
 import { basename, dirname, resolve } from "@std/path";
 import { isWindowReady } from "@adamduehansen/raylib-bindings/r-core";
-import { Resource } from "./resource.ts";
-import TextureResource from "./image-resource.ts";
+import type { Resource } from "./resource.ts";
+import { TextureResource } from "./texture-resource.ts";
 
 interface Property {
   type: string;

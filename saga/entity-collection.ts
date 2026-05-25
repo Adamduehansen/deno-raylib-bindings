@@ -1,5 +1,5 @@
-import { Entity } from "./entity.ts";
-import { Scene } from "./scene.ts";
+import type { Entity } from "./entity.ts";
+import type { Scene } from "./scene.ts";
 
 export class EntityCollection {
   private _entities: Entity[] = [];

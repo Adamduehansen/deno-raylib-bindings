@@ -1,4 +1,4 @@
-import { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
+import type { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 
 interface Options {
   x?: number;

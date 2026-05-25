@@ -1,5 +1,4 @@
-import TextureResource from "./core/resource/image-resource.ts";
-import { TiledMapResource } from "./core/resource/tiled-map-resource.ts";
+import { TextureResource, TiledMapResource } from "@adamduehansen/saga";
 
 export const Resources = {
   wizard: new TextureResource(

@@ -1,4 +1,4 @@
-import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import type { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
 
 export class Vector {
   /**

@@ -2,12 +2,12 @@ import {
   getFrameTime,
   RaylibVector,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { GameContext } from "../../game-context.ts";
+import { GameContext } from "../../../saga/game-context.ts";
 import { Player } from "./player.ts";
 import { InputController } from "./input-controller.ts";
 import { GameScene } from "../../scenes/game-scene.ts";
 import Tp from "../../entities/tp.ts";
-import { Logger } from "../../core/logger.ts";
+import { Logger } from "@adamduehansen/saga";
 
 export abstract class PlayerState {
   constructor(readonly player: Player) {}

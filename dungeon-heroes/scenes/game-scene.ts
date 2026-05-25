@@ -1,13 +1,15 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { TiledMapResource } from "../core/resource/tiled-map-resource.ts";
-import { Scene } from "../core/scene.ts";
-import { SpriteSheet } from "../core/sprite-sheet.ts";
+import {
+  Scene,
+  SpriteSheet,
+  TiledMapResource,
+  Vector,
+} from "@adamduehansen/saga";
 import { Player } from "../entities/player/player.ts";
 import { Tile } from "../entities/tile.ts";
 import Tp from "../entities/tp.ts";
 import { Resources } from "../resources.ts";
-import { FollowEntityStrategy } from "../core/camera.ts";
-import { Vector } from "../core/vector.ts";
+import { FollowEntityStrategy } from "../../saga/camera.ts";
 
 export class GameScene extends Scene {
   player?: Player;

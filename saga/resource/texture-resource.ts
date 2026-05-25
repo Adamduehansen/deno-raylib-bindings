@@ -5,7 +5,7 @@ import {
 } from "@adamduehansen/raylib-bindings/r-textures";
 import type { Resource } from "./resource.ts";
 
-export default class TextureResource implements Resource {
+export class TextureResource implements Resource {
   texture?: RaylibTexture;
 
   constructor(readonly path: string) {}

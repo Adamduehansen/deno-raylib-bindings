@@ -1,4 +1,4 @@
-import { type RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
+import type { RaylibTexture } from "@adamduehansen/raylib-bindings/r-core";
 import { Sprite } from "./sprite.ts";
 import { assertEquals } from "@std/assert/equals";
 

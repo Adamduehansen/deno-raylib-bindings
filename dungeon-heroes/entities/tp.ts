@@ -1,5 +1,5 @@
 import { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "../core/entity.ts";
+import { Entity } from "@adamduehansen/saga";
 
 interface Args {
   position: RaylibVector;

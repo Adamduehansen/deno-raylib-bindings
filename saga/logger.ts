@@ -4,7 +4,7 @@ import {
   setTraceLogLevel,
   traceLog,
 } from "@adamduehansen/raylib-bindings/r-core";
-import { GameContext } from "../game-context.ts";
+import { GameContext } from "./game-context.ts";
 
 export class Logger {
   private static _instance?: Logger;

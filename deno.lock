@@ -12,7 +12,8 @@
     "jsr:@std/streams@^1.0.17": "1.1.0",
     "jsr:@std/tar@~0.1.10": "0.1.10",
     "jsr:@std/testing@^1.0.18": "1.0.18",
-    "jsr:@std/xml@0.1": "0.1.1"
+    "jsr:@std/xml@0.1": "0.1.1",
+    "jsr:@std/xml@~0.1.1": "0.1.1"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -45,6 +46,15 @@
         "jsr:@std/internal@^1.0.12"
       ]
     },
+    "@std/streams@1.1.0": {
+      "integrity": "2f7024d841f343fd478afe0c958a3f0f068ef2a0d2bcc954f550f97ac1fa22e3"
+    },
+    "@std/tar@0.1.10": {
+      "integrity": "6bf907f3a4bc8bfef42973ba132d946756a6161ef6b914a9e1c06debe664db17",
+      "dependencies": [
+        "jsr:@std/streams"
+      ]
+    },
     "@std/testing@1.0.18": {
       "integrity": "d3152f57b11666bf6358d0e127c7e3488e91178b0c2d8fbf0793e1c53cd13cb1",
       "dependencies": [
@@ -54,15 +64,6 @@
         "jsr:@std/fs",
         "jsr:@std/internal@^1.0.13",
         "jsr:@std/path"
-      ]
-    },
-    "@std/streams@1.1.0": {
-      "integrity": "2f7024d841f343fd478afe0c958a3f0f068ef2a0d2bcc954f550f97ac1fa22e3"
-    },
-    "@std/tar@0.1.10": {
-      "integrity": "6bf907f3a4bc8bfef42973ba132d946756a6161ef6b914a9e1c06debe664db17",
-      "dependencies": [
-        "jsr:@std/streams"
       ]
     },
     "@std/xml@0.1.0": {
@@ -80,7 +81,7 @@
           "jsr:@std/tar@~0.1.10"
         ]
       },
-      "game": {
+      "dungeon-heroes": {
         "dependencies": [
           "jsr:@std/assert@1",
           "jsr:@std/path@^1.1.4",
@@ -90,7 +91,10 @@
       },
       "saga": {
         "dependencies": [
-          "jsr:@std/assert@^1.0.19"
+          "jsr:@std/assert@^1.0.19",
+          "jsr:@std/path@^1.1.4",
+          "jsr:@std/testing@^1.0.18",
+          "jsr:@std/xml@~0.1.1"
         ]
       }
     }

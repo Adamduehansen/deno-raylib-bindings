@@ -1,6 +1,5 @@
 import { type RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity } from "../../core/entity.ts";
-import { Sprite } from "../../core/sprite.ts";
+import { Entity, Sprite } from "@adamduehansen/saga";
 import { Resources } from "../../resources.ts";
 import { IdleState, PlayerState } from "./player-state.ts";
 import { InputController } from "./input-controller.ts";

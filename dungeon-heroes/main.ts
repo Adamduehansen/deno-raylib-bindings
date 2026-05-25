@@ -1,5 +1,5 @@
 import { DarkGray } from "@adamduehansen/raylib-bindings/r-core";
-import Game from "./core/game.ts";
+import { Game } from "@adamduehansen/saga";
 import { Resources } from "./resources.ts";
 import { GameScene } from "./scenes/game-scene.ts";
 
