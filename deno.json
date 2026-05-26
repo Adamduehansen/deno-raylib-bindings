@@ -1,7 +1,14 @@
 {
-  "workspace": ["./bindings", "./saga", "./dungeon-heroes", "./tests/jsx-test"],
+  "workspace": [
+    "./bindings",
+    "./saga",
+    "./dungeon-heroes",
+    "./stealth-invader",
+    "./tests/jsx-test"
+  ],
   "tasks": {
-    "start": "deno task --cwd=dungeon-heroes start",
+    "start:heroes": "deno task --cwd=dungeon-heroes start",
+    "start:stealth-invader": "deno task --cwd=stealth-invader start",
     "compile": "deno task --cwd=dungeon-heroes compile",
     "jsx": "deno task --cwd=tests/jsx-test dev"
   }
