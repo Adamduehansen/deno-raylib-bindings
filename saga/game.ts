@@ -27,7 +27,7 @@ interface GameArgs {
   targetFPS?: number;
   resources?: Record<string, Resource>;
   backgroundColor?: RaylibColor;
-  isFullscreen: boolean;
+  isFullscreen?: boolean;
   onUpdate?: (game: Game) => void;
 }
 
@@ -51,8 +51,8 @@ export class Game {
     this.width = args.width;
     this.height = args.height;
     this.scenes = args.scenes;
-    this.isFullscreen = args.isFullscreen;
 
+    this.isFullscreen = args.isFullscreen ?? false;
     this.targetFPS = args.targetFPS ?? DEFAULT_TARGET_FPS;
     this.resources = args.resources ?? DEFAULT_RESOURCES;
     this.backgroundColor = args.backgroundColor ?? Black;

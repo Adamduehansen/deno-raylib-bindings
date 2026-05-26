@@ -7,6 +7,8 @@ interface Options {
   height?: number;
 }
 
+// TODO: Maybe refactor constructor to use TextureResource instead to avoid the "!" in "Resources.SomeTexture.texture!"
+
 export class Sprite {
   readonly x: number;
   readonly y: number;

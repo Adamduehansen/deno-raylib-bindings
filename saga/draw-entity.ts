@@ -23,7 +23,7 @@ export function drawEntity(entity: Entity) {
       height: height,
       width: width,
     },
-    rotation: 0,
+    rotation: entity.rotation,
     origin: {
       x: width / 2,
       y: height / 2,

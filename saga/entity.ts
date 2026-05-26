@@ -18,9 +18,11 @@ export class Entity {
 
   position: RaylibVector;
   z: number;
+
   sprite?: Sprite;
   scene?: Scene;
 
+  rotation = 0;
   flipHorizontal = false;
   flipVertical = false;
 
@@ -30,6 +32,11 @@ export class Entity {
     this.name = args.name;
     this.z = args.z ?? 1;
   }
+
+  /**
+   * Called when the entity is added to the scene.
+   */
+  init(): void {}
 
   /**
    * Called on each frame. Override this function to update the entity.
