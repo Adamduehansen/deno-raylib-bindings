@@ -1,10 +1,12 @@
-export * from "./game.ts";
+// export * from "./ecs/component-manager.ts";
+// export * from "./ecs/entity-collection.ts";
+// export * from "./ecs/system.ts";
 
-export * from "./ecs/component-manager.ts";
-export * from "./ecs/entity-collection.ts";
-export * from "./ecs/system.ts";
+export * from "./body.ts";
 
 export * from "./entity.ts";
+
+export * from "./game.ts";
 
 export * from "./logger.ts";
 

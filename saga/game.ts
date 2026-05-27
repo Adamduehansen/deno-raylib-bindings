@@ -12,9 +12,10 @@ import {
 import { drawFPS, drawText } from "@adamduehansen/raylib-bindings/r-text";
 import type { Resource } from "./resource/resource.ts";
 import type { Scene } from "./scene.ts";
-import { drawEntity } from "./draw-entity.ts";
+import { drawSprite } from "./draw-entity.ts";
 import { Logger } from "./logger.ts";
 import { GameContext } from "./game-context.ts";
+import { drawBody } from "./draw-body.ts";
 
 const DEFAULT_TARGET_FPS = 60;
 const DEFAULT_RESOURCES = {};
@@ -107,7 +108,11 @@ export class Game {
       // TODO: cache the current length of entities and update/render only that list.
 
       for (const entity of this.currentScene.entities) {
-        drawEntity(entity);
+        drawSprite(entity);
+
+        if (GameContext.isDebug) {
+          drawBody(entity);
+        }
       }
 
       this.currentScene.camera.endRender();

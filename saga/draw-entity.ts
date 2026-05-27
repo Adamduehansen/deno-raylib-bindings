@@ -2,7 +2,7 @@ import { White } from "@adamduehansen/raylib-bindings/r-core";
 import { drawTexturePro } from "@adamduehansen/raylib-bindings/r-textures";
 import type { Entity } from "./entity.ts";
 
-export function drawEntity(entity: Entity) {
+export function drawSprite(entity: Entity) {
   if (entity.sprite === undefined) {
     return;
   }

@@ -1,4 +1,5 @@
 import type { RaylibVector } from "@adamduehansen/raylib-bindings/r-core";
+import type { Body } from "./body.ts";
 import type { Sprite } from "./sprite.ts";
 import type { Scene } from "./scene.ts";
 
@@ -21,6 +22,7 @@ export class Entity {
 
   sprite?: Sprite;
   scene?: Scene;
+  body?: Body;
 
   rotation = 0;
   flipHorizontal = false;

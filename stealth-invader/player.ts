@@ -1,10 +1,17 @@
 import { isKeyDown, KeyA, KeyD } from "@adamduehansen/raylib-bindings/r-core";
-import { Entity, Sprite } from "@adamduehansen/saga";
+import { Entity, RectangleBody, Sprite } from "@adamduehansen/saga";
 import { Resources } from "./resources.ts";
 
 const RotationSpeed = 5;
 
 export class Player extends Entity {
+  constructor() {
+    super({
+      position: { x: 100, y: 100 },
+    });
+    this.body = new RectangleBody(99, 75);
+  }
+
   override init(): void {
     this.sprite = new Sprite(Resources.spaceship.texture!);
   }
