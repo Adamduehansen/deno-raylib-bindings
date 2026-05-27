@@ -100,6 +100,17 @@ closeWindow();
 await Deno.writeTextFile(resolve(projectDir, "main.ts"), mainFileContent);
 
 /**
+ * .gitignore
+ * ----------------------------------------------------------------------------
+ */
+
+console.log('-> Creating ".gitignore"');
+const gitIgnoreContent = `# Project files
+lib
+`;
+await Deno.writeTextFile(resolve(projectDir, ".gitignore"), gitIgnoreContent);
+
+/**
  * Fetching binaries
  * ----------------------------------------------------------------------------
  */
