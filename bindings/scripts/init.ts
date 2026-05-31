@@ -10,6 +10,10 @@ async function dirExists(path: string): Promise<boolean> {
   }
 }
 
+function isWhitespaceString(str: string) {
+  return /\S/.test(str) === false;
+}
+
 /**
  * INIT
  * ----------------------------------------------------------------------------
@@ -19,10 +23,8 @@ console.log("Deno Raylib bindings: init project");
 
 const projectName = prompt("Project name:");
 
-// TODO: Check for empty or only whitespace name
-
-if (projectName === null) {
-  console.log("Project name cannot be null");
+if (projectName === null || isWhitespaceString(projectName)) {
+  console.log("Please provide a valid name");
   Deno.exit();
 }
 
