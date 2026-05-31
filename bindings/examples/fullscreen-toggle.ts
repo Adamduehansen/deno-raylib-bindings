@@ -1,66 +1,45 @@
-import {
-  beginDrawing,
-  clearBackground,
-  closeWindow,
-  endDrawing,
-  getCurrentMonitor,
-  getMonitorHeight,
-  getMonitorWidth,
-  initWindow,
-  isKeyDown,
-  isKeyPressed,
-  isWindowFullScreen,
-  KeyEnter,
-  KeyLeftAlt,
-  LightGray,
-  RayWhite,
-  setTargetFPS,
-  setWindowSize,
-  toggleFullScreen,
-  windowShouldClose,
-} from "@adamduehansen/raylib-bindings/r-core";
-import { drawText } from "@adamduehansen/raylib-bindings/r-text";
+import * as r from "@adamduehansen/raylib-bindings";
 
 const screenWidth = 800;
 const screenHeight = 450;
 
-initWindow({
+r.initWindow({
   width: screenWidth,
   height: screenHeight,
   title: "raylib [core] example - fullscreen toggle",
 });
-setTargetFPS(60);
+r.setTargetFPS(60);
 
-while (windowShouldClose() === false) {
+while (r.windowShouldClose() === false) {
   // Update
   // --------------------------------------------------------------------------
-  if (isKeyPressed(KeyEnter) && isKeyDown(KeyLeftAlt)) {
-    const display = getCurrentMonitor();
+  if (r.isKeyPressed(r.KeyEnter) && r.isKeyDown(r.KeyLeftAlt)) {
+    const display = r.getCurrentMonitor();
 
-    if (isWindowFullScreen()) {
-      setWindowSize(screenWidth, screenHeight);
+    if (r.isWindowFullScreen()) {
+      r.setWindowSize(screenWidth, screenHeight);
     } else {
-      setWindowSize(getMonitorWidth(display), getMonitorHeight(display));
+      r.setWindowSize(r.getMonitorWidth(display), r.getMonitorHeight(display));
     }
 
-    toggleFullScreen();
+    r.toggleFullScreen();
   }
 
   // Draw
   // --------------------------------------------------------------------------
-  beginDrawing();
+  r.beginDrawing();
 
-  clearBackground(RayWhite);
+  r.clearBackground(r.RayWhite);
 
-  drawText({
+  r.drawText({
     posX: 190,
     posY: 200,
     fontSize: 20,
-    color: LightGray,
+    color: r.LightGray,
     text: "Press ALT + Enter to toggle fullscreen",
   });
 
-  endDrawing();
+  r.endDrawing();
 }
 
-closeWindow();
+r.closeWindow();

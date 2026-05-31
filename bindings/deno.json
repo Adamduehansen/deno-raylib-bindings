@@ -4,15 +4,7 @@
   "tasks": {},
   "license": "MIT",
   "exports": {
-    ".": "./mod.ts",
-    "./init": "./scripts/init.ts",
-    "./r-audio": "./src/r-audio.ts",
-    "./r-core": "./src/r-core.ts",
-    "./r-math": "./src/r-math.ts",
-    "./r-models": "./src/r-models.ts",
-    "./r-shapes": "./src/r-shapes.ts",
-    "./r-text": "./src/r-text.ts",
-    "./r-textures": "./src/r-textures.ts"
+    ".": "./mod.ts"
   },
   "imports": {
     "@std/path": "jsr:@std/path@^1.1.4",

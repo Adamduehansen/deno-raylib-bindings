@@ -1,78 +1,59 @@
-import {
-  beginDrawing,
-  clearBackground,
-  closeWindow,
-  DarkGray,
-  endDrawing,
-  initWindow,
-  isKeyDown,
-  KeyDown,
-  KeyLeft,
-  KeyRight,
-  KeyUp,
-  Maroon,
-  type RaylibVector,
-  RayWhite,
-  setTargetFPS,
-  windowShouldClose,
-} from "@adamduehansen/raylib-bindings/r-core";
-import { drawCircleV } from "@adamduehansen/raylib-bindings/r-shapes";
-import { drawText } from "@adamduehansen/raylib-bindings/r-text";
+import * as r from "@adamduehansen/raylib-bindings";
 
 const SCREEN_HEIGHT = 450;
 const SCREEN_WIDTH = 800;
 
-initWindow({
+r.initWindow({
   title: "raylib [core] example - input keys",
   height: 450,
   width: 800,
 });
 
-const ballPosition: RaylibVector = {
+const ballPosition: r.RaylibVector = {
   x: SCREEN_WIDTH / 2,
   y: SCREEN_HEIGHT / 2,
 };
 
-setTargetFPS(60);
+r.setTargetFPS(60);
 
-while (windowShouldClose() === false) {
+while (r.windowShouldClose() === false) {
   // Update
   //---------------------------------------------------------------------------
-  if (isKeyDown(KeyRight)) {
+  if (r.isKeyDown(r.KeyRight)) {
     ballPosition.x += 2;
   }
-  if (isKeyDown(KeyLeft)) {
+  if (r.isKeyDown(r.KeyLeft)) {
     ballPosition.x -= 2;
   }
-  if (isKeyDown(KeyUp)) {
+  if (r.isKeyDown(r.KeyUp)) {
     ballPosition.y -= 2;
   }
-  if (isKeyDown(KeyDown)) {
+  if (r.isKeyDown(r.KeyDown)) {
     ballPosition.y += 2;
   }
   //---------------------------------------------------------------------------
 
   // Draw
   //---------------------------------------------------------------------------
-  beginDrawing();
+  r.beginDrawing();
 
-  clearBackground(RayWhite);
+  r.clearBackground(r.RayWhite);
 
-  drawText({
+  r.drawText({
     text: "move the ball with arrow keys",
     posX: 10,
     posY: 10,
     fontSize: 20,
-    color: DarkGray,
+    color: r.DarkGray,
   });
 
-  drawCircleV({
+  r.drawCircleV({
     center: ballPosition,
-    color: Maroon,
+    color: r.Maroon,
     radius: 50,
   });
 
-  endDrawing();
+  r.endDrawing();
 }
 
-closeWindow();
+r.closeWindow();
