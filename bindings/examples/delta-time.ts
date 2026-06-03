@@ -1,29 +1,9 @@
-import {
-  beginDrawing,
-  Blue,
-  clearBackground,
-  closeWindow,
-  DarkGray,
-  endDrawing,
-  getFPS,
-  getFrameTime,
-  getMouseWheelMove,
-  initWindow,
-  isKeyPressed,
-  KeyR,
-  type RaylibVector,
-  RayWhite,
-  Red,
-  setTargetFPS,
-  windowShouldClose,
-} from "@adamduehansen/raylib-bindings/r-core";
-import { drawCircleV } from "@adamduehansen/raylib-bindings/r-shapes";
-import { drawText } from "@adamduehansen/raylib-bindings/r-text";
+import * as r from "@adamduehansen/raylib-bindings";
 
 const SCREEN_HEIGHT = 450;
 const SCREEN_WIDTH = 800;
 
-initWindow({
+r.initWindow({
   title: "raylib [core] example - delta time",
   width: SCREEN_WIDTH,
   height: SCREEN_HEIGHT,
@@ -32,7 +12,7 @@ initWindow({
 let currentFps = 60;
 
 // Store the position for the both of the circles
-const deltaCircle: RaylibVector = {
+const deltaCircle: r.RaylibVector = {
   x: 0,
   y: SCREEN_HEIGHT / 3,
 };
@@ -46,27 +26,27 @@ const frameCircle = {
 const speed = 10;
 const circleRadius = 32;
 
-setTargetFPS(currentFps);
+r.setTargetFPS(currentFps);
 
 //--------------------------------------------------------------------------------------
 
 // Main game loop
-while (windowShouldClose() === false) {
+while (r.windowShouldClose() === false) {
   // Update
   //----------------------------------------------------------------------------------
   // Adjust the FPS target based on the mouse wheel
-  const mouseWheel = getMouseWheelMove();
+  const mouseWheel = r.getMouseWheelMove();
   if (mouseWheel !== 0) {
     currentFps += mouseWheel;
     if (currentFps === 0) {
       currentFps = 0;
     }
-    setTargetFPS(currentFps);
+    r.setTargetFPS(currentFps);
   }
 
   // Multiply by 6.0 (an arbitrary value) in order to make the speed
   // visually closer to the other circle (at 60 fps), for comparison
-  deltaCircle.x += getFrameTime() * 6 * speed;
+  deltaCircle.x += r.getFrameTime() * 6 * speed;
   // This circle can move faster or slower visually depending on the FPS
   frameCircle.x += 0.1 * speed;
 
@@ -80,7 +60,7 @@ while (windowShouldClose() === false) {
   }
 
   // Reset both circles positions
-  if (isKeyPressed(KeyR)) {
+  if (r.isKeyPressed(r.KeyR)) {
     deltaCircle.x = 0;
     frameCircle.x = 0;
   }
@@ -90,70 +70,70 @@ while (windowShouldClose() === false) {
   // Draw
   //----------------------------------------------------------------------------------
 
-  beginDrawing();
+  r.beginDrawing();
 
-  clearBackground(RayWhite);
+  r.clearBackground(r.RayWhite);
 
-  drawCircleV({
+  r.drawCircleV({
     center: deltaCircle,
-    color: Red,
+    color: r.Red,
     radius: circleRadius,
   });
 
-  drawCircleV({
+  r.drawCircleV({
     center: frameCircle,
-    color: Blue,
+    color: r.Blue,
     radius: circleRadius,
   });
 
   let fpsText: string;
   if (currentFps <= 0) {
-    fpsText = `FPS: Unlimited (${getFPS()})`;
+    fpsText = `FPS: Unlimited (${r.getFPS()})`;
   } else {
-    fpsText = `FPS: ${getFPS()} (target: ${currentFps})`;
+    fpsText = `FPS: ${r.getFPS()} (target: ${currentFps})`;
   }
 
-  drawText({
+  r.drawText({
     text: fpsText,
-    color: DarkGray,
+    color: r.DarkGray,
     fontSize: 20,
     posX: 10,
     posY: 10,
   });
 
-  drawText({
-    text: `Frame time: ${getFrameTime().toFixed(2)} ms`,
-    color: DarkGray,
+  r.drawText({
+    text: `Frame time: ${r.getFrameTime().toFixed(2)} ms`,
+    color: r.DarkGray,
     fontSize: 20,
     posX: 10,
     posY: 30,
   });
 
-  drawText({
+  r.drawText({
     text: "Use the scroll wheel to change the fps limit, r to reset",
-    color: DarkGray,
+    color: r.DarkGray,
     fontSize: 20,
     posX: 10,
     posY: 50,
   });
 
-  drawText({
+  r.drawText({
     text: "FUNC: x += GetFrameTime()*speed",
-    color: Red,
+    color: r.Red,
     fontSize: 20,
     posX: 10,
     posY: 90,
   });
 
-  drawText({
+  r.drawText({
     text: "FUNC: x += speed",
-    color: Blue,
+    color: r.Blue,
     fontSize: 20,
     posX: 10,
     posY: 240,
   });
 
-  endDrawing();
+  r.endDrawing();
 }
 
-closeWindow();
+r.closeWindow();

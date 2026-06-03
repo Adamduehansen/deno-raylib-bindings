@@ -1,61 +1,15 @@
-import {
-  beginDrawing,
-  beginMode2D,
-  Black,
-  clearBackground,
-  closeWindow,
-  DarkGray,
-  DarkGreen,
-  endDrawing,
-  endMode2D,
-  getMouseDelta,
-  getMousePosition,
-  getMouseWheelMove,
-  getMouseX,
-  getMouseY,
-  getScreenHeight,
-  getScreenToWorld2D,
-  getScreenWidth,
-  initWindow,
-  isKeyPressed,
-  isMouseButtonDown,
-  KeyOne,
-  KeyTwo,
-  MouseButtonLeft,
-  type RaylibCamera,
-  RayWhite,
-  setTargetFPS,
-  windowShouldClose,
-} from "@adamduehansen/raylib-bindings/r-core";
-import {
-  clamp,
-  rlPopMatrix,
-  rlPushMatrix,
-  rlRotatef,
-  rlTranslatef,
-  vector2Add,
-  vector2Scale,
-} from "@adamduehansen/raylib-bindings/r-math";
-import { drawGrid } from "@adamduehansen/raylib-bindings/r-models";
-import {
-  drawCircle,
-  drawCircleV,
-} from "@adamduehansen/raylib-bindings/r-shapes";
-import {
-  drawTextEx,
-  getFontDefault,
-} from "@adamduehansen/raylib-bindings/r-text";
+import * as r from "@adamduehansen/raylib-bindings";
 
 const screenWidth = 800;
 const screenHeight = 450;
 
-initWindow({
+r.initWindow({
   title: "raylib [core] example - 2d camera mouse zoom",
   width: screenWidth,
   height: screenHeight,
 });
 
-const camera: RaylibCamera = {
+const camera: r.RaylibCamera = {
   zoom: 1,
   rotation: 0,
   target: {
@@ -70,33 +24,33 @@ const camera: RaylibCamera = {
 
 let zoomMode = 0;
 
-setTargetFPS(60);
+r.setTargetFPS(60);
 
-while (windowShouldClose() === false) {
+while (r.windowShouldClose() === false) {
   // Update
   // ------------------------------------------------------------------------
-  if (isKeyPressed(KeyOne)) {
+  if (r.isKeyPressed(r.KeyOne)) {
     zoomMode = 0;
-  } else if (isKeyPressed(KeyTwo)) {
+  } else if (r.isKeyPressed(r.KeyTwo)) {
     zoomMode = 1;
   }
 
   // Translate based on mouse right click
-  if (isMouseButtonDown(MouseButtonLeft)) {
-    const mouseDelta = getMouseDelta();
-    const delta = vector2Scale(mouseDelta, -1 / camera.zoom);
-    camera.target = vector2Add(camera.target, delta);
+  if (r.isMouseButtonDown(r.MouseButtonLeft)) {
+    const mouseDelta = r.getMouseDelta();
+    const delta = r.vector2Scale(mouseDelta, -1 / camera.zoom);
+    camera.target = r.vector2Add(camera.target, delta);
   }
 
   if (zoomMode === 0) {
     // Zoom based on the mouse wheel.
-    const wheelDelta = getMouseWheelMove();
+    const wheelDelta = r.getMouseWheelMove();
     if (wheelDelta !== 0) {
       // Get the world point under the mouse
-      const mouseWorldPos = getScreenToWorld2D(getMousePosition(), camera);
+      const mouseWorldPos = r.getScreenToWorld2D(r.getMousePosition(), camera);
 
       // Set the offset to where the mouse is.
-      camera.offset = getMousePosition();
+      camera.offset = r.getMousePosition();
 
       // Set the target to match, so that the camera maps the world space point
       // under the cursor to the screen space point under the cursor at any zoom
@@ -105,51 +59,51 @@ while (windowShouldClose() === false) {
       // Zoom increment
       // Uses log scaling to provide consistent zoom speed
       const scale = 0.2 * wheelDelta;
-      camera.zoom = clamp(Math.exp(Math.log(camera.zoom) + scale), 0.125, 64);
+      camera.zoom = r.clamp(Math.exp(Math.log(camera.zoom) + scale), 0.125, 64);
     }
   }
 
   // Drawing
   // ------------------------------------------------------------------------
-  beginDrawing();
+  r.beginDrawing();
 
-  clearBackground(RayWhite);
+  r.clearBackground(r.RayWhite);
 
-  beginMode2D(camera);
-  rlPushMatrix();
-  rlTranslatef(0, 25 * 50, 0);
-  rlRotatef(90, 1, 0, 0);
-  drawGrid(100, 50);
-  rlPopMatrix();
+  r.beginMode2D(camera);
+  r.rlPushMatrix();
+  r.rlTranslatef(0, 25 * 50, 0);
+  r.rlRotatef(90, 1, 0, 0);
+  r.drawGrid(100, 50);
+  r.rlPopMatrix();
 
-  drawCircle({
-    centerX: getScreenWidth() / 2,
-    centerY: getScreenHeight() / 2,
+  r.drawCircle({
+    centerX: r.getScreenWidth() / 2,
+    centerY: r.getScreenHeight() / 2,
     radius: 50,
-    color: DarkGreen,
+    color: r.DarkGreen,
   });
-  endMode2D();
+  r.endMode2D();
 
   // Draw mouse reference
-  drawCircleV({
-    center: getMousePosition(),
+  r.drawCircleV({
+    center: r.getMousePosition(),
     radius: 4,
-    color: DarkGray,
+    color: r.DarkGray,
   });
 
-  drawTextEx({
-    font: getFontDefault(),
-    text: `[${getMouseX()}, ${getMouseY()}]`,
-    tint: Black,
+  r.drawTextEx({
+    font: r.getFontDefault(),
+    text: `[${r.getMouseX()}, ${r.getMouseY()}]`,
+    tint: r.Black,
     spacing: 2,
     fontSize: 20,
-    position: vector2Add(getMousePosition(), {
+    position: r.vector2Add(r.getMousePosition(), {
       x: -44,
       y: -24,
     }),
   });
 
-  endDrawing();
+  r.endDrawing();
 }
 
-closeWindow();
+r.closeWindow();
