@@ -21,7 +21,7 @@ function isWhitespaceString(str: string) {
 
 console.log("Deno Raylib bindings: init project");
 
-const projectName = prompt("Project name:");
+const projectName = prompt("Project name:", "deno-raylib-project");
 
 if (projectName === null || isWhitespaceString(projectName)) {
   console.log("Please provide a valid name");
