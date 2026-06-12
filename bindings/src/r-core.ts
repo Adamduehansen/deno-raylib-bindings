@@ -236,6 +236,14 @@ export function windowShouldClose(): boolean {
 }
 
 //-----------------------------------------------------------------------------
+// Cursor-related functions
+// ----------------------------------------------------------------------------
+
+export function isCursorHidden(): boolean {
+  return raylib.symbols.IsCursorHidden();
+}
+
+//----------------------------------------------------------------------------
 // Input-related functions: keyboard
 // ----------------------------------------------------------------------------
 
@@ -248,6 +256,7 @@ export const KeyTwo = 50;
 export const KeyA = 65;
 export const KeyE = 69;
 export const KeyD = 68;
+export const KeyH = 72;
 export const KeyP = 80;
 export const KeyQ = 81;
 export const KeyR = 82;
