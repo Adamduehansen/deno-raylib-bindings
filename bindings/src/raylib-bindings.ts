@@ -290,6 +290,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
     parameters: [],
     result: "i16",
   },
+  HideCursor: {
+    parameters: [],
+    result: "void",
+  },
   InitAudioDevice: {
     parameters: [],
     result: "void",
@@ -297,6 +301,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   InitWindow: {
     parameters: ["i16", "i16", "buffer"],
     result: "void",
+  },
+  IsCursorHidden: {
+    parameters: [],
+    result: "bool",
   },
   IsWindowFullscreen: {
     parameters: [],
@@ -392,6 +400,10 @@ export const raylib = Deno.dlopen("./lib/libraylib.so.5.5.0", {
   },
   SetWindowSize: {
     parameters: ["i32", "i32"],
+    result: "void",
+  },
+  ShowCursor: {
+    parameters: [],
     result: "void",
   },
   ToggleFullscreen: {
